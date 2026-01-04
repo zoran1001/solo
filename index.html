@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NARUTO OFFICIAL SITE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 顶部横幅 -->
+    <header class="top-banner" id="top">
+        <!-- 语言切换 -->
+        <div class="language-switcher">
+            <button id="lang-zh" class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
+            <button id="lang-en" class="lang-btn" onclick="switchLanguage('en')">EN</button>
+        </div>
+        
+        <!-- 左切换按钮 -->
+        <button class="banner-control banner-control-left" id="bannerPrev" aria-label="Previous Slide">
+            <span class="control-icon">&lt;</span>
+        </button>
+        
+        <div class="banner-container">
+            <!-- 横幅图片将通过JavaScript动态生成 -->
+            <img src="kv.png" alt="Naruto Banner" class="top-banner-image active" id="image-topBanner-1">
+        </div>
+        
+        <!-- 右切换按钮 -->
+        <button class="banner-control banner-control-right" id="bannerNext" aria-label="Next Slide">
+            <span class="control-icon">&gt;</span>
+        </button>
+        
+        <!-- 轮播图指示器将通过JavaScript动态生成 -->
+        <div class="carousel-indicators">
+            <button class="indicator active" data-slide="0" title="Slide 1"></button>
+        </div>
+    </header>
+
+    <!-- 子导航栏 -->
+    <nav class="sub-nav">
+        <ul class="sub-nav-list">
+            <li class="sub-nav-item"><a href="#top" class="sub-nav-link" id="text-navItem1">首页</a></li>
+            <li class="sub-nav-item"><a href="#news" class="sub-nav-link" id="text-navItem2">新闻</a></li>
+            <li class="sub-nav-item"><a href="#merch" class="sub-nav-link" id="text-navItem3">商品</a></li>
+            <li class="sub-nav-item"><a href="#ranking" class="sub-nav-link" id="text-navItem4">排名</a></li>
+            <li class="sub-nav-item"><a href="#anime" class="sub-nav-link" id="text-navItem5">动漫</a></li>
+            <li class="sub-nav-item"><a href="#story" class="sub-nav-link" id="text-navItem6">故事</a></li>
+        </ul>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 产品信息栏 -->
+        <section class="product-section">
+            <div class="section-header">
+                <h2 class="section-title" id="text-productTitle">产品信息</h2>
+            </div>
+            <div class="product-grid">
+                <!-- 产品1 -->
+                <div class="product-item">
+                    <div class="product-image-container">
+                        <div class="image-placeholder product-image" id="image-product1"></div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name" id="text-product1Name">产品名称</h3>
+                        <p class="product-config" id="text-product1Config">产品配置</p>
+                        <div class="product-price">
+                            <span class="original-price" id="text-product1OriginalPrice">¥999</span>
+                            <span class="discount-price" id="text-product1DiscountPrice">¥699</span>
+                            <span class="discount-tag" id="text-product1DiscountTag">限时折扣</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 产品2 -->
+                <div class="product-item">
+                    <div class="product-image-container">
+                        <div class="image-placeholder product-image" id="image-product2"></div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name" id="text-product2Name">产品名称</h3>
+                        <p class="product-config" id="text-product2Config">产品配置</p>
+                        <div class="product-price">
+                            <span class="original-price" id="text-product2OriginalPrice">¥899</span>
+                            <span class="discount-price" id="text-product2DiscountPrice">¥599</span>
+                            <span class="discount-tag" id="text-product2DiscountTag">限时折扣</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 产品3 -->
+                <div class="product-item">
+                    <div class="product-image-container">
+                        <div class="image-placeholder product-image" id="image-product3"></div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name" id="text-product3Name">产品名称</h3>
+                        <p class="product-config" id="text-product3Config">产品配置</p>
+                        <div class="product-price">
+                            <span class="original-price" id="text-product3OriginalPrice">¥799</span>
+                            <span class="discount-price" id="text-product3DiscountPrice">¥499</span>
+                            <span class="discount-tag" id="text-product3DiscountTag">限时折扣</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- 额外图片部分 -->
+        <section class="extra-image-section">
+            <div class="image-placeholder extra-image" id="image-extra1" style="background-image: url(https://cdn.shopify.com/s/files/1/0522/3320/7988/files/slp1_a6553d0a-1084-4704-88c8-9d2af342e299.png?v=1767170716); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
+        </section>
+    
+        <!-- NEWS部分 -->
+        <section class="news-section" id="news">
+            <div class="section-header">
+                <h2 class="section-title" id="text-newsTitle">NEWS</h2>
+
+            </div>
+            <div class="news-grid">
+                <div class="news-item">
+                    <div class="image-placeholder news-image news1-image" id="image-news1"></div>
+                </div>
+                <div class="news-item">
+                    <div class="image-placeholder news-image news2-image" id="image-news2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MERCH部分 -->
+        <section class="merch-section" id="merch">
+            <div class="merch-grid">
+                <div class="merch-item">
+                    <div class="image-placeholder merch-image merch1-image" id="image-merch1"></div>
+                </div>
+                <div class="merch-item">
+                    <div class="image-placeholder merch-image merch2-image" id="image-merch2"></div>
+                </div>
+                <div class="merch-item">
+                    <div class="image-placeholder merch-image merch3-image" id="image-merch3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WEEKLY RANKING部分 -->
+        <section class="ranking-section" id="ranking">
+            <div class="section-header">
+                <h2 class="section-title" id="text-rankingTitle">WEEKLY RANKING</h2>
+            </div>
+            <div class="ranking-grid">
+                <div class="ranking-item">
+                    <div class="image-placeholder ranking-image rank1-image" id="image-rank1"></div>
+                </div>
+                <div class="ranking-item">
+                    <div class="image-placeholder ranking-image rank2-image" id="image-rank2"></div>
+                </div>
+                <div class="ranking-item">
+                    <div class="image-placeholder ranking-image rank3-image" id="image-rank3"></div>
+                </div>
+            </div>
+            <div class="ranking-footer">
+                <div class="image-placeholder ranking-footer-image"></div>
+            </div>
+        </section>
+
+        <!-- MERCH部分 -->
+        <section class="merch-section">
+            <div class="section-header">
+                <h2 class="section-title" id="text-merchTitle">MERCH</h2>
+                <div class="merch-illustration">
+                    <div class="image-placeholder merch-illustration-image"></div>
+                </div>
+            </div>
+            <div class="merch-grid">
+                <div class="merch-item">
+                    <div class="image-placeholder merch-image merch4-image" id="image-merch4"></div>
+                </div>
+                <div class="merch-item">
+                    <div class="image-placeholder merch-image merch5-image" id="image-merch5"></div>
+                </div>
+            </div>
+            <div class="merch-grid-small">
+                <div class="merch-item-small">
+                    <div class="image-placeholder merch-small-image merch6-image" id="image-merch6"></div>
+                </div>
+                <div class="merch-item-small">
+                    <div class="image-placeholder merch-small-image merch7-image" id="image-merch7"></div>
+                </div>
+                <div class="merch-item-small">
+                    <div class="image-placeholder merch-small-image merch8-image" id="image-merch8"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMICS & ANIME部分 -->
+        <section class="comics-anime-section" id="anime">
+            <div class="comics-anime-grid">
+                <div class="category-item">
+                    <div class="image-placeholder category-image comics-image" id="image-comics"></div>
+                    <h3 class="category-title" id="text-comicsTitle">COMICS</h3>
+                </div>
+                <div class="category-item">
+                    <div class="image-placeholder category-image anime-image" id="image-anime"></div>
+                    <h3 class="category-title" id="text-animeTitle">ANIME</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- NARUTO STORY部分 -->
+        <section class="story-section" id="story">
+            <div class="story-grid">
+                <div class="story-item">
+                    <div class="image-placeholder story-image story1-image" id="image-story1"></div>
+                    <h3 class="story-title" id="text-story1Title">NARUTO STORY</h3>
+                    <p class="story-year" id="text-story1Year">1999-2014</p>
+                </div>
+                <div class="story-item">
+                    <div class="image-placeholder story-image story2-image" id="image-story2"></div>
+                    <h3 class="story-title" id="text-story2Title">NARUTO SHIPPUDEN</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- 底部插图 -->
+        <section class="bottom-illustration">
+            <div class="image-placeholder bottom-illustration-image" id="image-bottomIllustration"></div>
+        </section>
+
+        <!-- 广告横幅 -->
+        <section class="ad-banners">
+            <div class="ad-grid">
+                <div class="ad-item">
+                    <div class="image-placeholder ad-image ad1-image" id="image-ad1"></div>
+                </div>
+                <div class="ad-item">
+                    <div class="image-placeholder ad-image ad2-image" id="image-ad2"></div>
+                </div>
+                <div class="ad-item">
+                    <div class="image-placeholder ad-image ad3-image" id="image-ad3"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="copyright">© 1999 MASASHI KISHIMOTO / 2002 SHIPPUDEN All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // 当前语言
+        let currentLang = 'zh';
+        
+        // 存储原始中文文本
+        const originalTexts = {};
+        
+        // 预定义翻译映射
+        const translations = {
+            '首页': 'Home',
+            '新闻': 'News',
+            '商品': 'Merchandise',
+            '排名': 'Ranking',
+            '动漫': 'Anime',
+            '故事': 'Story',
+            '产品信息': 'Product Info',
+            '产品名称': 'Product Name',
+            '产品配置': 'Product Config',
+            '限时折扣': 'Limited Discount',
+            'NARUTO OFFICIAL SITE': 'NARUTO OFFICIAL SITE',
+            'NEWS': 'NEWS',
+            'WEEKLY RANKING': 'WEEKLY RANKING',
+            'MERCH': 'MERCH',
+            'COMICS': 'COMICS',
+            'ANIME': 'ANIME',
+            'NARUTO STORY': 'NARUTO STORY',
+            'NARUTO SHIPPUDEN': 'NARUTO SHIPPUDEN',
+            '1999-2014': '1999-2014'
+        };
+        
+        // 从localStorage加载数据并更新页面
+        function loadPageData() {
+            // 从localStorage获取数据
+            const storedData = localStorage.getItem('narutoSiteData');
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                
+                // 处理顶部横幅图片
+                const bannerContainer = document.querySelector('.banner-container');
+                const indicatorsContainer = document.querySelector('.carousel-indicators');
+                
+                if (bannerContainer && indicatorsContainer) {
+                    // 清空现有内容
+                    bannerContainer.innerHTML = '';
+                    indicatorsContainer.innerHTML = '';
+                    
+                    // 统计顶部横幅图片数量
+                    const bannerImages = [];
+                    for (const [key, value] of Object.entries(data.images)) {
+                        if (key.startsWith('topBanner')) {
+                            bannerImages.push({key, value});
+                        }
+                    }
+                    
+                    // 如果没有横幅图片，添加默认图片
+                    if (bannerImages.length === 0) {
+                        const defaultBanner = document.createElement('img');
+                        defaultBanner.src = 'kv.png';
+                        defaultBanner.alt = 'Naruto Banner';
+                        defaultBanner.className = 'top-banner-image active';
+                        defaultBanner.id = 'image-topBanner-1';
+                        bannerContainer.appendChild(defaultBanner);
+                        
+                        const defaultIndicator = document.createElement('button');
+                        defaultIndicator.className = 'indicator active';
+                        defaultIndicator.dataset.slide = '0';
+                        defaultIndicator.title = 'Slide 1';
+                        indicatorsContainer.appendChild(defaultIndicator);
+                    } else {
+                        // 添加横幅图片
+                        bannerImages.forEach((banner, index) => {
+                            const img = document.createElement('img');
+                            img.src = banner.value || 'kv.png';
+                            img.alt = `Naruto Banner ${index + 1}`;
+                            img.className = `top-banner-image ${index === 0 ? 'active' : ''}`;
+                            img.id = `image-${banner.key}`;
+                            bannerContainer.appendChild(img);
+                            
+                            const indicator = document.createElement('button');
+                            indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+                            indicator.dataset.slide = index;
+                            indicator.title = `Slide ${index + 1}`;
+                            indicatorsContainer.appendChild(indicator);
+                        });
+                    }
+                }
+                
+                // 更新其他图片
+                for (const [key, value] of Object.entries(data.images)) {
+                    if (!key.startsWith('topBanner')) {
+                        const element = document.getElementById(`image-${key}`);
+                        if (element && value) {
+                            // 区分img标签和div标签
+                            if (element.tagName === 'IMG') {
+                                // 对于img标签，更新src属性
+                                element.src = value;
+                            } else {
+                                // 对于div标签，更新backgroundImage
+                                element.style.backgroundImage = `url(${value})`;
+                                element.style.backgroundColor = 'transparent';
+                            }
+                        }
+                    }
+                }
+                
+                // 更新文案
+                for (const [key, value] of Object.entries(data.texts)) {
+                    const element = document.getElementById(`text-${key}`);
+                    if (element && value) {
+                        // 更新元素内容
+                        element.textContent = value;
+                        // 应用翻译
+                        applyTranslation(element);
+                    }
+                }
+                
+                // 更新页面标题
+                if (data.texts.title) {
+                    document.title = data.texts.title;
+                    // 应用标题翻译
+                    if (currentLang === 'en') {
+                        document.title = translations[document.title] || document.title;
+                    }
+                }
+            }
+            
+            // 对所有文本元素应用翻译
+            applyAllTranslations();
+        }
+        
+        // 扫描页面中的可编辑元素
+        function scanEditableElements() {
+            // 扫描图片元素
+            const imageElements = document.querySelectorAll('[id^="image-"]');
+            const images = {};
+            imageElements.forEach(el => {
+                const key = el.id.replace('image-', '');
+                images[key] = '';
+            });
+            
+            // 扫描文案元素
+            const textElements = document.querySelectorAll('[id^="text-"]');
+            const texts = {};
+            textElements.forEach(el => {
+                const key = el.id.replace('text-', '');
+                texts[key] = el.textContent || '';
+            });
+            
+            // 存储到localStorage
+            const editableElements = {
+                images: images,
+                texts: texts
+            };
+            localStorage.setItem('narutoEditableElements', JSON.stringify(editableElements));
+        }
+        
+        // 保存所有原始中文文本
+        function saveOriginalTexts() {
+            // 获取所有带有id前缀为"text-"的元素
+            const textElements = document.querySelectorAll('[id^="text-"]');
+            textElements.forEach(element => {
+                const elementId = element.id;
+                // 只保存一次原始中文文本
+                if (!originalTexts[elementId]) {
+                    originalTexts[elementId] = element.textContent;
+                }
+            });
+            // 保存原始标题
+            if (!originalTexts['title']) {
+                originalTexts['title'] = document.title;
+            }
+        }
+        
+        // 应用所有翻译
+        function applyAllTranslations() {
+            // 先保存原始文本（如果还没有保存）
+            saveOriginalTexts();
+            
+            // 获取所有带有id前缀为"text-"的元素
+            const textElements = document.querySelectorAll('[id^="text-"]');
+            textElements.forEach(element => {
+                applyTranslation(element);
+            });
+            
+            // 应用页面标题翻译
+            if (currentLang === 'en') {
+                const originalTitle = originalTexts['title'];
+                document.title = translations[originalTitle] || originalTitle;
+            } else {
+                // 恢复中文标题
+                document.title = originalTexts['title'];
+            }
+        }
+        
+        // 应用单个元素翻译
+        function applyTranslation(element) {
+            const elementId = element.id;
+            // 确保原始文本已保存
+            if (!originalTexts[elementId]) {
+                originalTexts[elementId] = element.textContent;
+            }
+            
+            if (currentLang === 'en') {
+                // 英文模式，应用翻译
+                const originalText = originalTexts[elementId];
+                element.textContent = translations[originalText] || originalText;
+            } else {
+                // 中文模式，恢复原始中文文本
+                element.textContent = originalTexts[elementId];
+            }
+        }
+        
+        // 语言切换功能
+        function switchLanguage(lang) {
+            if (currentLang === lang) return;
+            
+            currentLang = lang;
+            
+            // 更新语言按钮状态
+            document.getElementById('lang-zh').classList.remove('active');
+            document.getElementById('lang-en').classList.remove('active');
+            document.getElementById(`lang-${lang}`).classList.add('active');
+            
+            // 保存当前语言到localStorage
+            localStorage.setItem('narutoCurrentLanguage', lang);
+            
+            // 应用所有翻译
+            applyAllTranslations();
+        }
+        
+        // 页面加载时自动加载数据
+        document.addEventListener('DOMContentLoaded', function() {
+            // 扫描可编辑元素并存储到localStorage
+            scanEditableElements();
+            
+            // 保存原始中文文本
+            saveOriginalTexts();
+            
+            // 加载保存的语言设置
+            const savedLang = localStorage.getItem('narutoCurrentLanguage');
+            if (savedLang) {
+                currentLang = savedLang;
+                // 更新语言按钮状态
+                document.getElementById('lang-zh').classList.remove('active');
+                document.getElementById('lang-en').classList.remove('active');
+                document.getElementById(`lang-${savedLang}`).classList.add('active');
+            }
+            
+            // 加载页面数据
+            loadPageData();
+            
+            // 应用翻译
+            applyAllTranslations();
+        });
+        
+        // 添加数据变化监听，实时更新页面
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'narutoSiteData') {
+                loadPageData();
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

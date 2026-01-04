@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naruto Site Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ff6b00;
+            color: #000000;
+        }
+        
+        /* Login Page */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border: 5px solid #000000;
+            box-shadow: 10px 10px 0px #000000;
+            text-align: center;
+        }
+        
+        .login-container h1 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: #ff6b00;
+        }
+        
+        .login-container input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            border: 3px solid #000000;
+        }
+        
+        .login-container button {
+            background-color: #ff6b00;
+            color: #ffffff;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: 3px solid #000000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 5px 5px 0px #000000;
+        }
+        
+        .login-container button:hover {
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 0px #000000;
+        }
+        
+        /* Admin Page */
+        .admin-container {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .admin-header {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 5px solid #000000;
+            box-shadow: 10px 10px 0px #000000;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-header h1 {
+            color: #ff6b00;
+        }
+        
+        .logout-btn {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background-color: #333333;
+        }
+        
+        .editor-section {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 5px solid #000000;
+            box-shadow: 10px 10px 0px #000000;
+            margin-bottom: 20px;
+        }
+        
+        .editor-section h2 {
+            margin-bottom: 20px;
+            color: #ff6b00;
+            font-size: 1.5rem;
+        }
+        
+        .editor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .editor-item {
+            border: 3px solid #000000;
+            padding: 15px;
+        }
+        
+        .editor-item h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .editor-item input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #000000;
+            font-size: 1rem;
+        }
+        
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #000000;
+            margin-bottom: 10px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: #f0f0f0;
+        }
+        
+        .image-preview:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .image-size-hint {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #666666;
+            font-weight: bold;
+        }
+        
+        .image-upload {
+            display: none;
+        }
+        
+        .save-btn {
+            background-color: #ff6b00;
+            color: #ffffff;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: 3px solid #000000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 5px 5px 0px #000000;
+            margin-right: 10px;
+        }
+        
+        .save-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 0px #000000;
+        }
+        
+        .publish-btn {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: 3px solid #000000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 5px 5px 0px #ff6b00;
+        }
+        
+        .publish-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 0px #ff6b00;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border: 3px solid #000000;
+            box-shadow: 10px 10px 0px #000000;
+        }
+        
+        /* 添加按钮样式 */
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: 3px solid #000000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 3px 3px 0px #000000;
+            margin-bottom: 20px;
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 5px 5px 0px #000000;
+        }
+        
+        /* 模块操作栏 */
+        .module-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        /* 删除按钮样式 */
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border: 2px solid #000000;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 2px 2px 0px #000000;
+            margin-left: 10px;
+        }
+        
+        .delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 3px 3px 0px #000000;
+        }
+        
+        /* 用户账户管理样式 */
+        .user-list {
+            margin-top: 20px;
+            border: 3px solid #000000;
+            background-color: #ffffff;
+            box-shadow: 5px 5px 0px #000000;
+        }
+        
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .user-item:last-child {
+            border-bottom: none;
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .user-role {
+            color: #666666;
+            font-size: 0.9rem;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #ffffff;
+            padding: 0;
+            border: 5px solid #000000;
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #ff6b00;
+            color: #ffffff;
+            border-bottom: 3px solid #000000;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .close-btn {
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #000000;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid #000000;
+            font-size: 1rem;
+            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.4);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-top: 2px solid #e0e0e0;
+            gap: 10px;
+        }
+        
+        .cancel-btn {
+            background-color: #9e9e9e;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: 3px solid #000000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cancel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 拖拽相关样式 */
+        .editor-section {
+            transition: all 0.3s ease;
+            cursor: move;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        /* 拖拽时的视觉反馈 */
+        .editor-section.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.7);
+        }
+        
+        /* 拖拽目标位置指示 */
+        .editor-section.drag-over {
+            border-top: 4px dashed #ff6b00;
+            margin-top: 0;
+            padding-top: 0;
+        }
+        
+        /* 拖拽区域样式 */
+        .drag-handle {
+            cursor: move;
+            display: inline-block;
+            margin-right: 10px;
+            color: #666;
+            font-size: 1.2rem;
+        }
+        
+        .drag-handle:hover {
+            color: #ff6b00;
+        }
+        
+        /* 用户头像样式 */
+        .user-info-with-avatar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #000000;
+            background-size: cover;
+            background-position: center;
+            background-color: #f0f0f0;
+            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 头像悬停叠加层 */
+        .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .user-avatar:hover .avatar-overlay {
+            opacity: 1;
+        }
+        
+        .avatar-text {
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+        }
+        
+        /* 用户昵称样式 */
+        .user-nickname {
+            color: #666666;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+        
+        /* 账户设置模态框样式 */
+        .account-modal {
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .account-modal-content {
+            background-color: #ffffff;
+            padding: 0;
+            border: 5px solid #000000;
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        /* 头像上传区域样式 */
+        .avatar-upload-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #000000;
+            background-size: cover;
+            background-position: center;
+            background-color: #f0f0f0;
+            margin: 0 auto 15px;
+            cursor: pointer;
+            box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .avatar-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 7px 7px 0px rgba(0, 0, 0, 0.5);
+        }
+        
+        .avatar-upload-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: 3px solid #000000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+        }
+        
+        .avatar-upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.5);
+        }
+        
+        .avatar-upload-input {
+            display: none;
+        }
+        
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            border: 3px solid #000000;
+            box-shadow: 5px 5px 0px #000000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginContainer">
+            <h1>NARUTO ADMIN</h1>
+            
+            <!-- 用户名输入框 -->
+            <input type="text" id="usernameInput" placeholder="输入用户名" onkeypress="handleEnterKey(event)" />
+            
+            <!-- 密码输入框 -->
+            <input type="password" id="passwordInput" placeholder="输入管理密码" onkeypress="handleEnterKey(event)" />
+            
+            <!-- 快捷方式登录和忘记密码 -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 0.9rem;">
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                    <input type="checkbox" id="rememberMe" />
+                    记住登录
+                </label>
+                <a href="#" onclick="showForgotPasswordModal()" style="color: #ff6b00; text-decoration: none;">忘记密码？</a>
+            </div>
+            
+            <!-- 登录按钮 -->
+            <button onclick="login()">登录</button>
+        </div>
+        
+        <!-- 忘记密码模态框 -->
+        <div class="modal" id="forgotPasswordModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>忘记密码</h3>
+                    <span class="close-btn" onclick="closeForgotPasswordModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p>请联系管理员重置密码。</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="save-btn" onclick="closeForgotPasswordModal()">确定</button>
+                </div>
+            </div>
+        </div>
+    
+    <!-- Admin Page -->
+    <div class="admin-container" id="adminContainer">
+        <div class="admin-header">
+            <h1>NARUTO 网站管理后台</h1>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <!-- 用户头像 -->
+                <div class="user-avatar" id="currentUserAvatar" onclick="console.log('Avatar clicked directly showing modal'); document.getElementById('accountModal').style.display = 'flex'" style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #000; cursor: pointer; background-size: cover; background-position: center; background-color: #f0f0f0;"></div>
+                <button class="logout-btn" onclick="logout()">退出登录</button>
+            </div>
+        </div>
+        
+        <div class="success-message" id="successMessage">保存成功！</div>
+        
+        <!-- 模块化管理区域 -->
+        <div id="modulesContainer"></div>
+        
+        <!-- 用户账户管理功能已移至头像菜单 -->
+        
+        <!-- 添加/编辑用户模态框 -->
+        <div class="modal" id="userModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">添加用户</h3>
+                    <span class="close-btn" onclick="closeUserModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="userId">
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username" placeholder="输入用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" placeholder="输入密码（留空则不修改）">
+                    </div>
+                    <div class="form-group">
+                        <label for="role">角色</label>
+                        <select id="role">
+                            <option value="admin">管理员</option>
+                            <option value="editor">编辑</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-btn" onclick="closeUserModal()">取消</button>
+                    <button class="save-btn" onclick="saveUser()">保存</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 账户设置模态框 -->
+        <div class="account-modal" id="accountModal">
+            <div class="account-modal-content">
+                <div class="modal-header">
+                    <h3>账户设置</h3>
+                    <span class="close-btn" onclick="closeAccountModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="accountUserId">
+                    
+                    <!-- 头像上传区域 -->
+                    <div class="avatar-upload-section">
+                        <div class="avatar-preview" id="accountAvatarPreview" onclick="document.getElementById('accountAvatarInput').click()"></div>
+                        <input type="file" id="accountAvatarInput" class="avatar-upload-input" accept="image/*" onchange="handleAvatarUpload(event)">
+                        <button class="avatar-upload-btn" onclick="document.getElementById('accountAvatarInput').click()">上传头像</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="accountUsername">用户名</label>
+                        <input type="text" id="accountUsername" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="accountNickname">昵称</label>
+                        <input type="text" id="accountNickname" placeholder="输入昵称">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="accountCurrentPassword">当前密码</label>
+                        <input type="password" id="accountCurrentPassword" placeholder="输入当前密码">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="accountNewPassword">新密码</label>
+                        <input type="password" id="accountNewPassword" placeholder="输入新密码（留空则不修改）">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-btn" onclick="closeAccountModal()">取消</button>
+                    <button class="save-btn" onclick="saveAccountSettings()">保存设置</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="save-btn" onclick="saveData()">保存数据</button>
+            <button class="publish-btn" onclick="publishData()">发布更改</button>
+        </div>
+    </div>
+    
+    <script>
+        const ADMIN_PASSWORD = 'admin123';
+        
+        // 处理回车键登录
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                login();
+            }
+        }
+        
+        // 显示忘记密码模态框
+        function showForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+        }
+        
+        // 关闭忘记密码模态框
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+        }
+        
+        // 用户账户数据管理
+        let users = [];
+        
+        // 从localStorage加载用户数据
+        function loadUsers() {
+            const storedUsers = localStorage.getItem('narutoAdminUsers');
+            if (storedUsers) {
+                users = JSON.parse(storedUsers);
+            } else {
+                // 初始化默认用户
+                users = [
+                    { id: 1, username: 'admin', password: 'admin123', role: 'admin', avatar: '', nickname: '管理员' }
+                ];
+                saveUsers();
+            }
+        }
+        
+        // 保存用户数据到localStorage
+        function saveUsers() {
+            localStorage.setItem('narutoAdminUsers', JSON.stringify(users));
+        }
+        
+        // 显示账户设置模态框
+        function showAccountSettings(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                // 设置默认头像
+                const defaultAvatar = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMzAgNDBjLTYuNjI3IDAtMTIgNS4zNzMtMTIgMTIgMCA2LjYyOCA1LjM3MyAxMiAxMiAxMiA2LjYyNyAwIDEyLTUuMzczIDEyLTEyIDAtNi42MjctNS4zNzMtMTItMTItMTJ6bTE1IDEyYzAgMS42NTYtMS4zNCAzLTMgM3MtMy0xLjM0NC0zLTMgMS4zNDMtMyAzLTMgMyAxLjM0NCAzIDMgM3ptLTMyIDBoMzJoMzJ2LTJoLTMydjJ6bS0zMiA0aDMydjJIMTh2LTJ6Ii8+PC9zdmc+';
+                
+                // 填充用户数据
+                document.getElementById('accountUserId').value = user.id;
+                document.getElementById('accountUsername').value = user.username;
+                document.getElementById('accountNickname').value = user.nickname || user.username;
+                document.getElementById('accountCurrentPassword').value = '';
+                document.getElementById('accountNewPassword').value = '';
+                
+                // 设置头像预览
+                const avatarPreview = document.getElementById('accountAvatarPreview');
+                avatarPreview.style.backgroundImage = `url(${user.avatar || defaultAvatar})`;
+                
+                // 显示模态框
+                document.getElementById('accountModal').style.display = 'flex';
+            }
+        }
+        
+        // 更新当前用户头像
+        function updateCurrentUserAvatar() {
+            // 获取当前登录用户（假设始终是admin用户）
+            const currentUser = users.find(u => u.username === 'admin');
+            if (currentUser) {
+                const avatarUrl = currentUser.avatar || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMzAgNDBjLTYuNjI3IDAtMTIgNS4zNzMtMTIgMTIgMCA2LjYyOCA1LjM3MyAxMiAxMiAxMiA2LjYyNyAwIDEyLTUuMzczIDEyLTEyIDAtNi42MjctNS4zNzMtMTItMTItMTJ6bTE1IDEyYzAgMS42NTYtMS4zNCAzLTMgM3MtMy0xLjM0NC0zLTMgMS4zNDMtMyAzLTMgMyAxLjM0NCAzIDMgM3ptLTMyIDBoMzJoMzJ2LTJoLTMydjJ6bS0zMiA0aDMydjJIMTh2LTJ6Ii8+PC9zdmc+';
+                const avatarElement = document.getElementById('currentUserAvatar');
+                if (avatarElement) {
+                    avatarElement.style.backgroundImage = `url(${avatarUrl})`;
+                }
+            }
+        }
+        
+        // 显示账户设置模态框
+        function showAccountSettingsModal() {
+            console.log('showAccountSettingsModal function called');
+            
+            // 检查users数组是否有数据
+            console.log('users array:', users);
+            
+            // 确保users数组已加载
+            if (users.length === 0) {
+                console.log('users array is empty, loading users...');
+                loadUsers();
+                console.log('users after loading:', users);
+            }
+            
+            // 获取当前登录用户（假设始终是admin用户）
+            const currentUser = users.find(u => u.username === 'admin');
+            console.log('currentUser:', currentUser);
+            
+            if (currentUser) {
+                console.log('Calling showAccountSettings with user id:', currentUser.id);
+                showAccountSettings(currentUser.id);
+            } else {
+                console.log('No admin user found');
+                alert('无法找到管理员用户');
+            }
+        }
+        
+        // 显示账户设置模态框
+        function showAccountSettings(userId) {
+            console.log('showAccountSettings function called with id:', userId);
+            
+            const user = users.find(u => u.id === userId);
+            console.log('Found user:', user);
+            
+            if (user) {
+                console.log('Found user, proceeding to show modal');
+                // 设置默认头像
+                const defaultAvatar = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMzAgNDBjLTYuNjI3IDAtMTIgNS4zNzMtMTIgMTIgMCA2LjYyOCA1LjM3MyAxMiAxMiAxMiA2LjYyNyAwIDEyLTUuMzczIDEyLTEyIDAtNi42MjctNS4zNzMtMTItMTItMTJ6bTE1IDEyYzAgMS42NTYtMS4zNCAzLTMgM3MtMy0xLjM0NC0zLTMgMS4zNDMtMyAzLTMgMyAxLjM0NCAzIDMgM3ptLTMyIDBoMzJoMzJ2LTJoLTMydjJ6bS0zMiA0aDMydjJIMTh2LTJ6Ii8+PC9zdmc+';
+                
+                // 填充用户数据
+                document.getElementById('accountUserId').value = user.id;
+                document.getElementById('accountUsername').value = user.username;
+                document.getElementById('accountNickname').value = user.nickname || user.username;
+                document.getElementById('accountCurrentPassword').value = '';
+                document.getElementById('accountNewPassword').value = '';
+                
+                // 设置头像预览
+                const avatarPreview = document.getElementById('accountAvatarPreview');
+                avatarPreview.style.backgroundImage = `url(${user.avatar || defaultAvatar})`;
+                
+                // 检查模态框元素是否存在
+                const accountModal = document.getElementById('accountModal');
+                console.log('accountModal element:', accountModal);
+                
+                if (accountModal) {
+                    console.log('Showing accountModal');
+                    // 显示模态框
+                    accountModal.style.display = 'flex';
+                    console.log('accountModal display style after setting:', accountModal.style.display);
+                } else {
+                    console.log('accountModal element not found');
+                    alert('无法找到账户设置模态框元素');
+                }
+            } else {
+                console.log('User not found with id:', userId);
+                alert('无法找到用户');
+            }
+        }
+        
+        // 显示添加用户模态框
+        function showAddUserModal() {
+            document.getElementById('modalTitle').textContent = '添加用户';
+            document.getElementById('userId').value = '';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('role').value = 'admin';
+            document.getElementById('userModal').style.display = 'flex';
+        }
+        
+        // 显示编辑用户模态框
+        function showEditUserModal(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                document.getElementById('modalTitle').textContent = '编辑用户';
+                document.getElementById('userId').value = user.id;
+                document.getElementById('username').value = user.username;
+                document.getElementById('password').value = '';
+                document.getElementById('role').value = user.role;
+                document.getElementById('userModal').style.display = 'flex';
+            }
+        }
+        
+        // 关闭用户模态框
+        function closeUserModal() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+        
+        // 保存用户（添加或编辑）
+        function saveUser() {
+            const userId = parseInt(document.getElementById('userId').value);
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            
+            // 表单验证
+            if (!username) {
+                alert('请输入用户名');
+                return;
+            }
+            
+            if (userId) {
+                // 编辑现有用户
+                const userIndex = users.findIndex(u => u.id === userId);
+                if (userIndex !== -1) {
+                    users[userIndex].username = username;
+                    if (password) {
+                        users[userIndex].password = password;
+                    }
+                    users[userIndex].role = role;
+                    alert('用户编辑成功！');
+                }
+            } else {
+                // 添加新用户
+                // 检查用户名是否已存在
+                if (users.some(u => u.username === username)) {
+                    alert('用户名已存在');
+                    return;
+                }
+                
+                if (!password) {
+                    alert('请输入密码');
+                    return;
+                }
+                
+                // 生成新用户ID
+                const maxId = users.length > 0 ? Math.max(...users.map(u => u.id)) : 0;
+                const newUser = {
+                    id: maxId + 1,
+                    username: username,
+                    password: password,
+                    role: role,
+                    avatar: '',
+                    nickname: username
+                };
+                
+                users.push(newUser);
+                alert('用户添加成功！');
+            }
+            
+            // 保存用户数据
+            saveUsers();
+            
+            // 关闭模态框
+            closeUserModal();
+        }
+        
+        // 删除用户
+        function deleteUser(userId) {
+            if (confirm('确定要删除这个用户吗？')) {
+                users = users.filter(u => u.id !== userId);
+                saveUsers();
+                alert('用户删除成功！');
+            }
+        }
+        
+        // 关闭账户设置模态框
+        function closeAccountModal() {
+            document.getElementById('accountModal').style.display = 'none';
+        }
+        
+        // 处理头像上传
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarPreview = document.getElementById('accountAvatarPreview');
+                    avatarPreview.style.backgroundImage = `url(${e.target.result})`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // 保存账户设置
+        function saveAccountSettings() {
+            const userId = parseInt(document.getElementById('accountUserId').value);
+            const nickname = document.getElementById('accountNickname').value.trim();
+            const currentPassword = document.getElementById('accountCurrentPassword').value;
+            const newPassword = document.getElementById('accountNewPassword').value;
+            const avatarPreview = document.getElementById('accountAvatarPreview');
+            
+            // 获取当前背景图片URL
+            const backgroundImage = avatarPreview.style.backgroundImage;
+            let avatar = '';
+            if (backgroundImage) {
+                // 提取URL
+                avatar = backgroundImage.replace(/^url\(['"]?|['"]?\)$/g, '');
+            }
+            
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                // 验证当前密码（如果修改密码）
+                if (newPassword && currentPassword !== user.password) {
+                    alert('当前密码错误！');
+                    return;
+                }
+                
+                // 更新用户数据
+                user.nickname = nickname || user.username;
+                user.avatar = avatar;
+                if (newPassword) {
+                    user.password = newPassword;
+                }
+                
+                // 保存数据
+                saveUsers();
+                
+                // 更新当前用户头像
+                updateCurrentUserAvatar();
+                
+                // 关闭模态框
+                closeAccountModal();
+                
+                alert('账户设置保存成功！');
+            }
+        }
+        
+        // 更新登录功能，使用用户列表进行验证
+        const initialData = {
+            images: {
+                topBanner: '',
+                news1: '',
+                news2: '',
+                merch1: '',
+                merch2: '',
+                merch3: '',
+                merch4: '',
+                merch5: '',
+                merch6: '',
+                merch7: '',
+                merch8: '',
+                rank1: '',
+                rank2: '',
+                rank3: '',
+                comics: '',
+                anime: '',
+                story1: '',
+                story2: '',
+                bottomIllustration: '',
+                ad1: '',
+                ad2: '',
+                ad3: ''
+            },
+            texts: {
+                title: 'NARUTO OFFICIAL SITE',
+                newsTitle: 'NEWS',
+                merchTitle: 'MERCH',
+                rankingTitle: 'WEEKLY RANKING',
+                comicsTitle: 'COMICS',
+                animeTitle: 'ANIME',
+                story1Title: 'NARUTO STORY',
+                story1Year: '1999-2014',
+                story2Title: 'NARUTO SHIPPUDEN'
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            let siteData = localStorage.getItem('narutoSiteData');
+            // 检查是否存在可编辑元素数据
+            const editableElements = localStorage.getItem('narutoEditableElements');
+            
+            if (!siteData) {
+                // 如果没有siteData，检查是否有可编辑元素数据
+                if (editableElements) {
+                    // 使用可编辑元素数据作为初始数据
+                    localStorage.setItem('narutoSiteData', editableElements);
+                } else {
+                    // 否则使用硬编码的初始数据
+                    localStorage.setItem('narutoSiteData', JSON.stringify(initialData));
+                }
+            } else {
+                try {
+                    const parsedData = JSON.parse(siteData);
+                    // 检查数据格式是否正确
+                    if (!parsedData.images || !parsedData.texts) {
+                        throw new Error('数据格式不正确');
+                    }
+                } catch (error) {
+                    console.error('localStorage数据格式错误，重置为初始数据:', error);
+                    if (editableElements) {
+                        localStorage.setItem('narutoSiteData', editableElements);
+                    } else {
+                        localStorage.setItem('narutoSiteData', JSON.stringify(initialData));
+                    }
+                }
+            }
+            
+            // 自动填充记住的用户名
+            const rememberedUsername = localStorage.getItem('narutoAdminRememberedUsername');
+            if (rememberedUsername) {
+                document.getElementById('usernameInput').value = rememberedUsername;
+                document.getElementById('rememberMe').checked = true;
+            }
+        });
+        
+        function login() {
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+            
+            if (!username) {
+                alert('请输入用户名');
+                return;
+            }
+            
+            // 从localStorage加载用户数据
+            loadUsers();
+            
+            // 查找匹配的用户
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                // 检查是否需要记住登录
+                if (document.getElementById('rememberMe').checked) {
+                    // 保存用户名到localStorage
+                    localStorage.setItem('narutoAdminRememberedUsername', username);
+                } else {
+                    // 清除记住的用户名
+                    localStorage.removeItem('narutoAdminRememberedUsername');
+                }
+                
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('adminContainer').style.display = 'block';
+                loadEditorData();
+                // 更新当前用户头像
+                updateCurrentUserAvatar();
+            } else {
+                alert('用户名或密码错误！');
+            }
+        }
+        
+        function logout() {
+            document.getElementById('adminContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('passwordInput').value = '';
+        }
+        
+        function loadEditorData() {
+            // 获取页面扫描的可编辑元素
+            const editableElements = JSON.parse(localStorage.getItem('narutoEditableElements')) || {
+                images: {},
+                texts: {}
+            };
+            
+            // 获取现有数据
+            const existingData = JSON.parse(localStorage.getItem('narutoSiteData')) || {
+                images: {},
+                texts: {}
+            };
+            
+            // 合并数据，确保新元素被添加
+            const mergedData = {
+                images: { ...editableElements.images, ...existingData.images },
+                texts: { ...editableElements.texts, ...existingData.texts }
+            };
+            
+            // 保存合并后的数据
+            localStorage.setItem('narutoSiteData', JSON.stringify(mergedData));
+            
+            // 图片尺寸建议
+            const imageSizes = {
+                topBanner: '建议尺寸：1920x600',
+                product1: '建议尺寸：400x400（1:1）',
+                product2: '建议尺寸：400x400（1:1）',
+                product3: '建议尺寸：400x400（1:1）',
+                extra1: '建议尺寸：1200x600',
+                news1: '建议尺寸：800x600',
+                news2: '建议尺寸：800x600',
+                merch1: '建议尺寸：600x800',
+                merch2: '建议尺寸：600x800',
+                merch3: '建议尺寸：600x800',
+                merch4: '建议尺寸：600x800',
+                merch5: '建议尺寸：600x800',
+                merch6: '建议尺寸：400x400',
+                merch7: '建议尺寸：400x400',
+                merch8: '建议尺寸：400x400',
+                rank1: '建议尺寸：600x400',
+                rank2: '建议尺寸：600x400',
+                rank3: '建议尺寸：600x400',
+                comics: '建议尺寸：900x600',
+                anime: '建议尺寸：900x600',
+                story1: '建议尺寸：800x600',
+                story2: '建议尺寸：800x600',
+                bottomIllustration: '建议尺寸：1200x800',
+                ad1: '建议尺寸：600x300',
+                ad2: '建议尺寸：600x300',
+                ad3: '建议尺寸：600x300'
+            };
+            
+            // 定义模块结构
+            const modules = [
+                {
+                    name: '顶部横幅',
+                    key: 'banner',
+                    dynamicImages: 'topBanner', // 支持动态增加的图片前缀
+                    staticImages: [],
+                    texts: ['title']
+                },
+                {
+                    name: '子导航栏',
+                    key: 'subNav',
+                    images: [],
+                    texts: ['navItem1', 'navItem2', 'navItem3', 'navItem4', 'navItem5', 'navItem6']
+                },
+                {
+                    name: '产品信息',
+                    key: 'products',
+                    dynamicImages: 'product', // 支持动态增加的产品图片
+                    staticImages: [],
+                    texts: ['productTitle', 'product1Name', 'product1Config', 'product1OriginalPrice', 'product1DiscountPrice', 'product1DiscountTag', 
+                            'product2Name', 'product2Config', 'product2OriginalPrice', 'product2DiscountPrice', 'product2DiscountTag',
+                            'product3Name', 'product3Config', 'product3OriginalPrice', 'product3DiscountPrice', 'product3DiscountTag']
+                },
+                {
+                    name: '额外图片',
+                    key: 'extraImage',
+                    dynamicImages: 'extra', // 支持动态增加的额外图片
+                    staticImages: [],
+                    texts: []
+                },
+                {
+                    name: '新闻',
+                    key: 'news',
+                    dynamicImages: 'news', // 支持动态增加的新闻图片
+                    staticImages: [],
+                    texts: ['newsTitle']
+                },
+                {
+                    name: '商品区1',
+                    key: 'merch1',
+                    dynamicImages: 'merch', // 支持动态增加的商品图片
+                    staticImages: [],
+                    texts: []
+                },
+                {
+                    name: '每周排名',
+                    key: 'ranking',
+                    dynamicImages: 'rank', // 支持动态增加的排名图片
+                    staticImages: [],
+                    texts: ['rankingTitle']
+                },
+                {
+                    name: '商品区2',
+                    key: 'merch2',
+                    images: ['merch4', 'merch5', 'merch6', 'merch7', 'merch8'],
+                    texts: ['merchTitle']
+                },
+                {
+                    name: '漫画与动画',
+                    key: 'comicsAnime',
+                    images: ['comics', 'anime'],
+                    texts: ['comicsTitle', 'animeTitle']
+                },
+                {
+                    name: '故事',
+                    key: 'story',
+                    images: ['story1', 'story2'],
+                    texts: ['story1Title', 'story1Year', 'story2Title']
+                },
+                {
+                    name: '底部内容',
+                    key: 'bottom',
+                    dynamicImages: 'ad', // 支持动态增加的广告图片
+                    staticImages: ['bottomIllustration'],
+                    texts: []
+                }
+            ];
+            
+            // 生成模块化编辑器
+            const modulesContainer = document.getElementById('modulesContainer');
+            modulesContainer.innerHTML = '';
+            
+            // 获取保存的模块顺序
+            const savedOrder = JSON.parse(localStorage.getItem('narutoModuleOrder')) || [];
+            
+            // 创建模块映射，方便根据key查找模块
+            const moduleMap = {};
+            modules.forEach(module => {
+                moduleMap[module.key] = module;
+            });
+            
+            // 根据保存的顺序和原始顺序创建显示顺序
+            const displayOrder = [];
+            const usedKeys = new Set();
+            
+            // 首先添加保存顺序中的模块
+            savedOrder.forEach(key => {
+                if (moduleMap[key]) {
+                    displayOrder.push(moduleMap[key]);
+                    usedKeys.add(key);
+                }
+            });
+            
+            // 然后添加剩余模块
+            modules.forEach(module => {
+                if (!usedKeys.has(module.key)) {
+                    displayOrder.push(module);
+                }
+            });
+            
+            // 生成模块编辑器
+            displayOrder.forEach(module => {
+                // 创建模块容器
+                const moduleSection = document.createElement('div');
+                moduleSection.className = 'editor-section';
+                moduleSection.dataset.moduleKey = module.key;
+                moduleSection.draggable = true;
+                
+                // 模块标题和操作栏
+                const moduleHeader = document.createElement('div');
+                moduleHeader.className = 'module-actions';
+                moduleHeader.innerHTML = `<h2>${module.name}</h2>`;
+                
+                // 为支持动态图片的模块添加"添加图片"按钮
+                if (module.dynamicImages) {
+                    const addButton = document.createElement('button');
+                    addButton.className = 'add-btn';
+                    addButton.textContent = '添加图片';
+                    addButton.onclick = () => addDynamicImage(module.dynamicImages);
+                    moduleHeader.appendChild(addButton);
+                }
+                
+                moduleSection.appendChild(moduleHeader);
+                
+                // 创建编辑网格
+                const editorGrid = document.createElement('div');
+                editorGrid.className = 'editor-grid';
+                
+                // 处理支持动态图片的模块
+                if (module.dynamicImages) {
+                    // 收集该模块的所有动态图片
+                    const dynamicImageKeys = [];
+                    for (const [key, value] of Object.entries(mergedData.images)) {
+                        if (key.startsWith(module.dynamicImages)) {
+                            dynamicImageKeys.push(key);
+                        }
+                    }
+                    
+                    // 按数字顺序排序
+                    dynamicImageKeys.sort((a, b) => {
+                        const numA = parseInt(a.replace(module.dynamicImages, '')) || 0;
+                        const numB = parseInt(b.replace(module.dynamicImages, '')) || 0;
+                        return numA - numB;
+                    });
+                    
+                    // 添加动态图片编辑项
+                    dynamicImageKeys.forEach(imageKey => {
+                        const value = mergedData.images[imageKey];
+                        const editorItem = document.createElement('div');
+                        editorItem.className = 'editor-item';
+                        editorItem.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <h3>${imageKey.replace(/([A-Z])/g, ' $1').trim()}</h3>
+                                <button class="delete-btn" onclick="deleteDynamicImage('${imageKey}')">删除</button>
+                            </div>
+                            <p class="image-size-hint">${imageSizes[imageKey] || imageSizes[module.dynamicImages] || '建议尺寸：自适应'}</p>
+                            <div class="image-preview" id="preview-${imageKey}" onclick="document.getElementById('url-${imageKey}').focus()" style="background-image: url(${value || ''})"></div>
+                            <input type="url" id="url-${imageKey}" value="${value || ''}" placeholder="输入图片URL地址" onchange="handleImageUrlChange('${imageKey}', this.value)" />
+                        `;
+                        editorGrid.appendChild(editorItem);
+                    });
+                }
+                
+                // 处理静态图片
+                (module.images || []).forEach(imageKey => {
+                    if (mergedData.images.hasOwnProperty(imageKey)) {
+                        const value = mergedData.images[imageKey];
+                        const editorItem = document.createElement('div');
+                        editorItem.className = 'editor-item';
+                        editorItem.innerHTML = `
+                            <h3>${imageKey.replace(/([A-Z])/g, ' $1').trim()}</h3>
+                            <p class="image-size-hint">${imageSizes[imageKey] || '建议尺寸：自适应'}</p>
+                            <div class="image-preview" id="preview-${imageKey}" onclick="document.getElementById('url-${imageKey}').focus()" style="background-image: url(${value || ''})"></div>
+                            <input type="url" id="url-${imageKey}" value="${value || ''}" placeholder="输入图片URL地址" onchange="handleImageUrlChange('${imageKey}', this.value)" />
+                        `;
+                        editorGrid.appendChild(editorItem);
+                    }
+                });
+                
+                // 处理静态图片（新属性名）
+                (module.staticImages || []).forEach(imageKey => {
+                    if (mergedData.images.hasOwnProperty(imageKey)) {
+                        const value = mergedData.images[imageKey];
+                        const editorItem = document.createElement('div');
+                        editorItem.className = 'editor-item';
+                        editorItem.innerHTML = `
+                            <h3>${imageKey.replace(/([A-Z])/g, ' $1').trim()}</h3>
+                            <p class="image-size-hint">${imageSizes[imageKey] || '建议尺寸：自适应'}</p>
+                            <div class="image-preview" id="preview-${imageKey}" onclick="document.getElementById('url-${imageKey}').focus()" style="background-image: url(${value || ''})"></div>
+                            <input type="url" id="url-${imageKey}" value="${value || ''}" placeholder="输入图片URL地址" onchange="handleImageUrlChange('${imageKey}', this.value)" />
+                        `;
+                        editorGrid.appendChild(editorItem);
+                    }
+                });
+                
+                // 添加文案编辑项
+                module.texts.forEach(textKey => {
+                    if (mergedData.texts.hasOwnProperty(textKey)) {
+                        const value = mergedData.texts[textKey];
+                        
+                        // 处理多语言数据结构
+                        const zhValue = typeof value === 'object' && value !== null ? value['zh'] || '' : value;
+                        const enValue = typeof value === 'object' && value !== null ? value['en'] || '' : '';
+                        
+                        const editorItem = document.createElement('div');
+                        editorItem.className = 'editor-item';
+                        editorItem.innerHTML = `
+                            <h3>${textKey.replace(/([A-Z])/g, ' $1').trim()}</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #ff6b00;">中文</label>
+                                    <input type="text" id="text-${textKey}-zh" value="${zhValue}" onchange="updateTextData('${textKey}', 'zh', this.value)" />
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #ff6b00;">English</label>
+                                    <input type="text" id="text-${textKey}-en" value="${enValue}" onchange="updateTextData('${textKey}', 'en', this.value)" />
+                                </div>
+                            </div>
+                        `;
+                        editorGrid.appendChild(editorItem);
+                    }
+                });
+                
+                // 无论模块是否有内容，都添加到容器中，以保持保存的顺序
+                moduleSection.appendChild(editorGrid);
+                modulesContainer.appendChild(moduleSection);
+            });
+            
+            // 初始化拖拽功能
+            initDragAndDrop();
+
+        }
+        
+        // 添加动态图片
+        function addDynamicImage(prefix) {
+            const data = JSON.parse(localStorage.getItem('narutoSiteData'));
+            
+            // 查找现有最大索引
+            let maxIndex = 0;
+            for (const [key] of Object.entries(data.images)) {
+                if (key.startsWith(prefix)) {
+                    // 处理带有连字符的键名，如 topBanner-1, topBanner-2
+                    const parts = key.split('-');
+                    if (parts.length > 1) {
+                        // 获取最后一部分作为索引
+                        const index = parseInt(parts[parts.length - 1]) || 0;
+                        if (index > maxIndex) {
+                            maxIndex = index;
+                        }
+                    } else {
+                        // 处理没有连字符的键名
+                        const index = parseInt(key.replace(prefix, '')) || 0;
+                        if (index > maxIndex) {
+                            maxIndex = index;
+                        }
+                    }
+                }
+            }
+            
+            // 创建新图片键
+            const newKey = `${prefix}-${maxIndex + 1}`;
+            data.images[newKey] = '';
+            
+            // 保存数据
+            localStorage.setItem('narutoSiteData', JSON.stringify(data));
+            
+            // 重新加载编辑器
+            loadEditorData();
+        }
+        
+        // 删除动态图片
+        function deleteDynamicImage(imageKey) {
+            if (confirm('确定要删除这个图片吗？')) {
+                const data = JSON.parse(localStorage.getItem('narutoSiteData'));
+                
+                // 删除图片数据
+                delete data.images[imageKey];
+                
+                // 保存数据
+                localStorage.setItem('narutoSiteData', JSON.stringify(data));
+                
+                // 重新加载编辑器
+                loadEditorData();
+            }
+        }
+        
+        function handleImageUrlChange(imageKey, url) {
+            if (url) {
+                // 更新预览图
+                const preview = document.getElementById(`preview-${imageKey}`);
+                preview.style.backgroundImage = `url(${url})`;
+                
+                // 保存到localStorage
+                const data = JSON.parse(localStorage.getItem('narutoSiteData'));
+                data.images[imageKey] = url;
+                localStorage.setItem('narutoSiteData', JSON.stringify(data));
+            }
+        }
+        
+        function updateTextData(textKey, lang, value) {
+            const data = JSON.parse(localStorage.getItem('narutoSiteData'));
+            
+            // 如果当前不是多语言数据结构，转换为多语言数据结构
+            if (typeof data.texts[textKey] !== 'object' || data.texts[textKey] === null) {
+                // 保存原有值为中文
+                const originalValue = data.texts[textKey] || '';
+                data.texts[textKey] = {
+                    zh: originalValue,
+                    en: ''
+                };
+            }
+            
+            // 更新指定语言的值
+            data.texts[textKey][lang] = value;
+            localStorage.setItem('narutoSiteData', JSON.stringify(data));
+        }
+        
+        function saveData() {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+        
+        function publishData() {
+            // 确保数据已保存
+            const data = JSON.parse(localStorage.getItem('narutoSiteData'));
+            localStorage.setItem('narutoSiteData', JSON.stringify(data));
+            
+            saveData();
+            alert('更改已发布！请刷新网站页面查看最新更改。');
+        }
+        
+        // 拖拽功能实现
+        
+        // 保存模块顺序到localStorage
+        function saveModuleOrder(order) {
+            localStorage.setItem('narutoModuleOrder', JSON.stringify(order));
+            console.log('模块顺序已保存:', order);
+        }
+        
+        // 获取当前模块顺序
+        function getCurrentModuleOrder() {
+            const modulesContainer = document.getElementById('modulesContainer');
+            const sections = modulesContainer.querySelectorAll('.editor-section');
+            return Array.from(sections).map(section => section.dataset.moduleKey);
+        }
+        
+        // 拖拽开始事件
+        function dragStart(e) {
+            this.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', this.dataset.moduleKey);
+        }
+        
+        // 拖拽结束事件
+        function dragEnd() {
+            this.classList.remove('dragging');
+            
+            // 移除所有drag-over类
+            document.querySelectorAll('.editor-section').forEach(section => {
+                section.classList.remove('drag-over');
+            });
+            
+            // 保存新的模块顺序
+            saveModuleOrder(getCurrentModuleOrder());
+        }
+        
+        // 拖拽经过事件
+        function dragOver(e) {
+            e.preventDefault();
+            const dragging = document.querySelector('.dragging');
+            if (!dragging) return;
+            
+            const sections = Array.from(document.querySelectorAll('.editor-section'));
+            const currentSection = this;
+            
+            // 避免在当前拖拽元素上添加drag-over类
+            if (currentSection === dragging) return;
+            
+            // 计算位置，决定是在上方还是下方插入
+            const afterElement = getDragAfterElement(currentSection, e.clientY);
+            
+            // 移除所有drag-over类
+            sections.forEach(section => {
+                section.classList.remove('drag-over');
+            });
+            
+            if (afterElement === null) {
+                currentSection.classList.add('drag-over');
+            } else {
+                afterElement.classList.add('drag-over');
+            }
+        }
+        
+        // 拖拽离开事件
+        function dragLeave() {
+            this.classList.remove('drag-over');
+        }
+        
+        // 拖拽放置事件
+        function drop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            const modulesContainer = document.getElementById('modulesContainer');
+            const dragging = document.querySelector('.dragging');
+            if (!dragging) return;
+            
+            const dragKey = e.dataTransfer.getData('text/plain');
+            const currentSection = this;
+            
+            // 计算位置，决定是在上方还是下方插入
+            const afterElement = getDragAfterElement(currentSection, e.clientY);
+            
+            if (afterElement === null) {
+                modulesContainer.appendChild(dragging);
+            } else {
+                modulesContainer.insertBefore(dragging, afterElement);
+            }
+            
+            // 保存新的模块顺序
+            saveModuleOrder(getCurrentModuleOrder());
+        }
+        
+        // 计算拖拽元素应该插入到哪个元素之后
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.parentElement.querySelectorAll('.editor-section:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+        
+        // 拖拽过程事件，控制滚动
+        function drag(e) {
+            // 阻止默认滚动行为
+            e.preventDefault();
+        }
+        
+        // 初始化拖拽功能
+        function initDragAndDrop() {
+            const sections = document.querySelectorAll('.editor-section');
+            
+            sections.forEach(section => {
+                // 添加拖拽属性
+                section.draggable = true;
+                
+                // 添加事件监听器
+                section.addEventListener('dragstart', dragStart);
+                section.addEventListener('drag', drag);
+                section.addEventListener('dragend', dragEnd);
+                section.addEventListener('dragover', dragOver);
+                section.addEventListener('dragleave', dragLeave);
+                section.addEventListener('drop', drop);
+            });
+            
+            // 为整个文档添加drag事件监听器，防止拖拽到页面边缘时滚动
+            document.addEventListener('drag', function(e) {
+                e.preventDefault();
+            });
+        }
+    </script>
+</body>
+</html>
