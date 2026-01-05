@@ -1,515 +1,492 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NARUTO OFFICIAL SITE</title>
+    <title>我的设计宇宙</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 顶部横幅 -->
-    <header class="top-banner" id="top">
-        <!-- 语言切换 -->
-        <div class="language-switcher">
-            <button id="lang-zh" class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
-            <button id="lang-en" class="lang-btn" onclick="switchLanguage('en')">EN</button>
-        </div>
-        
-        <!-- 左切换按钮 -->
-        <button class="banner-control banner-control-left" id="bannerPrev" aria-label="Previous Slide">
-            <span class="control-icon">&lt;</span>
-        </button>
-        
-        <div class="banner-container">
-            <!-- 横幅图片将通过JavaScript动态生成 -->
-            <img src="kv.png" alt="Naruto Banner" class="top-banner-image active" id="image-topBanner-1">
-        </div>
-        
-        <!-- 右切换按钮 -->
-        <button class="banner-control banner-control-right" id="bannerNext" aria-label="Next Slide">
-            <span class="control-icon">&gt;</span>
-        </button>
-        
-        <!-- 轮播图指示器将通过JavaScript动态生成 -->
-        <div class="carousel-indicators">
-            <button class="indicator active" data-slide="0" title="Slide 1"></button>
-        </div>
-    </header>
-
-    <!-- 子导航栏 -->
-    <nav class="sub-nav">
-        <ul class="sub-nav-list">
-            <li class="sub-nav-item"><a href="#top" class="sub-nav-link" id="text-navItem1">首页</a></li>
-            <li class="sub-nav-item"><a href="#news" class="sub-nav-link" id="text-navItem2">新闻</a></li>
-            <li class="sub-nav-item"><a href="#merch" class="sub-nav-link" id="text-navItem3">商品</a></li>
-            <li class="sub-nav-item"><a href="#ranking" class="sub-nav-link" id="text-navItem4">排名</a></li>
-            <li class="sub-nav-item"><a href="#anime" class="sub-nav-link" id="text-navItem5">动漫</a></li>
-            <li class="sub-nav-item"><a href="#story" class="sub-nav-link" id="text-navItem6">故事</a></li>
+    <!-- 浮动导航点 -->
+    <nav class="floating-nav">
+        <ul class="nav-dots">
+            <li class="nav-dot active" data-target="hero"><a href="#hero" class="dot-link" title="首页"></a></li>
+            <li class="nav-dot" data-target="showcase"><a href="#showcase" class="dot-link" title="作品展示"></a></li>
+            <li class="nav-dot" data-target="about"><a href="#about" class="dot-link" title="关于我"></a></li>
+            <li class="nav-dot" data-target="skills"><a href="#skills" class="dot-link" title="专业技能"></a></li>
+            <li class="nav-dot" data-target="contact"><a href="#contact" class="dot-link" title="联系方式"></a></li>
         </ul>
     </nav>
 
-    <!-- 主要内容 -->
-    <main class="main-content">
-        <!-- 产品信息栏 -->
-        <section class="product-section">
-            <div class="section-header">
-                <h2 class="section-title" id="text-productTitle">产品信息</h2>
+    <!-- 英雄区域 -->
+    <section id="hero" class="hero">
+        <!-- Three.js Canvas -->
+        <canvas id="webgl"></canvas>
+        <!-- 首页横幅 -->
+        <div class="hero-banner" id="heroBanner"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="title-line">设计无界</span>
+                    <span class="title-line">创意无限</span>
+                </h1>
+                <p class="hero-subtitle">突破常规的设计之旅</p>
             </div>
-            <div class="product-grid">
-                <!-- 产品1 -->
-                <div class="product-item">
-                    <div class="product-image-container">
-                        <div class="image-placeholder product-image" id="image-product1"></div>
+            <a href="#showcase" class="hero-cta">
+                <span>探索作品</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14M19 12l-7 7-7-7"/>
+                </svg>
+            </a>
+            <!-- 右侧顶部边缘文案 -->
+            <div class="edge-text-right">
+                <div>
+                    <p>突破常规</p>
+                    <p>创意表达</p>
+                    <p>设计美学</p>
+                </div>
+            </div>
+            <!-- 右侧底部边缘文案 -->
+            <div class="edge-text-bottom">
+                <div>
+                    <p>视觉艺术</p>
+                    <p>创新思维</p>
+                    <p>数字体验</p>
+                </div>
+            </div>
+        </div>
+        <div class="hero-shape shape-1"></div>
+        <div class="hero-shape shape-2"></div>
+        <div class="hero-shape shape-3"></div>
+    </section>
+
+    <!-- 作品展示区域 -->
+    <section id="showcase" class="showcase">
+        <div class="showcase-header">
+            <h2 class="section-heading">我的设计作品</h2>
+            <p class="section-subheading">突破常规的创意表达</p>
+        </div>
+        
+        <div class="works-container">
+            <!-- 大作品项 -->
+            <div class="work-item large work-1">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="品牌设计">
                     </div>
-                    <div class="product-info">
-                        <h3 class="product-name" id="text-product1Name">产品名称</h3>
-                        <p class="product-config" id="text-product1Config">产品配置</p>
-                        <div class="product-price">
-                            <span class="original-price" id="text-product1OriginalPrice">¥999</span>
-                            <span class="discount-price" id="text-product1DiscountPrice">¥699</span>
-                            <span class="discount-tag" id="text-product1DiscountTag">限时折扣</span>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">品牌设计</h3>
+                            <p class="work-category">平面设计</p>
                         </div>
                     </div>
                 </div>
-                <!-- 产品2 -->
-                <div class="product-item">
-                    <div class="product-image-container">
-                        <div class="image-placeholder product-image" id="image-product2"></div>
+            </div>
+            
+            <!-- 中等作品项 -->
+            <div class="work-item medium work-2">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1607083206956-353a1427852f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="UI/UX设计">
                     </div>
-                    <div class="product-info">
-                        <h3 class="product-name" id="text-product2Name">产品名称</h3>
-                        <p class="product-config" id="text-product2Config">产品配置</p>
-                        <div class="product-price">
-                            <span class="original-price" id="text-product2OriginalPrice">¥899</span>
-                            <span class="discount-price" id="text-product2DiscountPrice">¥599</span>
-                            <span class="discount-tag" id="text-product2DiscountTag">限时折扣</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- 产品3 -->
-                <div class="product-item">
-                    <div class="product-image-container">
-                        <div class="image-placeholder product-image" id="image-product3"></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name" id="text-product3Name">产品名称</h3>
-                        <p class="product-config" id="text-product3Config">产品配置</p>
-                        <div class="product-price">
-                            <span class="original-price" id="text-product3OriginalPrice">¥799</span>
-                            <span class="discount-price" id="text-product3DiscountPrice">¥499</span>
-                            <span class="discount-tag" id="text-product3DiscountTag">限时折扣</span>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">UI/UX设计</h3>
+                            <p class="work-category">数字设计</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- 额外图片部分 -->
-        <section class="extra-image-section">
-            <div class="image-placeholder extra-image" id="image-extra1" style="background-image: url(https://cdn.shopify.com/s/files/1/0522/3320/7988/files/slp1_a6553d0a-1084-4704-88c8-9d2af342e299.png?v=1767170716); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
-        </section>
-    
-        <!-- NEWS部分 -->
-        <section class="news-section" id="news">
-            <div class="section-header">
-                <h2 class="section-title" id="text-newsTitle">NEWS</h2>
+            
+            <!-- 小作品项 -->
+            <div class="work-item small work-3">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80" alt="包装设计">
+                    </div>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">包装设计</h3>
+                            <p class="work-category">产品设计</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 小作品项 -->
+            <div class="work-item small work-4">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="网站设计">
+                    </div>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">网站设计</h3>
+                            <p class="work-category">网页设计</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中等作品项 -->
+            <div class="work-item medium work-5">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="插画设计">
+                    </div>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">插画设计</h3>
+                            <p class="work-category">创意设计</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 大作品项 -->
+            <div class="work-item large work-6">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1563453270858-f91240401a3d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="3D设计">
+                    </div>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">3D设计</h3>
+                            <p class="work-category">立体设计</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            </div>
-            <div class="news-grid">
-                <div class="news-item">
-                    <div class="image-placeholder news-image news1-image" id="image-news1"></div>
+    <!-- 关于我区域 -->
+    <section id="about" class="about">
+        <div class="about-container">
+            <div class="about-image">
+                <div class="image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="关于我">
                 </div>
-                <div class="news-item">
-                    <div class="image-placeholder news-image news2-image" id="image-news2"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-heading">关于我</h2>
+                    <p class="about-paragraph">我是一位充满激情的设计师，专注于创造独特、有影响力的设计作品。我相信设计不仅仅是视觉上的美观，更是解决问题和传达情感的强大工具。</p>
+                    <p class="about-paragraph">我的设计理念是将创新与简约相结合，突破常规，创造出令人难忘的设计体验。我不断探索新的设计技术和趋势，以保持作品的新鲜感和前瞻性。</p>
+                    <p class="about-paragraph">我擅长将复杂的概念转化为简洁、有力的视觉语言，通过设计讲述故事，引发共鸣。</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- MERCH部分 -->
-        <section class="merch-section" id="merch">
-            <div class="merch-grid">
-                <div class="merch-item">
-                    <div class="image-placeholder merch-image merch1-image" id="image-merch1"></div>
+    <!-- 技能区域 -->
+    <section id="skills" class="skills">
+        <div class="skills-header">
+            <h2 class="section-heading">专业技能</h2>
+            <p class="section-subheading">我的设计工具箱</p>
+        </div>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
                 </div>
-                <div class="merch-item">
-                    <div class="image-placeholder merch-image merch2-image" id="image-merch2"></div>
-                </div>
-                <div class="merch-item">
-                    <div class="image-placeholder merch-image merch3-image" id="image-merch3"></div>
-                </div>
+                <h3 class="skill-title">平面设计</h3>
             </div>
-        </section>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                </div>
+                <h3 class="skill-title">UI/UX设计</h3>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <path d="M21 15l-5-5L5 21"/>
+                    </svg>
+                </div>
+                <h3 class="skill-title">网页设计</h3>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <h3 class="skill-title">插画设计</h3>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                </div>
+                <h3 class="skill-title">3D设计</h3>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    </svg>
+                </div>
+                <h3 class="skill-title">包装设计</h3>
+            </div>
+        </div>
+    </section>
 
-        <!-- WEEKLY RANKING部分 -->
-        <section class="ranking-section" id="ranking">
-            <div class="section-header">
-                <h2 class="section-title" id="text-rankingTitle">WEEKLY RANKING</h2>
+    <!-- 联系方式区域 -->
+    <section id="contact" class="contact">
+        <div class="contact-container">
+            <div class="contact-header">
+                <h2 class="section-heading">与我联系</h2>
+                <p class="section-subheading">开始我们的设计合作</p>
             </div>
-            <div class="ranking-grid">
-                <div class="ranking-item">
-                    <div class="image-placeholder ranking-image rank1-image" id="image-rank1"></div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <h3 class="contact-title">邮箱</h3>
+                            <p class="contact-text">design@example.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <h3 class="contact-title">电话</h3>
+                            <p class="contact-text">+86 123 4567 8910</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <h3 class="contact-title">社交媒体</h3>
+                            <div class="social-links">
+                                <a href="#" class="social-link">Instagram</a>
+                                <a href="#" class="social-link">Behance</a>
+                                <a href="#" class="social-link">Dribbble</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="ranking-item">
-                    <div class="image-placeholder ranking-image rank2-image" id="image-rank2"></div>
-                </div>
-                <div class="ranking-item">
-                    <div class="image-placeholder ranking-image rank3-image" id="image-rank3"></div>
-                </div>
-            </div>
-            <div class="ranking-footer">
-                <div class="image-placeholder ranking-footer-image"></div>
-            </div>
-        </section>
-
-        <!-- MERCH部分 -->
-        <section class="merch-section">
-            <div class="section-header">
-                <h2 class="section-title" id="text-merchTitle">MERCH</h2>
-                <div class="merch-illustration">
-                    <div class="image-placeholder merch-illustration-image"></div>
-                </div>
-            </div>
-            <div class="merch-grid">
-                <div class="merch-item">
-                    <div class="image-placeholder merch-image merch4-image" id="image-merch4"></div>
-                </div>
-                <div class="merch-item">
-                    <div class="image-placeholder merch-image merch5-image" id="image-merch5"></div>
-                </div>
-            </div>
-            <div class="merch-grid-small">
-                <div class="merch-item-small">
-                    <div class="image-placeholder merch-small-image merch6-image" id="image-merch6"></div>
-                </div>
-                <div class="merch-item-small">
-                    <div class="image-placeholder merch-small-image merch7-image" id="image-merch7"></div>
-                </div>
-                <div class="merch-item-small">
-                    <div class="image-placeholder merch-small-image merch8-image" id="image-merch8"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- COMICS & ANIME部分 -->
-        <section class="comics-anime-section" id="anime">
-            <div class="comics-anime-grid">
-                <div class="category-item">
-                    <div class="image-placeholder category-image comics-image" id="image-comics"></div>
-                    <h3 class="category-title" id="text-comicsTitle">COMICS</h3>
-                </div>
-                <div class="category-item">
-                    <div class="image-placeholder category-image anime-image" id="image-anime"></div>
-                    <h3 class="category-title" id="text-animeTitle">ANIME</h3>
-                </div>
-            </div>
-        </section>
-
-        <!-- NARUTO STORY部分 -->
-        <section class="story-section" id="story">
-            <div class="story-grid">
-                <div class="story-item">
-                    <div class="image-placeholder story-image story1-image" id="image-story1"></div>
-                    <h3 class="story-title" id="text-story1Title">NARUTO STORY</h3>
-                    <p class="story-year" id="text-story1Year">1999-2014</p>
-                </div>
-                <div class="story-item">
-                    <div class="image-placeholder story-image story2-image" id="image-story2"></div>
-                    <h3 class="story-title" id="text-story2Title">NARUTO SHIPPUDEN</h3>
+                <div class="contact-form-container">
+                    <form action="#" method="POST" class="contact-form">
+                        <div class="form-group">
+                            <label for="name" class="form-label">姓名</label>
+                            <input type="text" id="name" name="name" required class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">邮箱</label>
+                            <input type="email" id="email" name="email" required class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="form-label">留言</label>
+                            <textarea id="message" name="message" rows="5" required class="form-textarea"></textarea>
+                        </div>
+                        <button type="submit" class="form-submit">发送消息</button>
+                    </form>
                 </div>
             </div>
-        </section>
-
-        <!-- 底部插图 -->
-        <section class="bottom-illustration">
-            <div class="image-placeholder bottom-illustration-image" id="image-bottomIllustration"></div>
-        </section>
-
-        <!-- 广告横幅 -->
-        <section class="ad-banners">
-            <div class="ad-grid">
-                <div class="ad-item">
-                    <div class="image-placeholder ad-image ad1-image" id="image-ad1"></div>
-                </div>
-                <div class="ad-item">
-                    <div class="image-placeholder ad-image ad2-image" id="image-ad2"></div>
-                </div>
-                <div class="ad-item">
-                    <div class="image-placeholder ad-image ad3-image" id="image-ad3"></div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-
+        </div>
+    </section>
 
     <!-- 页脚 -->
     <footer class="footer">
         <div class="footer-content">
-            <p class="copyright">© 1999 MASASHI KISHIMOTO / 2002 SHIPPUDEN All Rights Reserved.</p>
+            <p class="footer-text">© 2024 我的设计宇宙. 突破常规，创造无限可能.</p>
         </div>
     </footer>
+
+    <!-- Three.js 库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="script.js"></script>
     
+    <!-- 加载网站数据 -->
     <script>
-        // 当前语言
-        let currentLang = 'zh';
-        
-        // 存储原始中文文本
-        const originalTexts = {};
-        
-        // 预定义翻译映射
-        const translations = {
-            '首页': 'Home',
-            '新闻': 'News',
-            '商品': 'Merchandise',
-            '排名': 'Ranking',
-            '动漫': 'Anime',
-            '故事': 'Story',
-            '产品信息': 'Product Info',
-            '产品名称': 'Product Name',
-            '产品配置': 'Product Config',
-            '限时折扣': 'Limited Discount',
-            'NARUTO OFFICIAL SITE': 'NARUTO OFFICIAL SITE',
-            'NEWS': 'NEWS',
-            'WEEKLY RANKING': 'WEEKLY RANKING',
-            'MERCH': 'MERCH',
-            'COMICS': 'COMICS',
-            'ANIME': 'ANIME',
-            'NARUTO STORY': 'NARUTO STORY',
-            'NARUTO SHIPPUDEN': 'NARUTO SHIPPUDEN',
-            '1999-2014': '1999-2014'
-        };
-        
-        // 从localStorage加载数据并更新页面
-        function loadPageData() {
-            // 从localStorage获取数据
-            const storedData = localStorage.getItem('narutoSiteData');
-            if (storedData) {
-                const data = JSON.parse(storedData);
+        // 从localStorage加载网站数据
+        function loadSiteData() {
+            const siteData = localStorage.getItem('portfolioSiteData');
+            if (siteData) {
+                const data = JSON.parse(siteData);
+                console.log('加载网站数据:', data);
                 
-                // 处理顶部横幅图片
-                const bannerContainer = document.querySelector('.banner-container');
-                const indicatorsContainer = document.querySelector('.carousel-indicators');
+                // 动态更新页面内容
+                updatePageContent(data);
                 
-                if (bannerContainer && indicatorsContainer) {
-                    // 清空现有内容
-                    bannerContainer.innerHTML = '';
-                    indicatorsContainer.innerHTML = '';
-                    
-                    // 统计顶部横幅图片数量
-                    const bannerImages = [];
-                    for (const [key, value] of Object.entries(data.images)) {
-                        if (key.startsWith('topBanner')) {
-                            bannerImages.push({key, value});
-                        }
+                // 监听localStorage变化，实现实时同步
+                window.addEventListener('storage', (e) => {
+                    if (e.key === 'portfolioSiteData') {
+                        loadSiteData();
                     }
+                });
+            }
+        }
+        
+        // 更新页面内容
+        function updatePageContent(data) {
+            // 更新文本内容
+            if (data.texts) {
+                // 英雄区域
+                const heroTitle1 = document.querySelector('.hero-title .title-line:nth-child(1)');
+                const heroTitle2 = document.querySelector('.hero-title .title-line:nth-child(2)');
+                const heroSubtitle = document.querySelector('.hero-subtitle');
+                const heroCta = document.querySelector('.hero-cta span');
+                
+                if (heroTitle1 && data.texts.heroTitle1) heroTitle1.textContent = data.texts.heroTitle1;
+                if (heroTitle2 && data.texts.heroTitle2) heroTitle2.textContent = data.texts.heroTitle2;
+                if (heroSubtitle && data.texts.heroSubtitle) heroSubtitle.textContent = data.texts.heroSubtitle;
+                if (heroCta && data.texts.heroCtaText) heroCta.textContent = data.texts.heroCtaText;
+                
+                // 边缘文案
+                const edgeTextRight = document.querySelectorAll('.edge-text-right p');
+                const edgeTextBottom = document.querySelectorAll('.edge-text-bottom p');
+                
+                if (edgeTextRight.length > 0 && data.texts.edgeTextTop1) edgeTextRight[0].textContent = data.texts.edgeTextTop1;
+                if (edgeTextRight.length > 1 && data.texts.edgeTextTop2) edgeTextRight[1].textContent = data.texts.edgeTextTop2;
+                if (edgeTextRight.length > 2 && data.texts.edgeTextTop3) edgeTextRight[2].textContent = data.texts.edgeTextTop3;
+                if (edgeTextBottom.length > 0 && data.texts.edgeTextBottom1) edgeTextBottom[0].textContent = data.texts.edgeTextBottom1;
+                if (edgeTextBottom.length > 1 && data.texts.edgeTextBottom2) edgeTextBottom[1].textContent = data.texts.edgeTextBottom2;
+                if (edgeTextBottom.length > 2 && data.texts.edgeTextBottom3) edgeTextBottom[2].textContent = data.texts.edgeTextBottom3;
+                
+                // 作品展示
+                const showcaseHeading = document.querySelector('#showcase .section-heading');
+                const showcaseSubheading = document.querySelector('#showcase .section-subheading');
+                
+                if (showcaseHeading && data.texts.showcaseHeading) showcaseHeading.textContent = data.texts.showcaseHeading;
+                if (showcaseSubheading && data.texts.showcaseSubheading) showcaseSubheading.textContent = data.texts.showcaseSubheading;
+                
+                // 关于我
+                const aboutHeading = document.querySelector('#about .section-heading');
+                const aboutParagraphs = document.querySelectorAll('#about .about-paragraph');
+                
+                if (aboutHeading && data.texts.aboutHeading) aboutHeading.textContent = data.texts.aboutHeading;
+                if (aboutParagraphs.length > 0 && data.texts.aboutParagraph1) aboutParagraphs[0].textContent = data.texts.aboutParagraph1;
+                if (aboutParagraphs.length > 1 && data.texts.aboutParagraph2) aboutParagraphs[1].textContent = data.texts.aboutParagraph2;
+                if (aboutParagraphs.length > 2 && data.texts.aboutParagraph3) aboutParagraphs[2].textContent = data.texts.aboutParagraph3;
+                
+                // 专业技能
+                const skillsHeading = document.querySelector('#skills .section-heading');
+                const skillsSubheading = document.querySelector('#skills .section-subheading');
+                const skillTitles = document.querySelectorAll('#skills .skill-title');
+                
+                if (skillsHeading && data.texts.skillsHeading) skillsHeading.textContent = data.texts.skillsHeading;
+                if (skillsSubheading && data.texts.skillsSubheading) skillsSubheading.textContent = data.texts.skillsSubheading;
+                if (skillTitles.length > 0 && data.texts.skill1Title) skillTitles[0].textContent = data.texts.skill1Title;
+                if (skillTitles.length > 1 && data.texts.skill2Title) skillTitles[1].textContent = data.texts.skill2Title;
+                if (skillTitles.length > 2 && data.texts.skill3Title) skillTitles[2].textContent = data.texts.skill3Title;
+                if (skillTitles.length > 3 && data.texts.skill4Title) skillTitles[3].textContent = data.texts.skill4Title;
+                if (skillTitles.length > 4 && data.texts.skill5Title) skillTitles[4].textContent = data.texts.skill5Title;
+                if (skillTitles.length > 5 && data.texts.skill6Title) skillTitles[5].textContent = data.texts.skill6Title;
+                
+                // 联系方式
+                const contactHeading = document.querySelector('#contact .section-heading');
+                const contactSubheading = document.querySelector('#contact .section-subheading');
+                const contactEmail = document.querySelector('#contact .contact-item:nth-child(1) .contact-text');
+                const contactPhone = document.querySelector('#contact .contact-item:nth-child(2) .contact-text');
+                const socialLinks = document.querySelectorAll('#contact .social-link');
+                
+                if (contactHeading && data.texts.contactHeading) contactHeading.textContent = data.texts.contactHeading;
+                if (contactSubheading && data.texts.contactSubheading) contactSubheading.textContent = data.texts.contactSubheading;
+                if (contactEmail && data.texts.contactEmail) contactEmail.textContent = data.texts.contactEmail;
+                if (contactPhone && data.texts.contactPhone) contactPhone.textContent = data.texts.contactPhone;
+                if (socialLinks.length > 0 && data.texts.socialInstagram) socialLinks[0].textContent = data.texts.socialInstagram;
+                if (socialLinks.length > 1 && data.texts.socialBehance) socialLinks[1].textContent = data.texts.socialBehance;
+                if (socialLinks.length > 2 && data.texts.socialDribbble) socialLinks[2].textContent = data.texts.socialDribbble;
+                
+                // 页脚
+                const footerText = document.querySelector('.footer-text');
+                if (footerText && data.texts.footerText) footerText.textContent = data.texts.footerText;
+            }
+            
+            // 更新图片
+            if (data.images) {
+                // 首页横幅
+                const heroBanner = document.getElementById('heroBanner');
+                if (heroBanner && data.images.heroBanner) {
+                    heroBanner.style.backgroundImage = `url(${data.images.heroBanner})`;
+                }
+                
+                // 关于我图片
+                const aboutImage = document.querySelector('#about .about-image img');
+                if (aboutImage && data.images.aboutImage) aboutImage.src = data.images.aboutImage;
+            }
+            
+            // 更新作品展示
+            if (data.works) {
+                const worksContainer = document.querySelector('.works-container');
+                if (worksContainer) {
+                    // 清空现有作品
+                    worksContainer.innerHTML = '';
                     
-                    // 如果没有横幅图片，添加默认图片
-                    if (bannerImages.length === 0) {
-                        const defaultBanner = document.createElement('img');
-                        defaultBanner.src = 'kv.png';
-                        defaultBanner.alt = 'Naruto Banner';
-                        defaultBanner.className = 'top-banner-image active';
-                        defaultBanner.id = 'image-topBanner-1';
-                        bannerContainer.appendChild(defaultBanner);
+                    // 生成新作品
+                    data.works.forEach((work, index) => {
+                        // 确保作品数据完整
+                        const workData = {
+                            image: work.image || 'https://via.placeholder.com/800x600?text=No+Image',
+                            title: work.title || '作品标题',
+                            category: work.category || '作品类别',
+                            size: work.size || 'medium'
+                        };
                         
-                        const defaultIndicator = document.createElement('button');
-                        defaultIndicator.className = 'indicator active';
-                        defaultIndicator.dataset.slide = '0';
-                        defaultIndicator.title = 'Slide 1';
-                        indicatorsContainer.appendChild(defaultIndicator);
-                    } else {
-                        // 添加横幅图片
-                        bannerImages.forEach((banner, index) => {
-                            const img = document.createElement('img');
-                            img.src = banner.value || 'kv.png';
-                            img.alt = `Naruto Banner ${index + 1}`;
-                            img.className = `top-banner-image ${index === 0 ? 'active' : ''}`;
-                            img.id = `image-${banner.key}`;
-                            bannerContainer.appendChild(img);
-                            
-                            const indicator = document.createElement('button');
-                            indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
-                            indicator.dataset.slide = index;
-                            indicator.title = `Slide ${index + 1}`;
-                            indicatorsContainer.appendChild(indicator);
-                        });
-                    }
-                }
-                
-                // 更新其他图片
-                for (const [key, value] of Object.entries(data.images)) {
-                    if (!key.startsWith('topBanner')) {
-                        const element = document.getElementById(`image-${key}`);
-                        if (element && value) {
-                            // 区分img标签和div标签
-                            if (element.tagName === 'IMG') {
-                                // 对于img标签，更新src属性
-                                element.src = value;
-                            } else {
-                                // 对于div标签，更新backgroundImage
-                                element.style.backgroundImage = `url(${value})`;
-                                element.style.backgroundColor = 'transparent';
-                            }
-                        }
-                    }
-                }
-                
-                // 更新文案
-                for (const [key, value] of Object.entries(data.texts)) {
-                    const element = document.getElementById(`text-${key}`);
-                    if (element && value) {
-                        // 更新元素内容
-                        element.textContent = value;
-                        // 应用翻译
-                        applyTranslation(element);
-                    }
-                }
-                
-                // 更新页面标题
-                if (data.texts.title) {
-                    document.title = data.texts.title;
-                    // 应用标题翻译
-                    if (currentLang === 'en') {
-                        document.title = translations[document.title] || document.title;
-                    }
+                        // 创建作品元素
+                        const workItem = document.createElement('div');
+                        workItem.className = `work-item ${workData.size} work-${index + 1}`;
+                        workItem.innerHTML = `
+                            <div class="work-inner">
+                                <div class="work-image">
+                                    <img src="${workData.image}" alt="${workData.title}">
+                                </div>
+                                <div class="work-overlay">
+                                    <div class="work-info">
+                                        <h3 class="work-title">${workData.title}</h3>
+                                        <p class="work-category">${workData.category}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // 添加到容器
+                        worksContainer.appendChild(workItem);
+                    });
                 }
             }
-            
-            // 对所有文本元素应用翻译
-            applyAllTranslations();
         }
         
-        // 扫描页面中的可编辑元素
-        function scanEditableElements() {
-            // 扫描图片元素
-            const imageElements = document.querySelectorAll('[id^="image-"]');
-            const images = {};
-            imageElements.forEach(el => {
-                const key = el.id.replace('image-', '');
-                images[key] = '';
-            });
-            
-            // 扫描文案元素
-            const textElements = document.querySelectorAll('[id^="text-"]');
-            const texts = {};
-            textElements.forEach(el => {
-                const key = el.id.replace('text-', '');
-                texts[key] = el.textContent || '';
-            });
-            
-            // 存储到localStorage
-            const editableElements = {
-                images: images,
-                texts: texts
-            };
-            localStorage.setItem('narutoEditableElements', JSON.stringify(editableElements));
-        }
-        
-        // 保存所有原始中文文本
-        function saveOriginalTexts() {
-            // 获取所有带有id前缀为"text-"的元素
-            const textElements = document.querySelectorAll('[id^="text-"]');
-            textElements.forEach(element => {
-                const elementId = element.id;
-                // 只保存一次原始中文文本
-                if (!originalTexts[elementId]) {
-                    originalTexts[elementId] = element.textContent;
-                }
-            });
-            // 保存原始标题
-            if (!originalTexts['title']) {
-                originalTexts['title'] = document.title;
-            }
-        }
-        
-        // 应用所有翻译
-        function applyAllTranslations() {
-            // 先保存原始文本（如果还没有保存）
-            saveOriginalTexts();
-            
-            // 获取所有带有id前缀为"text-"的元素
-            const textElements = document.querySelectorAll('[id^="text-"]');
-            textElements.forEach(element => {
-                applyTranslation(element);
-            });
-            
-            // 应用页面标题翻译
-            if (currentLang === 'en') {
-                const originalTitle = originalTexts['title'];
-                document.title = translations[originalTitle] || originalTitle;
-            } else {
-                // 恢复中文标题
-                document.title = originalTexts['title'];
-            }
-        }
-        
-        // 应用单个元素翻译
-        function applyTranslation(element) {
-            const elementId = element.id;
-            // 确保原始文本已保存
-            if (!originalTexts[elementId]) {
-                originalTexts[elementId] = element.textContent;
-            }
-            
-            if (currentLang === 'en') {
-                // 英文模式，应用翻译
-                const originalText = originalTexts[elementId];
-                element.textContent = translations[originalText] || originalText;
-            } else {
-                // 中文模式，恢复原始中文文本
-                element.textContent = originalTexts[elementId];
-            }
-        }
-        
-        // 语言切换功能
-        function switchLanguage(lang) {
-            if (currentLang === lang) return;
-            
-            currentLang = lang;
-            
-            // 更新语言按钮状态
-            document.getElementById('lang-zh').classList.remove('active');
-            document.getElementById('lang-en').classList.remove('active');
-            document.getElementById(`lang-${lang}`).classList.add('active');
-            
-            // 保存当前语言到localStorage
-            localStorage.setItem('narutoCurrentLanguage', lang);
-            
-            // 应用所有翻译
-            applyAllTranslations();
-        }
-        
-        // 页面加载时自动加载数据
-        document.addEventListener('DOMContentLoaded', function() {
-            // 扫描可编辑元素并存储到localStorage
-            scanEditableElements();
-            
-            // 保存原始中文文本
-            saveOriginalTexts();
-            
-            // 加载保存的语言设置
-            const savedLang = localStorage.getItem('narutoCurrentLanguage');
-            if (savedLang) {
-                currentLang = savedLang;
-                // 更新语言按钮状态
-                document.getElementById('lang-zh').classList.remove('active');
-                document.getElementById('lang-en').classList.remove('active');
-                document.getElementById(`lang-${savedLang}`).classList.add('active');
-            }
-            
-            // 加载页面数据
-            loadPageData();
-            
-            // 应用翻译
-            applyAllTranslations();
-        });
-        
-        // 添加数据变化监听，实时更新页面
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'narutoSiteData') {
-                loadPageData();
-            }
+        // 页面加载完成后加载数据
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSiteData();
         });
     </script>
-    <script src="script.js"></script>
 </body>
 </html>

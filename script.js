@@ -1,25 +1,254 @@
 // 确保页面完全加载后执行
 document.addEventListener('DOMContentLoaded', function() {
     // 为所有锚点链接添加平滑滚动功能
-    const links = document.querySelectorAll('.sub-nav-link');
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop,
-                    behavior: 'smooth'
-                });
-            }
-        });
+    addSmoothScroll();
+    
+    // 添加滚动动画效果
+    addScrollAnimations();
+    
+    // 添加浮动导航点高亮功能
+    addFloatingNavHighlight();
+    
+    // 添加作品项悬停效果
+    addWorkItemEffects();
+    
+    // 添加技能项悬停效果
+    addSkillItemEffects();
+    
+    // 添加表单提交效果
+    addFormSubmissionEffect();
+    
+    // 初始化滚动动画
+    initScrollAnimations();
+    
+    // 初始化Three.js 3D场景
+    initThreeJS();
+});
+
+// Three.js 初始化函数
+function initThreeJS() {
+    // 创建场景
+    const scene = new THREE.Scene(); 
+    
+    // 创建相机
+    const camera = new THREE.PerspectiveCamera( 
+        60, 
+        window.innerWidth / window.innerHeight, 
+        0.1, 
+        1000 
+    );
+    camera.position.z = 5;
+    
+    // 创建渲染器
+    const renderer = new THREE.WebGLRenderer({
+        canvas: document.querySelector('#webgl'), 
+        antialias: true, 
+        alpha: true
     });
     
-    addScrollAnimations();
-    addImageClickEffect();
-    initCarousel();
-});
+    // 设置渲染器大小
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // 添加梵高星空背景
+    const createStarfieldBackground = () => {
+        // 创建平面几何体作为背景
+        const geometry = new THREE.PlaneGeometry(20, 20, 100, 100);
+        
+        // 梵高星空着色器材质
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0.0 },
+                uMouse: { value: new THREE.Vector2(0, 0) },
+                uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+            },
+            vertexShader: `
+                uniform float uTime;
+                uniform vec2 uMouse;
+                uniform vec2 uResolution;
+                
+                varying vec2 vUv;
+                varying vec3 vNormal;
+                
+                void main() {
+                    vUv = uv;
+                    vNormal = normal;
+                    
+                    vec3 pos = position;
+                    
+                    // 鼠标驱动的水波纹效果
+                    vec2 mouse = (uMouse / uResolution - 0.5) * 2.0;
+                    float dist = distance(uv, mouse + 0.5);
+                    float wave = sin(dist * 10.0 - uTime * 2.0) * 0.1;
+                    pos.z += wave * 0.5;
+                    
+                    // 液化效果 - 随机扰动
+                    pos.x += sin(uv.y * 20.0 + uTime * 0.5) * 0.1;
+                    pos.y += sin(uv.x * 20.0 + uTime * 0.3) * 0.1;
+                    
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float uTime;
+                uniform vec2 uMouse;
+                
+                varying vec2 vUv;
+                varying vec3 vNormal;
+                
+                // 简易噪声函数
+                float noise(vec2 p) {
+                    return fract(sin(dot(p, vec2(12.9898, 78.233))) * 2.0 - 1.0;
+                }
+                
+                // 分形噪声
+                float fractalNoise(vec2 p) {
+                    float sum = 0.0;
+                    float amplitude = 1.0;
+                    float frequency = 1.0;
+                    
+                    for (int i = 0; i < 5; i++) {
+                        sum += noise(p * frequency) * amplitude;
+                        amplitude *= 0.5;
+                        frequency *= 2.0;
+                    }
+                    
+                    return sum;
+                }
+                
+                void main() {
+                    vec2 uv = vUv;
+                    
+                    // 梵高星空色彩
+                    vec3 color = vec3(0.0, 0.0, 0.1); // 深蓝背景
+                    
+                    // 星空噪波
+                    float starNoise = fractalNoise(uv * 10.0 + uTime * 0.1);
+                    color += vec3(starNoise * 0.5 + 0.5) * 0.3;
+                    
+                    // 旋涡效果
+                    vec2 center = uv - 0.5;
+                    float angle = atan(center.y, center.x);
+                    float radius = length(center);
+                    
+                    // 梵高风格的色彩渐变
+                    vec3 swirlColor1 = vec3(0.8, 0.1, 0.5); // 粉红
+                    vec3 swirlColor2 = vec3(0.1, 0.2, 0.8); // 蓝紫
+                    vec3 swirlColor3 = vec3(0.1, 0.5, 0.8); // 蓝色
+                    
+                    // 根据角度和半径混合颜色
+                    float swirl = sin(angle * 5.0 - radius * 20.0 - uTime * 1.0) * 0.5 + 0.5;
+                    vec3 mixedColor = mix(swirlColor1, swirlColor2, swirl);
+                    mixedColor = mix(mixedColor, swirlColor3, sin(radius * 10.0) * 0.5 + 0.5);
+                    
+                    // 添加色彩到背景
+                    color += mixedColor * (1.0 - radius) * 0.5;
+                    
+                    // 液化扭曲效果
+                    color.r += sin(uv.x * 5.0 + uTime * 0.5) * 0.1;
+                    color.g += cos(uv.y * 5.0 + uTime * 0.3) * 0.1;
+                    color.b += sin(uv.x * uv.y * 20.0 + uTime * 0.7) * 0.1;
+                    
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `,
+            side: THREE.DoubleSide
+        });
+        
+        const plane = new THREE.Mesh(geometry, material);
+        plane.position.z = -5;
+        
+        return plane;
+    };
+    
+    const starfield = createStarfieldBackground();
+    scene.add(starfield);
+    
+    // 添加粒子云
+    const particleGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(3000);
+    
+    for (let i = 0; i < positions.length; i++) {
+        positions[i] = (Math.random() - 0.5) * 10;
+    }
+    
+    particleGeometry.setAttribute(
+        'position',
+        new THREE.BufferAttribute(positions, 3)
+    );
+    
+    const particleMaterial = new THREE.PointsMaterial({
+        size: 0.02,
+        color: 0xffffff
+    });
+    
+    const points = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(points);
+    
+    // 添加环境光
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    
+    // 添加点光源
+    const pointLight = new THREE.PointLight(0xff0000, 1);
+    pointLight.position.set(5, 5, 5);
+    scene.add(pointLight);
+    
+
+    
+    // 鼠标位置变量
+    let mouseX = 0;
+    let mouseY = 0;
+    
+    // 添加鼠标移动事件监听
+    window.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+    
+    // 动画循环
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        // 获取当前时间
+        const time = Date.now() * 0.001;
+        
+        // 更新星空背景的uniforms
+        starfield.material.uniforms.uTime.value = time;
+        starfield.material.uniforms.uMouse.value.set(mouseX * window.innerWidth, mouseY * window.innerHeight);
+        starfield.material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+        
+        // 旋转星空背景
+        starfield.rotation.x += 0.001;
+        starfield.rotation.y += 0.002;
+        
+        // 粒子云动画
+        points.rotation.x += 0.005;
+        points.rotation.y += 0.005;
+        
+
+        
+        // 鼠标驱动摄像机
+        camera.position.x += (mouseX - camera.position.x) * 0.05;
+        camera.position.y += (-mouseY - camera.position.y) * 0.05;
+        
+        // 确保摄像机始终看向原点
+        camera.lookAt(0, 0, 0);
+        
+        // 渲染场景
+        renderer.render(scene, camera);
+    }
+    
+    // 开始动画
+    animate();
+    
+    // 处理窗口大小变化
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+}
 
 // 平滑滚动函数
 function addSmoothScroll() {
@@ -34,187 +263,134 @@ function addSmoothScroll() {
     });
 }
 
+// 滚动动画效果
 function addScrollAnimations() {
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.15,
+        rootMargin: '0px 0px -100px 0px'
     };
     
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('visible');
             }
         });
     }, observerOptions);
     
-    const animateElements = document.querySelectorAll('.news-item, .merch-item, .merch-item-small, .ranking-item, .category-item, .story-item, .ad-item');
+    // 为所有需要动画的元素添加观察
+    const animateElements = document.querySelectorAll('.work-item, .skill-card, .contact-item, .form-group, .about-paragraph');
     animateElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        el.classList.add('fade-in');
         observer.observe(el);
     });
 }
 
-function addImageClickEffect() {
-    const placeholders = document.querySelectorAll('.image-placeholder');
-    placeholders.forEach(placeholder => {
-        placeholder.addEventListener('click', function() {
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 150);
+// 浮动导航点高亮功能
+function addFloatingNavHighlight() {
+    const sections = document.querySelectorAll('section[id]');
+    const navDots = document.querySelectorAll('.nav-dot');
+    
+    // 滚动事件监听
+    window.addEventListener('scroll', function() {
+        let current = '';
+        const scrollPosition = window.scrollY + 100;
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navDots.forEach(dot => {
+            dot.classList.remove('active');
+            if (dot.dataset.target === current) {
+                dot.classList.add('active');
+            }
         });
     });
 }
 
-
-
-function initCarousel() {
-    updateCarousel();
+// 作品项悬停效果
+function addWorkItemEffects() {
+    const workItems = document.querySelectorAll('.work-item');
     
-    // 每5秒自动切换
-    setInterval(() => {
-        updateCarousel();
-    }, 5000);
-}
-
-function updateCarousel() {
-    const indicators = document.querySelectorAll('.indicator');
-    const banners = document.querySelectorAll('.top-banner-image');
-    
-    if (indicators.length === 0 || banners.length === 0) return;
-    
-    // 获取当前活动的幻灯片索引
-    let currentIndex = 0;
-    indicators.forEach((indicator, index) => {
-        if (indicator.classList.contains('active')) {
-            currentIndex = index;
-        }
+    workItems.forEach(item => {
+        // 鼠标进入效果已在CSS中实现
+        // 鼠标离开效果已在CSS中实现
     });
-    
-    // 切换到下一张幻灯片
-    const nextIndex = (currentIndex + 1) % indicators.length;
-    
-    // 使用统一的updateSlide函数更新幻灯片
-    updateSlide(nextIndex);
 }
 
-// 为指示器添加点击事件
-function addIndicatorClickEvents() {
-    const indicators = document.querySelectorAll('.indicator');
-    const banners = document.querySelectorAll('.top-banner-image');
+// 技能项悬停效果
+function addSkillItemEffects() {
+    const skillCards = document.querySelectorAll('.skill-card');
     
-    indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', function() {
-            // 更新指示器状态
-            indicators.forEach((ind, i) => {
-                ind.classList.toggle('active', i === index);
-            });
+    skillCards.forEach(card => {
+        // 鼠标进入效果已在CSS中实现
+        // 鼠标离开效果已在CSS中实现
+    });
+}
+
+// 表单提交效果
+function addFormSubmissionEffect() {
+    const form = document.querySelector('.contact-form');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // 更新横幅图片状态
-            banners.forEach((banner, i) => {
-                banner.classList.toggle('active', i === index);
-            });
+            // 添加提交动画
+            const submitButton = this.querySelector('.form-submit');
+            const originalText = submitButton.textContent;
+            
+            // 添加加载状态
+            submitButton.textContent = '发送中...';
+            submitButton.disabled = true;
+            
+            // 模拟表单提交
+            setTimeout(() => {
+                submitButton.textContent = '发送成功！';
+                submitButton.style.backgroundColor = '#4caf50';
+                submitButton.style.borderColor = '#4caf50';
+                
+                // 重置表单
+                setTimeout(() => {
+                    form.reset();
+                    submitButton.textContent = originalText;
+                    submitButton.disabled = false;
+                    submitButton.style.backgroundColor = '';
+                    submitButton.style.borderColor = '';
+                }, 2000);
+            }, 1500);
         });
-    });
+    }
 }
 
-// 切换到上一张幻灯片
-function prevSlide() {
-    const indicators = document.querySelectorAll('.indicator');
-    const banners = document.querySelectorAll('.top-banner-image');
-    
-    if (indicators.length === 0 || banners.length === 0) return;
-    
-    // 获取当前活动的幻灯片索引
-    let currentIndex = 0;
-    indicators.forEach((indicator, index) => {
-        if (indicator.classList.contains('active')) {
-            currentIndex = index;
+// 初始化滚动动画
+function initScrollAnimations() {
+    // 监听滚动事件，为元素添加动画
+    window.addEventListener('scroll', function() {
+        const scrollY = window.pageYOffset;
+        
+        // 为英雄区域形状添加视差效果
+        const shapes = document.querySelectorAll('.hero-shape');
+        shapes.forEach((shape, index) => {
+            const speed = (index + 1) * 0.5;
+            shape.style.transform = `translateY(${scrollY * speed}px) rotate(${scrollY * speed * 0.1}deg)`;
+        });
+        
+        // 为浮动导航点添加淡入效果
+        const floatingNav = document.querySelector('.floating-nav');
+        if (scrollY > 200) {
+            floatingNav.style.opacity = '1';
+        } else {
+            floatingNav.style.opacity = '0';
         }
     });
     
-    // 计算上一张幻灯片索引
-    const prevIndex = (currentIndex - 1 + indicators.length) % indicators.length;
-    
-    // 更新指示器和横幅图片状态
-    updateSlide(prevIndex);
+    // 初始设置浮动导航点的不透明度
+    document.querySelector('.floating-nav').style.opacity = '0';
+    document.querySelector('.floating-nav').style.transition = 'opacity 0.5s ease';
 }
-
-// 切换到下一张幻灯片
-function nextSlide() {
-    const indicators = document.querySelectorAll('.indicator');
-    const banners = document.querySelectorAll('.top-banner-image');
-    
-    if (indicators.length === 0 || banners.length === 0) return;
-    
-    // 获取当前活动的幻灯片索引
-    let currentIndex = 0;
-    indicators.forEach((indicator, index) => {
-        if (indicator.classList.contains('active')) {
-            currentIndex = index;
-        }
-    });
-    
-    // 计算下一张幻灯片索引
-    const nextIndex = (currentIndex + 1) % indicators.length;
-    
-    // 更新指示器和横幅图片状态
-    updateSlide(nextIndex);
-}
-
-// 更新幻灯片状态
-function updateSlide(index) {
-    const indicators = document.querySelectorAll('.indicator');
-    const banners = document.querySelectorAll('.top-banner-image');
-    
-    // 更新指示器状态
-    indicators.forEach((indicator, i) => {
-        indicator.classList.toggle('active', i === index);
-    });
-    
-    // 更新横幅图片状态
-    banners.forEach((banner, i) => {
-        banner.classList.toggle('active', i === index);
-    });
-}
-
-// 为横幅控制按钮添加事件监听器
-function addBannerControlEvents() {
-    const prevBtn = document.getElementById('bannerPrev');
-    const nextBtn = document.getElementById('bannerNext');
-    
-    if (prevBtn) {
-        prevBtn.addEventListener('click', prevSlide);
-    }
-    
-    if (nextBtn) {
-        nextBtn.addEventListener('click', nextSlide);
-    }
-}
-
-// 在DOMContentLoaded后添加事件监听器
-document.addEventListener('DOMContentLoaded', function() {
-    addIndicatorClickEvents();
-    addBannerControlEvents();
-    
-    // 监听横幅图片变化，重新添加点击事件
-    const observer = new MutationObserver(() => {
-        addIndicatorClickEvents();
-        addBannerControlEvents();
-    });
-    
-    const indicatorsContainer = document.querySelector('.carousel-indicators');
-    const bannerContainer = document.querySelector('.banner-container');
-    
-    if (indicatorsContainer) {
-        observer.observe(indicatorsContainer, { childList: true });
-    }
-    
-    if (bannerContainer) {
-        observer.observe(bannerContainer, { childList: true });
-    }
-});
