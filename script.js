@@ -1,3 +1,61 @@
+// 轮播功能
+function initHeroCarousel() {
+    // 检查元素是否存在
+    const slides = document.querySelectorAll('.carousel-slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentSlide = 0;
+    let slideInterval;
+    
+    // 切换到指定幻灯片
+    function goToSlide(index) {
+        // 移除当前激活状态
+        slides[currentSlide].classList.remove('active');
+        
+        // 设置新的当前幻灯片
+        currentSlide = (index + slides.length) % slides.length;
+        
+        // 添加新的激活状态
+        slides[currentSlide].classList.add('active');
+        
+        // 重置自动播放
+        resetInterval();
+    }
+    
+    // 下一张幻灯片
+    function nextSlide() {
+        goToSlide(currentSlide + 1);
+    }
+    
+    // 上一张幻灯片
+    function prevSlide() {
+        goToSlide(currentSlide - 1);
+    }
+    
+    // 自动播放
+    function startAutoPlay() {
+        slideInterval = setInterval(nextSlide, 5000); // 每5秒切换一次
+    }
+    
+    // 重置自动播放
+    function resetInterval() {
+        clearInterval(slideInterval);
+        startAutoPlay();
+    }
+    
+    // 绑定事件监听器 - 添加直接的事件处理，避免作用域问题
+    document.getElementById('prevBtn').addEventListener('click', function() {
+        prevSlide();
+    });
+    
+    document.getElementById('nextBtn').addEventListener('click', function() {
+        nextSlide();
+    });
+    
+    // 开始自动播放
+    startAutoPlay();
+}
+
 // 确保页面完全加载后执行
 document.addEventListener('DOMContentLoaded', function() {
     // 为所有锚点链接添加平滑滚动功能
@@ -26,6 +84,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 初始化作品弹窗功能
     initWorkModal();
+    
+    // 初始化轮播功能
+    initHeroCarousel();
 });
 
 
