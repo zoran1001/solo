@@ -20,8 +20,8 @@
 
     <!-- 英雄区域 -->
     <section id="hero" class="hero">
-        <!-- Three.js Canvas -->
-        <canvas id="webgl"></canvas>
+        <!-- 粒子特效 -->
+        <canvas id="particles-canvas"></canvas>
         <div class="hero-content">
             <div class="hero-text">
                 <h1 class="hero-title">
@@ -64,10 +64,10 @@
         
         <div class="works-container">
             <!-- 大作品项 -->
-            <div class="work-item large work-1" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="work-item large work-1">
                 <div class="work-inner">
                     <div class="work-image">
-                        <div class="work-color-fill"></div>
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275" alt="Brand Design Project">
                     </div>
                     <div class="work-overlay">
                         <div class="work-info">
@@ -79,10 +79,10 @@
             </div>
             
             <!-- 小作品项 -->
-            <div class="work-item small work-3" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <div class="work-item small work-3">
                 <div class="work-inner">
                     <div class="work-image">
-                        <div class="work-color-fill"></div>
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275" alt="AI-generated Art Project">
                     </div>
                     <div class="work-overlay">
                         <div class="work-info">
@@ -94,10 +94,10 @@
             </div>
             
             <!-- 小作品项 -->
-            <div class="work-item small work-4" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <div class="work-item small work-4">
                 <div class="work-inner">
                     <div class="work-image">
-                        <div class="work-color-fill"></div>
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275" alt="Modern Website Design">
                     </div>
                     <div class="work-overlay">
                         <div class="work-info">
@@ -109,10 +109,10 @@
             </div>
             
             <!-- 中等作品项 -->
-            <div class="work-item medium work-5" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+            <div class="work-item medium work-5">
                 <div class="work-inner">
                     <div class="work-image">
-                        <div class="work-color-fill"></div>
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275" alt="Creative Illustration">
                     </div>
                     <div class="work-overlay">
                         <div class="work-info">
@@ -124,10 +124,10 @@
             </div>
             
             <!-- 大作品项 -->
-            <div class="work-item large work-6" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+            <div class="work-item large work-6">
                 <div class="work-inner">
                     <div class="work-image">
-                        <div class="work-color-fill"></div>
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275" alt="3D Product Design">
                     </div>
                     <div class="work-overlay">
                         <div class="work-info">
@@ -301,7 +301,7 @@
                 <!-- 首页Banner -->
                 <div class="work-banner">
                     <div class="work-banner-image">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Brand Design Project">
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275" alt="Brand Design Project">
                     </div>
                     <div class="work-banner-overlay">
                         <div class="work-banner-content">
@@ -348,13 +348,13 @@
                             <h2 class="work-section-title">Project Showcase</h2>
                             <div class="work-showcase-gallery">
                                 <div class="gallery-item">
-                                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Project Image 1">
+                                    <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275" alt="Project Image 1">
                                 </div>
                                 <div class="gallery-item">
-                                    <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Project Image 2">
+                                    <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275" alt="Project Image 2">
                                 </div>
                                 <div class="gallery-item">
-                                    <img src="https://images.unsplash.com/photo-1542744095-fcf48d80b84b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Project Image 3">
+                                    <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275" alt="Project Image 3">
                                 </div>
                             </div>
                         </section>
@@ -374,8 +374,6 @@
         </div>
     </div>
 
-    <!-- Three.js 库 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="script.js"></script>
 
 </body>

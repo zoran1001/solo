@@ -81,11 +81,16 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, var(--primary-bg) 0%, #1a0000 100%);
+    background-image: url(https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #000000; /* 备选背景色，防止图片加载失败 */
+    z-index: 0;
 }
 
-/* Three.js Canvas */
-#webgl {
+/* 粒子特效样式 */
+#particles-canvas {
     position: absolute;
     top: 0;
     left: 0;
@@ -95,22 +100,10 @@ h1, h2, h3, h4, h5, h6 {
     pointer-events: none;
 }
 
-/* 首页横幅 */
-.hero-banner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    z-index: 1.5;
-    opacity: 0.3;
-    transition: background-image 0.3s ease;
-}
+
 
 .hero-content {
-    z-index: 2;
+    z-index: 3;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -284,6 +277,18 @@ h1, h2, h3, h4, h5, h6 {
     top: 50%;
     left: 10%;
     animation-delay: -5s;
+}
+
+/* 淡入动画 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* 作品展示区域 */

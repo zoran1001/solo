@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Local Storage</title>
+</head>
+<body>
+    <h1>Clear Local Storage</h1>
+    <p>Click the button below to clear localStorage and reload the page.</p>
+    <button onclick="clearStorage()">Clear Local Storage</button>
+    
+    <script>
+        function clearStorage() {
+            localStorage.removeItem('websiteContent');
+            alert('LocalStorage cleared!');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

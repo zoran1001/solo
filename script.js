@@ -21,87 +21,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化滚动动画
     initScrollAnimations();
     
-    // 初始化Three.js 3D场景
-    initThreeJS();
+    // 初始化粒子系统
+    initParticleSystem();
     
-    // 初始化作品弹出层功能
+    // 初始化作品弹窗功能
     initWorkModal();
 });
 
-// Three.js 初始化函数
-function initThreeJS() {
-    // 创建场景
-    const scene = new THREE.Scene(); 
-    
-    // 创建相机
-    const camera = new THREE.PerspectiveCamera( 
-        80, 
-        window.innerWidth / window.innerHeight, 
-        0.1, 
-        1000 
-    );
-    camera.position.z = 8;
-    
-    // 创建渲染器
-    const renderer = new THREE.WebGLRenderer({
-        canvas: document.querySelector('#webgl'), 
-        antialias: true, 
-        alpha: true
-    });
-    
-    // 设置渲染器大小
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    
-    // 添加粒子云
-    const particleGeometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(3000);
-    
-    for (let i = 0; i < positions.length; i += 3) {
-        // 粒子分布在整个场景中
-        positions[i] = (Math.random() - 0.5) * 40; // x: -20 到 20
-        positions[i + 1] = (Math.random() - 0.5) * 30; // y: -15 到 15
-        positions[i + 2] = (Math.random() - 0.5) * 20; // z: -10 到 10
-    }
-    
-    particleGeometry.setAttribute(
-        'position',
-        new THREE.BufferAttribute(positions, 3)
-    );
-    
-    const particleMaterial = new THREE.PointsMaterial({
-        size: 0.02,
-        color: 0xffffff
-    });
-    
-    const points = new THREE.Points(particleGeometry, particleMaterial);
-    scene.add(points);
-    
-    // 动画循环
-    function animate() {
-        requestAnimationFrame(animate);
-        
-        // 粒子云动画
-        points.rotation.x += 0.005;
-        points.rotation.y += 0.005;
-        
-        // 固定摄像机
-        camera.lookAt(0, 0, 0);
-        
-        // 渲染场景
-        renderer.render(scene, camera);
-    }
-    
-    // 开始动画
-    animate();
-    
-    // 处理窗口大小变化
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-}
+
+
+
 
 // 平滑滚动函数
 function addSmoothScroll() {
@@ -244,16 +173,241 @@ function initScrollAnimations() {
     });
     
     // 初始设置浮动导航点的不透明度
-document.querySelector('.floating-nav').style.opacity = '0';
-document.querySelector('.floating-nav').style.transition = 'opacity 0.5s ease';
+    document.querySelector('.floating-nav').style.opacity = '0';
+    document.querySelector('.floating-nav').style.transition = 'opacity 0.5s ease';
 }
 
-// 作品数据
+// 雪花粒子系统
+class ParticleSystem {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.numParticles = 500; // 雪花数量
+        this.scrollY = 0; // 记录滚动位置
+        
+        // 3D相机参数
+        this.camera = {
+            x: 0,
+            y: 0,
+            z: 100, // 相机初始距离
+            speed: 5, // 相机移动速度
+            rotationX: 0,
+            rotationY: 0
+        };
+        
+        // 鼠标位置
+        this.mouse = {
+            x: this.canvas.width / 2,
+            y: this.canvas.height / 2
+        };
+        
+        // 透视参数
+        this.fov = 60; // 视野角度
+        this.aspect = this.canvas.width / this.canvas.height;
+        this.near = 1;
+        this.far = 1000;
+        
+        this.init();
+        this.animate();
+        
+        // 监听窗口大小变化
+        window.addEventListener('resize', () => this.init());
+        
+        // 监听滚动事件
+        window.addEventListener('scroll', () => {
+            this.scrollY = window.pageYOffset;
+        });
+        
+        // 监听鼠标移动事件，实现3D交互
+        window.addEventListener('mousemove', (e) => {
+            // 计算鼠标在canvas中的相对位置
+            const rect = this.canvas.getBoundingClientRect();
+            this.mouse.x = e.clientX - rect.left;
+            this.mouse.y = e.clientY - rect.top;
+            
+            // 根据鼠标位置调整相机旋转角度
+            this.camera.rotationX = (this.mouse.y / this.canvas.height - 0.5) * Math.PI / 4;
+            this.camera.rotationY = (this.mouse.x / this.canvas.width - 0.5) * Math.PI / 4;
+        });
+    }
+    
+    init() {
+        // 设置canvas尺寸
+        this.canvas.width = this.canvas.offsetWidth;
+        this.canvas.height = this.canvas.offsetHeight;
+        this.aspect = this.canvas.width / this.canvas.height;
+        
+        // 清空粒子数组
+        this.particles = [];
+        
+        // 创建雪花粒子 - 初始位置在屏幕上方
+        for (let i = 0; i < this.numParticles; i++) {
+            const x = (Math.random() - 0.5) * 2000;
+            const y = -Math.random() * 1000; // 初始位置在屏幕上方
+            const z = (Math.random() - 0.5) * 2000;
+            
+            this.particles.push({
+                // 3D位置
+                x: x,
+                y: y,
+                z: z,
+                
+                // 3D速度 - 主要向下飘落
+                speedX: (Math.random() - 0.5) * 1, // 减少左右移动
+                speedY: Math.random() * 2 + 1.5, // 向下飘落，速度更快
+                speedZ: (Math.random() - 0.5) * 0.5, // 减少Z轴移动
+                
+                // 雪花属性
+                size: Math.random() * 6 + 2, // 随机大小，2-8像素
+                color: 'rgba(255, 255, 255, ',
+                opacity: Math.random() * 0.8 + 0.2,
+                
+                // 旋转角度和速度
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 0.05
+            });
+        }
+    }
+    
+    // 3D点到2D屏幕坐标的投影转换
+    project(point) {
+        // 应用相机旋转
+        let x = point.x * Math.cos(this.camera.rotationY) + point.z * Math.sin(this.camera.rotationY);
+        let z = -point.x * Math.sin(this.camera.rotationY) + point.z * Math.cos(this.camera.rotationY);
+        let y = point.y * Math.cos(this.camera.rotationX) + z * Math.sin(this.camera.rotationX);
+        z = -point.y * Math.sin(this.camera.rotationX) + z * Math.cos(this.camera.rotationX);
+        
+        // 应用透视投影
+        const scale = this.camera.z / z;
+        const screenX = (x * scale * this.aspect) + this.canvas.width / 2;
+        const screenY = (y * scale) + this.canvas.height / 2 + this.scrollY * 0.1;
+        
+        return {
+            x: screenX,
+            y: screenY,
+            scale: scale,
+            z: z
+        };
+    }
+    
+    // 绘制雪花
+    drawSnowflake(x, y, size, rotation, opacity) {
+        this.ctx.save();
+        this.ctx.translate(x, y);
+        this.ctx.rotate(rotation);
+        this.ctx.scale(size, size);
+        
+        // 设置雪花样式
+        this.ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+        this.ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+        this.ctx.lineWidth = 0.5;
+        
+        // 绘制雪花形状 - 六角星
+        for (let i = 0; i < 6; i++) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, 0);
+            this.ctx.lineTo(0, -1);
+            this.ctx.lineTo(0.2, -0.8);
+            this.ctx.lineTo(0, -0.6);
+            this.ctx.lineTo(0.2, -0.4);
+            this.ctx.lineTo(0, -0.2);
+            this.ctx.lineTo(0.2, 0);
+            this.ctx.closePath();
+            this.ctx.fill();
+            this.ctx.stroke();
+            this.ctx.rotate(Math.PI / 3);
+        }
+        
+        this.ctx.restore();
+    }
+    
+    // 绘制单个雪花粒子
+    drawParticle(particle) {
+        const projected = this.project(particle);
+        
+        // 只跳过太远的粒子，确保雪花不会消失
+        if (projected.z > this.far) {
+            return;
+        }
+        
+        // 计算雪花最终大小 - 确保雪花不会太小消失
+        const finalSize = particle.size * projected.scale;
+        if (finalSize < 1) {
+            return; // 保持最小可见大小
+        }
+        
+        // 计算雪花透明度
+        const opacity = particle.opacity * (1 - (projected.z / this.far) * 0.5);
+        
+        // 绘制雪花
+        this.drawSnowflake(projected.x, projected.y, finalSize, particle.rotation, opacity);
+    }
+    
+    draw() {
+        // 清空canvas
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // 按Z轴位置排序雪花，远处的先绘制
+        this.particles.sort((a, b) => b.z - a.z);
+        
+        // 绘制所有雪花
+        this.particles.forEach(particle => {
+            this.drawParticle(particle);
+        });
+    }
+    
+    update() {
+        // 更新雪花位置
+        this.particles.forEach(particle => {
+            // 3D空间内的运动 - 主要向下飘落
+            particle.x += particle.speedX + Math.sin(Date.now() * 0.002 + particle.z * 0.005) * 0.3; // 减少左右摇摆
+            particle.y += particle.speedY + Math.cos(Date.now() * 0.001 + particle.x * 0.005) * 0.2; // 主要向下运动
+            particle.z += particle.speedZ; // 减少Z轴波动
+            
+            // 边界检测，确保雪花持续向下飘落
+            // X轴：保持在视野范围内，小幅波动
+            if (particle.x > 1000) particle.x = -1000;
+            if (particle.x < -1000) particle.x = 1000;
+            
+            // Y轴：超出底部后从顶部重新出现
+            if (particle.y > 1000) {
+                particle.y = -1000; // 从顶部重新飘落
+                particle.x = (Math.random() - 0.5) * 2000; // 随机X轴位置
+                particle.z = (Math.random() - 0.5) * 2000; // 随机Z轴位置
+            }
+            
+            // Z轴：保持在视野范围内
+            if (particle.z > 1000) particle.z = -1000;
+            if (particle.z < -1000) particle.z = 1000;
+            
+            // 更新旋转角度
+            particle.rotation += particle.rotationSpeed;
+        });
+        
+        // 移除自动相机旋转，保持固定视角
+        // this.camera.x += Math.sin(Date.now() * 0.0005) * this.camera.speed * 0.5;
+        // this.camera.z += Math.cos(Date.now() * 0.0005) * this.camera.speed * 0.5;
+    }
+    
+    animate() {
+        this.draw();
+        this.update();
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// 初始化粒子系统
+function initParticleSystem() {
+    new ParticleSystem('particles-canvas');
+}
+
+// 作品数据结构，存储每个作品的独特内容
 const workData = {
     'work-1': {
         title: 'Brand Design Project',
         category: 'Graphic Design',
-        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+        bannerImage: 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
         description: [
             'This is a comprehensive brand design project for a modern startup. The project includes logo design, brand identity, packaging design, and marketing materials.',
             'The design concept revolves around minimalism and modern aesthetics, using a clean color palette and geometric shapes to create a strong visual identity.'
@@ -262,175 +416,211 @@ const workData = {
             client: 'Tech Startup Inc.',
             year: '2024',
             services: 'Logo Design, Brand Identity, Packaging'
-        }
+        },
+        gallery: [
+            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
+            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
+            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275'
+        ],
+        concept: [
+            'The design concept for this project was inspired by modern minimalism and geometric aesthetics. We wanted to create a brand identity that is both timeless and contemporary, with a strong visual impact.',
+            'The color palette was carefully chosen to reflect the brand\'s values and personality, using clean and bold colors that create a strong visual contrast.',
+            'The typography selection was based on readability and visual hierarchy, with a modern sans-serif font that complements the geometric shapes used throughout the design.'
+        ]
     },
     'work-3': {
-        title: 'AI Generated Art Collection',
+        title: 'AI-generated Art Project',
         category: 'AI Design',
-        image: 'https://images.unsplash.com/photo-1677442136607-d81b6006d972?ixlib=rb-1.2.1&auto=format&fit=crop&w=1374&q=80',
+        bannerImage: 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
         description: [
-            'This collection showcases the potential of AI-generated art. Using advanced machine learning algorithms, we created a series of unique and captivating visual artworks.',
-            'Each piece combines human creativity with AI capabilities, resulting in stunning visuals that push the boundaries of traditional art.'
+            'This project explores the intersection of artificial intelligence and creative design. Using advanced AI algorithms, we generated unique visual compositions that challenge traditional design boundaries.',
+            'The project pushes the limits of what\'s possible with AI-generated art, creating stunning visuals that combine human creativity with machine intelligence.'
         ],
         details: {
-            client: 'Art Gallery Exhibition',
+            client: 'AI Creative Lab',
             year: '2024',
-            services: 'AI Art Generation, Digital Artwork'
-        }
+            services: 'AI Art Generation, Creative Direction'
+        },
+        gallery: [
+            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
+            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
+            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275'
+        ],
+        concept: [
+            'The core concept behind this project is to explore the creative potential of artificial intelligence as a collaborative tool for designers.',
+            'We used a combination of generative adversarial networks (GANs) and diffusion models to create unique visual compositions that blend human intent with machine creativity.',
+            'The result is a series of artworks that challenge our perception of what constitutes "creative" work in the age of AI.'
+        ]
     },
     'work-4': {
         title: 'Modern Website Design',
         category: 'Web Design',
-        image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+        bannerImage: 'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
         description: [
-            'A modern, responsive website design for a creative agency. The design focuses on user experience and visual appeal, with a clean layout and smooth animations.',
-            'The website is fully responsive, ensuring optimal viewing experience across all devices and screen sizes.'
+            'A modern, responsive website design for a creative agency. This project focuses on clean typography, smooth animations, and an intuitive user experience.',
+            'The design incorporates a minimalist aesthetic with bold visual elements to create a memorable impression.'
         ],
         details: {
-            client: 'Creative Agency',
+            client: 'Creative Agency Inc.',
             year: '2024',
-            services: 'Web Design, UI/UX Design, Responsive Development'
-        }
+            services: 'Website Design, UI/UX, Frontend Development'
+        },
+        gallery: [
+            'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+        ],
+        concept: [
+            'The design concept was centered around creating a digital experience that reflects the agency\'s creative approach.',
+            'We used a grid-based layout to create visual hierarchy, with ample white space to let the content breathe.',
+            'The color scheme was kept minimal, with accent colors used strategically to draw attention to important elements.'
+        ]
     },
     'work-5': {
-        title: 'Illustration Design Collection',
+        title: 'Creative Illustration',
         category: 'Creative Design',
-        image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+        bannerImage: 'https://images.unsplash.com/photo-1603970484243-63f290002d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
         description: [
-                'A collection of creative illustrations for various projects. The illustrations feature a unique style with bold colors and dynamic compositions.',
-                'The project includes editorial illustrations, children\'s book illustrations, and concept art for video games.'
-            ],
-        details: {
-            client: 'Multiple Clients',
-            year: '2024',
-            services: 'Illustration, Concept Art, Digital Painting'
-        }
-    },
-    'work-6': {
-        title: '3D Design Portfolio',
-        category: '3D Design',
-        image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        description: [
-            'A showcase of 3D design projects, including product visualization, architectural rendering, and character design.',
-            'Using industry-standard 3D software, we created realistic and visually stunning 3D models and renderings.'
+            'A series of creative illustrations for a children\'s book. The project focuses on vibrant colors, playful characters, and engaging storytelling.',
+            'Each illustration was carefully crafted to capture the imagination of young readers while supporting the book\'s narrative.'
         ],
         details: {
-            client: 'Design Studio',
+            client: 'Children\'s Book Publisher',
             year: '2024',
-            services: '3D Modeling, Rendering, Product Visualization'
-        }
+            services: 'Illustration, Character Design, Storyboarding'
+        },
+        gallery: [
+            'https://images.unsplash.com/photo-1603970484243-63f290002d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
+            'https://images.unsplash.com/photo-1599677885500-223a6d98d88c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
+            'https://images.unsplash.com/photo-1513639721868-2c83d12c9288?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'
+        ],
+        concept: [
+            'The illustration style was inspired by classic children\'s book art with a modern twist.',
+            'We used bold, saturated colors to create a sense of wonder and excitement, while keeping the characters relatable and expressive.',
+            'Each scene was composed to guide the reader\'s eye through the story, creating a cohesive narrative experience.'
+        ]
+    },
+    'work-6': {
+        title: '3D Product Design',
+        category: '3D Design',
+        bannerImage: 'https://images.unsplash.com/photo-1556661718-86b3f05a636d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+        description: [
+            'A 3D product design project for a consumer electronics company. The project includes product modeling, texturing, and realistic rendering.',
+            'The design focuses on sleek, modern aesthetics with a strong emphasis on functionality and user experience.'
+        ],
+        details: {
+            client: 'Electronics Company Ltd.',
+            year: '2024',
+            services: '3D Modeling, Product Design, Rendering'
+        },
+        gallery: [
+            'https://images.unsplash.com/photo-1556661718-86b3f05a636d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            'https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+        ],
+        concept: [
+            'The design concept was centered around creating a product that is both aesthetically pleasing and highly functional.',
+            'We used parametric modeling techniques to create smooth, organic shapes that feel natural to hold and use.',
+            'The materials and textures were carefully chosen to create a premium look and feel, with realistic rendering that showcases the product\'s features.'
+        ]
     }
 };
 
-// 作品弹出层功能
+// 动态更新模态框内容
+function updateModalContent(workKey) {
+    const data = workData[workKey];
+    if (!data) return;
+    
+    // 更新Banner部分
+    const bannerImage = document.querySelector('.work-banner-image img');
+    const bannerTitle = document.querySelector('.work-banner-title');
+    const bannerCategory = document.querySelector('.work-banner-category');
+    
+    bannerImage.src = data.bannerImage;
+    bannerImage.alt = data.title;
+    bannerTitle.textContent = data.title;
+    bannerCategory.textContent = data.category;
+    
+    // 更新项目概述
+    const descriptionContainer = document.querySelector('.work-modal-description');
+    descriptionContainer.innerHTML = '';
+    data.description.forEach(para => {
+        const p = document.createElement('p');
+        p.textContent = para;
+        descriptionContainer.appendChild(p);
+    });
+    
+    // 更新项目详情
+    const detailItems = document.querySelectorAll('.detail-item');
+    detailItems[0].querySelector('p').textContent = data.details.client;
+    detailItems[1].querySelector('p').textContent = data.details.year;
+    detailItems[2].querySelector('p').textContent = data.details.services;
+    
+    // 更新项目展示图片
+    const galleryItems = document.querySelectorAll('.gallery-item img');
+    galleryItems.forEach((item, index) => {
+        if (data.gallery[index]) {
+            item.src = data.gallery[index];
+            item.alt = `${data.title} Image ${index + 1}`;
+        }
+    });
+    
+    // 更新设计理念
+    const conceptContainer = document.querySelector('.work-concept-content');
+    conceptContainer.innerHTML = '';
+    data.concept.forEach(para => {
+        const p = document.createElement('p');
+        p.textContent = para;
+        conceptContainer.appendChild(p);
+    });
+}
+
+// 作品弹窗功能
 function initWorkModal() {
-    // 获取DOM元素
     const modal = document.getElementById('workModal');
     const closeBtn = document.querySelector('.work-modal-close');
     const workItems = document.querySelectorAll('.work-item');
     
-    // 获取模态框内的元素
-    const modalImage = modal.querySelector('.work-modal-image img');
-    const modalTitle = modal.querySelector('.work-modal-title');
-    const modalCategory = modal.querySelector('.work-modal-category');
-    const modalDescription = modal.querySelector('.work-modal-description');
-    const modalDetails = modal.querySelector('.work-modal-details');
-    
-    // 更新模态框内容
-    function updateModalContent(workId) {
-        const data = workData[workId];
-        if (data) {
-            // 更新Banner区域
-            const bannerImage = modal.querySelector('.work-banner-image img');
-            const bannerTitle = modal.querySelector('.work-banner-title');
-            const bannerCategory = modal.querySelector('.work-banner-category');
-            
-            if (bannerImage) bannerImage.src = data.image;
-            if (bannerImage) bannerImage.alt = data.title;
-            if (bannerTitle) bannerTitle.textContent = data.title;
-            if (bannerCategory) bannerCategory.textContent = data.category;
-            
-            // 更新详情页标题和分类
-            if (modalTitle) modalTitle.textContent = data.title;
-            if (modalCategory) modalCategory.textContent = data.category;
-            
-            // 更新描述
-            if (modalDescription) {
-                modalDescription.innerHTML = '';
-                data.description.forEach(paragraph => {
-                    const p = document.createElement('p');
-                    p.textContent = paragraph;
-                    modalDescription.appendChild(p);
-                });
-            }
-            
-            // 更新详细信息
-            if (modalDetails) {
-                modalDetails.innerHTML = `
-                    <div class="detail-item">
-                        <h4>Client</h4>
-                        <p>${data.details.client}</p>
-                    </div>
-                    <div class="detail-item">
-                        <h4>Year</h4>
-                        <p>${data.details.year}</p>
-                    </div>
-                    <div class="detail-item">
-                        <h4>Services</h4>
-                        <p>${data.details.services}</p>
-                    </div>
-                `;
-            }
-            
-            // 更新项目展示图片（使用相同图片的不同尺寸或相关图片）
-            const galleryItems = modal.querySelectorAll('.gallery-item img');
-            if (galleryItems.length > 0) {
-                galleryItems.forEach((item, index) => {
-                    // 为每个画廊项使用相同的主图，实际项目中可以使用不同图片
-                    item.src = data.image;
-                    item.alt = `${data.title} - Image ${index + 1}`;
-                });
-            }
-        }
-    }
-    
-    // 点击作品模块打开弹出层
+    // 打开模态框
     workItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const workId = this.classList[2]; // 获取work-1, work-3等类名
-            updateModalContent(workId);
+        item.addEventListener('click', () => {
+            // 获取作品的唯一标识（从class中提取，如work-1, work-3等）
+            const workClasses = Array.from(item.classList);
+            const workKey = workClasses.find(cls => cls.startsWith('work-') && cls !== 'work-item'); // 排除'work-item'，只匹配'work-1', 'work-3'等
+            
+            // 更新模态框内容
+            if (workKey) {
+                updateModalContent(workKey);
+            }
+            
             modal.classList.add('show');
-            // 禁止页面滚动
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
         });
     });
     
-    // 点击关闭按钮关闭弹出层
-    if (closeBtn && modal) {
-        closeBtn.addEventListener('click', function() {
-            modal.classList.remove('show');
-            // 恢复页面滚动
-            document.body.style.overflow = 'auto';
-        });
+    // 关闭模态框
+    function closeModal() {
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto'; // 恢复背景滚动
     }
     
-    // 点击弹出层外部关闭弹出层
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                modal.classList.remove('show');
-                // 恢复页面滚动
-                document.body.style.overflow = 'auto';
-            }
-        });
-    }
+    // 点击关闭按钮
+    closeBtn.addEventListener('click', closeModal);
     
-    // 按ESC键关闭弹出层
-    document.addEventListener('keydown', function(e) {
+    // 点击模态框外部区域
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // 按下ESC键
+    document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.classList.contains('show')) {
-            modal.classList.remove('show');
-            // 恢复页面滚动
-            document.body.style.overflow = 'auto';
+            closeModal();
         }
     });
 }
+
+
+
