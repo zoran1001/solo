@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 初始化Three.js 3D场景
     initThreeJS();
+    
+    // 初始化作品弹出层功能
+    initWorkModal();
 });
 
 // Three.js 初始化函数
@@ -32,12 +35,12 @@ function initThreeJS() {
     
     // 创建相机
     const camera = new THREE.PerspectiveCamera( 
-        60, 
+        80, 
         window.innerWidth / window.innerHeight, 
         0.1, 
         1000 
     );
-    camera.position.z = 5;
+    camera.position.z = 8;
     
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({
@@ -50,126 +53,15 @@ function initThreeJS() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     
-    // 添加梵高星空背景
-    const createStarfieldBackground = () => {
-        // 创建平面几何体作为背景
-        const geometry = new THREE.PlaneGeometry(20, 20, 100, 100);
-        
-        // 梵高星空着色器材质
-        const material = new THREE.ShaderMaterial({
-            uniforms: {
-                uTime: { value: 0.0 },
-                uMouse: { value: new THREE.Vector2(0, 0) },
-                uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
-            },
-            vertexShader: `
-                uniform float uTime;
-                uniform vec2 uMouse;
-                uniform vec2 uResolution;
-                
-                varying vec2 vUv;
-                varying vec3 vNormal;
-                
-                void main() {
-                    vUv = uv;
-                    vNormal = normal;
-                    
-                    vec3 pos = position;
-                    
-                    // 鼠标驱动的水波纹效果
-                    vec2 mouse = (uMouse / uResolution - 0.5) * 2.0;
-                    float dist = distance(uv, mouse + 0.5);
-                    float wave = sin(dist * 10.0 - uTime * 2.0) * 0.1;
-                    pos.z += wave * 0.5;
-                    
-                    // 液化效果 - 随机扰动
-                    pos.x += sin(uv.y * 20.0 + uTime * 0.5) * 0.1;
-                    pos.y += sin(uv.x * 20.0 + uTime * 0.3) * 0.1;
-                    
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-                }
-            `,
-            fragmentShader: `
-                uniform float uTime;
-                uniform vec2 uMouse;
-                
-                varying vec2 vUv;
-                varying vec3 vNormal;
-                
-                // 简易噪声函数
-                float noise(vec2 p) {
-                    return fract(sin(dot(p, vec2(12.9898, 78.233))) * 2.0 - 1.0;
-                }
-                
-                // 分形噪声
-                float fractalNoise(vec2 p) {
-                    float sum = 0.0;
-                    float amplitude = 1.0;
-                    float frequency = 1.0;
-                    
-                    for (int i = 0; i < 5; i++) {
-                        sum += noise(p * frequency) * amplitude;
-                        amplitude *= 0.5;
-                        frequency *= 2.0;
-                    }
-                    
-                    return sum;
-                }
-                
-                void main() {
-                    vec2 uv = vUv;
-                    
-                    // 梵高星空色彩
-                    vec3 color = vec3(0.0, 0.0, 0.1); // 深蓝背景
-                    
-                    // 星空噪波
-                    float starNoise = fractalNoise(uv * 10.0 + uTime * 0.1);
-                    color += vec3(starNoise * 0.5 + 0.5) * 0.3;
-                    
-                    // 旋涡效果
-                    vec2 center = uv - 0.5;
-                    float angle = atan(center.y, center.x);
-                    float radius = length(center);
-                    
-                    // 梵高风格的色彩渐变
-                    vec3 swirlColor1 = vec3(0.8, 0.1, 0.5); // 粉红
-                    vec3 swirlColor2 = vec3(0.1, 0.2, 0.8); // 蓝紫
-                    vec3 swirlColor3 = vec3(0.1, 0.5, 0.8); // 蓝色
-                    
-                    // 根据角度和半径混合颜色
-                    float swirl = sin(angle * 5.0 - radius * 20.0 - uTime * 1.0) * 0.5 + 0.5;
-                    vec3 mixedColor = mix(swirlColor1, swirlColor2, swirl);
-                    mixedColor = mix(mixedColor, swirlColor3, sin(radius * 10.0) * 0.5 + 0.5);
-                    
-                    // 添加色彩到背景
-                    color += mixedColor * (1.0 - radius) * 0.5;
-                    
-                    // 液化扭曲效果
-                    color.r += sin(uv.x * 5.0 + uTime * 0.5) * 0.1;
-                    color.g += cos(uv.y * 5.0 + uTime * 0.3) * 0.1;
-                    color.b += sin(uv.x * uv.y * 20.0 + uTime * 0.7) * 0.1;
-                    
-                    gl_FragColor = vec4(color, 1.0);
-                }
-            `,
-            side: THREE.DoubleSide
-        });
-        
-        const plane = new THREE.Mesh(geometry, material);
-        plane.position.z = -5;
-        
-        return plane;
-    };
-    
-    const starfield = createStarfieldBackground();
-    scene.add(starfield);
-    
     // 添加粒子云
     const particleGeometry = new THREE.BufferGeometry();
     const positions = new Float32Array(3000);
     
-    for (let i = 0; i < positions.length; i++) {
-        positions[i] = (Math.random() - 0.5) * 10;
+    for (let i = 0; i < positions.length; i += 3) {
+        // 粒子分布在整个场景中
+        positions[i] = (Math.random() - 0.5) * 40; // x: -20 到 20
+        positions[i + 1] = (Math.random() - 0.5) * 30; // y: -15 到 15
+        positions[i + 2] = (Math.random() - 0.5) * 20; // z: -10 到 10
     }
     
     particleGeometry.setAttribute(
@@ -185,54 +77,15 @@ function initThreeJS() {
     const points = new THREE.Points(particleGeometry, particleMaterial);
     scene.add(points);
     
-    // 添加环境光
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-    
-    // 添加点光源
-    const pointLight = new THREE.PointLight(0xff0000, 1);
-    pointLight.position.set(5, 5, 5);
-    scene.add(pointLight);
-    
-
-    
-    // 鼠标位置变量
-    let mouseX = 0;
-    let mouseY = 0;
-    
-    // 添加鼠标移动事件监听
-    window.addEventListener('mousemove', (e) => {
-        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-    });
-    
     // 动画循环
     function animate() {
         requestAnimationFrame(animate);
-        
-        // 获取当前时间
-        const time = Date.now() * 0.001;
-        
-        // 更新星空背景的uniforms
-        starfield.material.uniforms.uTime.value = time;
-        starfield.material.uniforms.uMouse.value.set(mouseX * window.innerWidth, mouseY * window.innerHeight);
-        starfield.material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
-        
-        // 旋转星空背景
-        starfield.rotation.x += 0.001;
-        starfield.rotation.y += 0.002;
         
         // 粒子云动画
         points.rotation.x += 0.005;
         points.rotation.y += 0.005;
         
-
-        
-        // 鼠标驱动摄像机
-        camera.position.x += (mouseX - camera.position.x) * 0.05;
-        camera.position.y += (-mouseY - camera.position.y) * 0.05;
-        
-        // 确保摄像机始终看向原点
+        // 固定摄像机
         camera.lookAt(0, 0, 0);
         
         // 渲染场景
@@ -391,6 +244,193 @@ function initScrollAnimations() {
     });
     
     // 初始设置浮动导航点的不透明度
-    document.querySelector('.floating-nav').style.opacity = '0';
-    document.querySelector('.floating-nav').style.transition = 'opacity 0.5s ease';
+document.querySelector('.floating-nav').style.opacity = '0';
+document.querySelector('.floating-nav').style.transition = 'opacity 0.5s ease';
+}
+
+// 作品数据
+const workData = {
+    'work-1': {
+        title: 'Brand Design Project',
+        category: 'Graphic Design',
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+        description: [
+            'This is a comprehensive brand design project for a modern startup. The project includes logo design, brand identity, packaging design, and marketing materials.',
+            'The design concept revolves around minimalism and modern aesthetics, using a clean color palette and geometric shapes to create a strong visual identity.'
+        ],
+        details: {
+            client: 'Tech Startup Inc.',
+            year: '2024',
+            services: 'Logo Design, Brand Identity, Packaging'
+        }
+    },
+    'work-3': {
+        title: 'AI Generated Art Collection',
+        category: 'AI Design',
+        image: 'https://images.unsplash.com/photo-1677442136607-d81b6006d972?ixlib=rb-1.2.1&auto=format&fit=crop&w=1374&q=80',
+        description: [
+            'This collection showcases the potential of AI-generated art. Using advanced machine learning algorithms, we created a series of unique and captivating visual artworks.',
+            'Each piece combines human creativity with AI capabilities, resulting in stunning visuals that push the boundaries of traditional art.'
+        ],
+        details: {
+            client: 'Art Gallery Exhibition',
+            year: '2024',
+            services: 'AI Art Generation, Digital Artwork'
+        }
+    },
+    'work-4': {
+        title: 'Modern Website Design',
+        category: 'Web Design',
+        image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+        description: [
+            'A modern, responsive website design for a creative agency. The design focuses on user experience and visual appeal, with a clean layout and smooth animations.',
+            'The website is fully responsive, ensuring optimal viewing experience across all devices and screen sizes.'
+        ],
+        details: {
+            client: 'Creative Agency',
+            year: '2024',
+            services: 'Web Design, UI/UX Design, Responsive Development'
+        }
+    },
+    'work-5': {
+        title: 'Illustration Design Collection',
+        category: 'Creative Design',
+        image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+        description: [
+                'A collection of creative illustrations for various projects. The illustrations feature a unique style with bold colors and dynamic compositions.',
+                'The project includes editorial illustrations, children\'s book illustrations, and concept art for video games.'
+            ],
+        details: {
+            client: 'Multiple Clients',
+            year: '2024',
+            services: 'Illustration, Concept Art, Digital Painting'
+        }
+    },
+    'work-6': {
+        title: '3D Design Portfolio',
+        category: '3D Design',
+        image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+        description: [
+            'A showcase of 3D design projects, including product visualization, architectural rendering, and character design.',
+            'Using industry-standard 3D software, we created realistic and visually stunning 3D models and renderings.'
+        ],
+        details: {
+            client: 'Design Studio',
+            year: '2024',
+            services: '3D Modeling, Rendering, Product Visualization'
+        }
+    }
+};
+
+// 作品弹出层功能
+function initWorkModal() {
+    // 获取DOM元素
+    const modal = document.getElementById('workModal');
+    const closeBtn = document.querySelector('.work-modal-close');
+    const workItems = document.querySelectorAll('.work-item');
+    
+    // 获取模态框内的元素
+    const modalImage = modal.querySelector('.work-modal-image img');
+    const modalTitle = modal.querySelector('.work-modal-title');
+    const modalCategory = modal.querySelector('.work-modal-category');
+    const modalDescription = modal.querySelector('.work-modal-description');
+    const modalDetails = modal.querySelector('.work-modal-details');
+    
+    // 更新模态框内容
+    function updateModalContent(workId) {
+        const data = workData[workId];
+        if (data) {
+            // 更新Banner区域
+            const bannerImage = modal.querySelector('.work-banner-image img');
+            const bannerTitle = modal.querySelector('.work-banner-title');
+            const bannerCategory = modal.querySelector('.work-banner-category');
+            
+            if (bannerImage) bannerImage.src = data.image;
+            if (bannerImage) bannerImage.alt = data.title;
+            if (bannerTitle) bannerTitle.textContent = data.title;
+            if (bannerCategory) bannerCategory.textContent = data.category;
+            
+            // 更新详情页标题和分类
+            if (modalTitle) modalTitle.textContent = data.title;
+            if (modalCategory) modalCategory.textContent = data.category;
+            
+            // 更新描述
+            if (modalDescription) {
+                modalDescription.innerHTML = '';
+                data.description.forEach(paragraph => {
+                    const p = document.createElement('p');
+                    p.textContent = paragraph;
+                    modalDescription.appendChild(p);
+                });
+            }
+            
+            // 更新详细信息
+            if (modalDetails) {
+                modalDetails.innerHTML = `
+                    <div class="detail-item">
+                        <h4>Client</h4>
+                        <p>${data.details.client}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4>Year</h4>
+                        <p>${data.details.year}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4>Services</h4>
+                        <p>${data.details.services}</p>
+                    </div>
+                `;
+            }
+            
+            // 更新项目展示图片（使用相同图片的不同尺寸或相关图片）
+            const galleryItems = modal.querySelectorAll('.gallery-item img');
+            if (galleryItems.length > 0) {
+                galleryItems.forEach((item, index) => {
+                    // 为每个画廊项使用相同的主图，实际项目中可以使用不同图片
+                    item.src = data.image;
+                    item.alt = `${data.title} - Image ${index + 1}`;
+                });
+            }
+        }
+    }
+    
+    // 点击作品模块打开弹出层
+    workItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const workId = this.classList[2]; // 获取work-1, work-3等类名
+            updateModalContent(workId);
+            modal.classList.add('show');
+            // 禁止页面滚动
+            document.body.style.overflow = 'hidden';
+        });
+    });
+    
+    // 点击关闭按钮关闭弹出层
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', function() {
+            modal.classList.remove('show');
+            // 恢复页面滚动
+            document.body.style.overflow = 'auto';
+        });
+    }
+    
+    // 点击弹出层外部关闭弹出层
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+                // 恢复页面滚动
+                document.body.style.overflow = 'auto';
+            }
+        });
+    }
+    
+    // 按ESC键关闭弹出层
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+            modal.classList.remove('show');
+            // 恢复页面滚动
+            document.body.style.overflow = 'auto';
+        }
+    });
 }

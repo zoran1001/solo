@@ -971,3 +971,373 @@ h1, h2, h3, h4, h5, h6 {
     background-color: rgba(255, 0, 0, 0.3);
     color: var(--text-primary);
 }
+
+/* 作品弹出层样式 */
+.work-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    overflow: auto;
+    animation: modalFadeIn 0.3s ease;
+}
+
+.work-modal.show {
+    display: block;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.work-modal-content {
+    position: relative;
+    background-color: var(--primary-bg);
+    margin: 2% auto;
+    padding: 0;
+    width: 95%;
+    max-width: 1400px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+    overflow: hidden;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.work-modal-close {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+    color: var(--text-secondary);
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 2001;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+}
+
+.work-modal-close:hover,
+.work-modal-close:focus {
+    color: var(--accent-color);
+    transform: scale(1.2);
+    border-color: var(--accent-color);
+}
+
+/* 作品详情页容器 */
+.work-page-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 首页Banner */
+.work-banner {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.work-banner-image {
+    width: 100%;
+    height: 100%;
+}
+
+.work-banner-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.work-banner:hover .work-banner-image img {
+    transform: scale(1.05);
+}
+
+.work-banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 3rem;
+}
+
+.work-banner-content {
+    max-width: 800px;
+}
+
+.work-banner-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    line-height: 1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.work-banner-category {
+    font-size: 1rem;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+/* 详情页内容 */
+.work-detail-page {
+    background-color: var(--primary-bg);
+    padding: 0;
+}
+
+.work-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+/* 项目概述 */
+.work-overview {
+    margin-bottom: 4rem;
+}
+
+.work-overview-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.work-overview-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.work-overview-details {
+    background-color: var(--secondary-bg);
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    height: fit-content;
+}
+
+/* 项目展示 */
+.work-showcase {
+    margin-bottom: 4rem;
+}
+
+.work-showcase-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.gallery-item {
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+/* 设计理念 */
+.work-concept {
+    margin-bottom: 3rem;
+}
+
+.work-concept-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 800px;
+}
+
+/* 通用部分样式 */
+.work-section-title {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+}
+
+.work-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background-color: var(--accent-color);
+    transition: var(--transition);
+}
+
+.work-section-title:hover::after {
+    width: 100%;
+}
+
+/* 模态框内的通用样式 */
+.work-modal-description {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.work-modal-description p {
+    margin-bottom: 1.5rem;
+}
+
+.work-modal-description p:last-child {
+    margin-bottom: 0;
+}
+
+.work-modal-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detail-item h4 {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+.detail-item p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .work-overview-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .work-overview-details {
+        order: -1;
+    }
+    
+    .work-showcase-gallery {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .work-modal-content {
+        margin: 5% auto;
+        width: 98%;
+    }
+    
+    .work-modal-close {
+        right: 1rem;
+        top: 1rem;
+        font-size: 1.5rem;
+        width: 35px;
+        height: 35px;
+    }
+    
+    .work-banner {
+        height: 300px;
+    }
+    
+    .work-banner-overlay {
+        padding: 2rem 1rem;
+    }
+    
+    .work-detail-container {
+        padding: 2rem 1rem;
+    }
+    
+    .work-overview-content {
+        gap: 1.5rem;
+    }
+    
+    .work-overview-details {
+        padding: 1.5rem;
+    }
+    
+    .work-showcase-gallery {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .gallery-item img {
+        height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .work-modal-content {
+        margin: 10% auto;
+    }
+    
+    .work-banner {
+        height: 250px;
+    }
+    
+    .work-banner-title {
+        font-size: 1.8rem;
+    }
+    
+    .work-section-title {
+        font-size: 1.5rem;
+    }
+}
