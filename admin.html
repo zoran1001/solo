@@ -30,11 +30,14 @@
                         <span>📧</span> 联系方式
                     </li>
                     <li data-section="footer">
-                        <span>📄</span> 页脚信息
-                    </li>
-                    <li data-section="workmodal">
-                        <span>📝</span> 弹窗内容
-                    </li>
+                    <span>📄</span> 页脚信息
+                </li>
+                <li data-section="workmodal">
+                    <span>📝</span> 弹窗内容
+                </li>
+                <li data-section="music">
+                    <span>🎵</span> 音乐设置
+                </li>
                 </ul>
             </nav>
             <div class="admin-actions">
@@ -588,6 +591,47 @@
                             <textarea data-field="modal-6-concept-1" rows="3" placeholder="理念段落1"></textarea>
                             <textarea data-field="modal-6-concept-2" rows="3" placeholder="理念段落2"></textarea>
                             <textarea data-field="modal-6-concept-3" rows="3" placeholder="理念段落3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 音乐设置 -->
+            <section id="music-section" class="admin-section">
+                <h2>音乐设置</h2>
+                
+                <div class="form-group">
+                    <h3>音乐基本信息</h3>
+                    <input type="text" data-field="music-name" placeholder="音乐名称">
+                    <input type="text" data-field="music-url" placeholder="音乐文件URL">
+                </div>
+
+                <div class="form-group">
+                    <h3>音乐设置</h3>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="music-auto-play">自动播放</label>
+                            <select id="music-auto-play" data-field="music-auto-play">
+                                <option value="true">开启</option>
+                                <option value="false">关闭</option>
+                            </select>
+                        </div>
+                        <div class="form-col">
+                            <label for="music-volume">默认音量 (0-100)</label>
+                            <input type="number" id="music-volume" data-field="music-volume" min="0" max="100" value="70">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h3>音乐状态</h3>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="music-enabled">启用音乐</label>
+                            <select id="music-enabled" data-field="music-enabled">
+                                <option value="true">开启</option>
+                                <option value="false">关闭</option>
+                            </select>
                         </div>
                     </div>
                 </div>

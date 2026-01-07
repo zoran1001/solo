@@ -56,38 +56,80 @@ function initHeroCarousel() {
     startAutoPlay();
 }
 
-// 确保页面完全加载后执行
-document.addEventListener('DOMContentLoaded', function() {
-    // 为所有锚点链接添加平滑滚动功能
+// 确保加载动画至少显示一段时间，并且在页面完全加载后才消失
+let pageLoaded = false;
+let minLoadTimePassed = false;
+
+// 页面DOM加载完成
+window.addEventListener('DOMContentLoaded', function() {
+    // 页面DOM加载完成后执行的逻辑
     addSmoothScroll();
-    
-    // 添加滚动动画效果
     addScrollAnimations();
-    
-    // 添加浮动导航点高亮功能
     addFloatingNavHighlight();
-    
-    // 添加作品项悬停效果
     addWorkItemEffects();
-    
-    // 添加技能项悬停效果
     addSkillItemEffects();
-    
-    // 添加表单提交效果
     addFormSubmissionEffect();
-    
-    // 初始化滚动动画
     initScrollAnimations();
-    
-    // 初始化粒子系统
     initParticleSystem();
-    
-    // 初始化作品弹窗功能
     initWorkModal();
-    
-    // 初始化轮播功能
     initHeroCarousel();
+    initMusicPlayer();
+    
+    pageLoaded = true;
+    checkLoadingComplete();
 });
+
+// 页面所有资源加载完成
+window.addEventListener('load', function() {
+    pageLoaded = true;
+    checkLoadingComplete();
+});
+
+// 确保至少显示2秒的加载动画
+setTimeout(function() {
+    minLoadTimePassed = true;
+    checkLoadingComplete();
+}, 2000);
+
+// 检查加载是否完成，只有在页面完全加载且最小加载时间已过时才隐藏遮罩
+function checkLoadingComplete() {
+    if (pageLoaded && minLoadTimePassed) {
+        // 添加loaded类，触发遮罩淡出动画
+        document.body.classList.add('loaded');
+    }
+}
+
+// 初始化滚动动画
+function initScrollAnimations() {
+    // 监听滚动事件，为元素添加动画
+    window.addEventListener('scroll', function() {
+        const scrollY = window.pageYOffset;
+        
+        // 为英雄区域形状添加视差效果
+        const shapes = document.querySelectorAll('.hero-shape');
+        shapes.forEach((shape, index) => {
+            const speed = (index + 1) * 0.5;
+            shape.style.transform = `translateY(${scrollY * speed}px) rotate(${scrollY * speed * 0.1}deg)`;
+        });
+        
+        // 为浮动导航点添加淡入效果
+        const floatingNav = document.querySelector('.floating-nav');
+        if (floatingNav) {
+            if (scrollY > 200) {
+                floatingNav.style.opacity = '1';
+            } else {
+                floatingNav.style.opacity = '0';
+            }
+        }
+    });
+    
+    // 初始设置浮动导航点的不透明度
+    const floatingNav = document.querySelector('.floating-nav');
+    if (floatingNav) {
+        floatingNav.style.opacity = '0';
+        floatingNav.style.transition = 'opacity 0.5s ease';
+    }
+}
 
 
 
@@ -108,23 +150,56 @@ function addSmoothScroll() {
 
 // 滚动动画效果
 function addScrollAnimations() {
+    // 设置更精确的观察选项
     const observerOptions = {
-        threshold: 0.15,
-        rootMargin: '0px 0px -100px 0px'
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
     };
     
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                // 添加visible类触发动画
                 entry.target.classList.add('visible');
+                // 动画完成后停止观察，避免重复触发
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
     
-    // 为所有需要动画的元素添加观察
-    const animateElements = document.querySelectorAll('.work-item, .skill-card, .contact-item, .form-group, .about-paragraph');
-    animateElements.forEach(el => {
+    // 获取所有需要动画的元素
+    const animateElements = document.querySelectorAll('.work-item, .skill-card, .contact-item, .form-group, .about-paragraph, .section-heading, .section-subheading');
+    
+    // 为不同类型元素添加不同的动画类，实现多样化的进入效果
+    animateElements.forEach((el, index) => {
+        // 基础淡入上浮效果
         el.classList.add('fade-in');
+        
+        // 为作品项添加交替左右进入效果
+        if (el.classList.contains('work-item')) {
+            // 根据索引奇偶性添加左右进入效果
+            if (index % 2 === 0) {
+                el.classList.add('left');
+            } else {
+                el.classList.add('right');
+            }
+        }
+        
+        // 为技能卡片添加旋转进入效果
+        if (el.classList.contains('skill-card')) {
+            el.classList.add('rotate');
+        }
+        
+        // 为联系项和表单组添加交替左右进入效果
+        if (el.classList.contains('contact-item') || el.classList.contains('form-group')) {
+            if (index % 2 === 0) {
+                el.classList.add('left');
+            } else {
+                el.classList.add('right');
+            }
+        }
+        
+        // 添加观察
         observer.observe(el);
     });
 }
@@ -681,6 +756,189 @@ function initWorkModal() {
             closeModal();
         }
     });
+}
+
+// 音乐播放器功能
+function initMusicPlayer() {
+    const musicPlayer = document.getElementById('musicPlayer');
+    const musicToggle = document.getElementById('musicToggle');
+    const musicPlay = document.getElementById('musicPlay');
+    const musicPrev = document.getElementById('musicPrev');
+    const musicNext = document.getElementById('musicNext');
+    const musicName = document.getElementById('musicName');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const playIcon = musicPlay.querySelector('.play-icon');
+    const pauseIcon = musicPlay.querySelector('.pause-icon');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volumeValue = document.getElementById('volumeValue');
+    const musicProgress = document.getElementById('musicProgress');
+    const musicProgressBar = document.getElementById('musicProgressBar');
+    
+    // 从localStorage获取音乐设置
+    const getMusicSettings = () => {
+        const storageKey = 'site_content_data';
+        try {
+            const saved = localStorage.getItem(storageKey);
+            if (saved) {
+                const data = JSON.parse(saved);
+                return {
+                    name: data['music-name'] || '背景音乐',
+                    url: data['music-url'] || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+                    autoPlay: data['music-auto-play'] === 'true' || false,
+                    volume: parseInt(data['music-volume']) || 70,
+                    enabled: data['music-enabled'] === 'true' || true
+                };
+            }
+        } catch (error) {
+            console.error('Failed to load music settings:', error);
+        }
+        // 默认值
+        return {
+            name: '背景音乐',
+            url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            autoPlay: true,
+            volume: 70,
+            enabled: true
+        };
+    };
+    
+    let musicSettings = getMusicSettings();
+    let isPlaying = false;
+    
+    // 设置初始音量
+    const initialVolume = musicSettings.volume / 100;
+    audioPlayer.volume = initialVolume;
+    volumeSlider.value = musicSettings.volume;
+    volumeValue.textContent = musicSettings.volume + '%';
+    
+    // 默认显示控制按钮
+    musicPlayer.classList.add('expanded');
+    
+    // 播放/暂停控制（音乐按钮直接控制）
+    function togglePlayPause() {
+        if (isPlaying) {
+            pauseMusic();
+        } else {
+            playMusic();
+        }
+    }
+    
+    // 音乐按钮控制面板显示/隐藏
+    musicToggle.addEventListener('click', function() {
+        const musicPanel = document.getElementById('musicPanel');
+        musicPanel.classList.toggle('open');
+    });
+    
+    // 播放/暂停按钮控制播放状态
+    musicPlay.addEventListener('click', togglePlayPause);
+    
+    // 由于只有一首歌，上一首和下一首按钮可以隐藏或禁用
+    musicPrev.style.display = 'none';
+    musicNext.style.display = 'none';
+    
+    // 如果音乐未启用，隐藏播放器
+    if (!musicSettings.enabled) {
+        musicPlayer.style.display = 'none';
+        return;
+    }
+    
+    // 加载音乐
+    function loadMusic() {
+        audioPlayer.src = musicSettings.url;
+        musicName.textContent = musicSettings.name;
+        musicProgressBar.style.width = '0%';
+    }
+    
+    // 尝试自动播放音乐
+    function tryAutoPlay() {
+        if (musicSettings.autoPlay) {
+            // 直接尝试自动播放
+            audioPlayer.play().then(() => {
+                isPlaying = true;
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            }).catch(() => {
+                // 如果失败，设置用户交互监听
+                console.log('自动播放失败，等待用户交互...');
+                // 添加所有可能的用户交互事件
+                const userEvents = ['click', 'touchstart', 'keydown', 'mousemove'];
+                
+                function playOnUserInteraction() {
+                    audioPlayer.play().then(() => {
+                        isPlaying = true;
+                        playIcon.style.display = 'none';
+                        pauseIcon.style.display = 'block';
+                        // 移除所有事件监听器
+                        userEvents.forEach(event => {
+                            document.removeEventListener(event, playOnUserInteraction);
+                        });
+                    }).catch(error => {
+                        console.log('播放失败:', error);
+                    });
+                }
+                
+                // 添加事件监听器
+                userEvents.forEach(event => {
+                    document.addEventListener(event, playOnUserInteraction, { once: true });
+                });
+            });
+        }
+    }
+    
+    // 音量控制
+    volumeSlider.addEventListener('input', function() {
+        const volume = this.value / 100;
+        audioPlayer.volume = volume;
+        volumeValue.textContent = this.value + '%';
+    });
+    
+    // 进度条点击跳转
+    musicProgress.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        if (audioPlayer.duration) {
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        }
+    });
+    
+    // 更新进度条
+    audioPlayer.addEventListener('timeupdate', function() {
+        if (audioPlayer.duration) {
+            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            musicProgressBar.style.width = percent + '%';
+        }
+    });
+    
+    // 播放音乐
+    function playMusic() {
+        audioPlayer.play().catch(function(error) {
+            console.log('播放失败:', error);
+        });
+        isPlaying = true;
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+    }
+    
+    // 暂停音乐
+    function pauseMusic() {
+        audioPlayer.pause();
+        isPlaying = false;
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+    }
+    
+    // 音乐播放结束
+    audioPlayer.addEventListener('ended', function() {
+        // 循环播放当前音乐
+        audioPlayer.currentTime = 0;
+        playMusic();
+    });
+    
+    // 加载音乐
+    loadMusic();
+    
+    // 尝试自动播放音乐
+    tryAutoPlay();
 }
 
 

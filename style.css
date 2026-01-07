@@ -5,11 +5,64 @@
     box-sizing: border-box;
 }
 
+/* 主内容容器 - 在后台渲染，视觉上隐藏 */
+body > *:not(.page-loader) {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+/* 页面加载完成后主内容立即显示 */
+body.loaded > *:not(.page-loader) {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 全屏加载遮罩样式 */
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 圆形加载动画 */
+.loader-circle {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* 旋转动画 */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 页面加载完成后的遮罩状态 - 直接淡出，无缩放动画 */
+body.loaded .page-loader {
+    opacity: 0;
+    pointer-events: none;
+}
+
 /* 根变量定义 */
 :root {
     --primary-bg: #000000;
     --secondary-bg: #111111;
+    --surface: rgba(255, 255, 255, 0.1);
     --accent-color: #ff0000;
+    --accent-hover: rgba(255, 0, 0, 0.8);
     --text-primary: #ffffff;
     --text-secondary: rgba(255, 255, 255, 0.8);
     --border-color: rgba(255, 0, 0, 0.2);
@@ -35,10 +88,176 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: -0.5px;
 }
 
+/* 文本滑动动画 - 仅保留简单的滑动效果 */
+@keyframes textSlide {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* 滚动淡入效果：淡入 + 上浮/横移 */
+.fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: opacity, transform;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 为不同类型元素添加特定的进入动画 */
+/* 左侧进入 */
+.fade-in.left {
+    transform: translateX(-50px);
+}
+
+.fade-in.left.visible {
+    transform: translateX(0);
+}
+
+/* 右侧进入 */
+.fade-in.right {
+    transform: translateX(50px);
+}
+
+.fade-in.right.visible {
+    transform: translateX(0);
+}
+
+/* 旋转进入 */
+.fade-in.rotate {
+    transform: translateY(30px) rotate(-5deg);
+}
+
+.fade-in.rotate.visible {
+    transform: translateY(0) rotate(0deg);
+}
+
+/* 为连续的元素添加交错动画延迟，实现有节奏地出场 */
+/* 作品项交错动画 */
+.work-item.fade-in {
+    transition-delay: 0s;
+}
+
+.work-item.fade-in:nth-child(2) {
+    transition-delay: 0.15s;
+}
+
+.work-item.fade-in:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.work-item.fade-in:nth-child(4) {
+    transition-delay: 0.45s;
+}
+
+.work-item.fade-in:nth-child(5) {
+    transition-delay: 0.6s;
+}
+
+.work-item.fade-in:nth-child(6) {
+    transition-delay: 0.75s;
+}
+
+/* 技能卡片交错动画 */
+.skill-card.fade-in {
+    transition-delay: 0s;
+}
+
+.skill-card.fade-in:nth-child(2) {
+    transition-delay: 0.15s;
+}
+
+.skill-card.fade-in:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.skill-card.fade-in:nth-child(4) {
+    transition-delay: 0.45s;
+}
+
+.skill-card.fade-in:nth-child(5) {
+    transition-delay: 0.6s;
+}
+
+/* 联系项交错动画 */
+.contact-item.fade-in {
+    transition-delay: 0s;
+}
+
+.contact-item.fade-in:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.contact-item.fade-in:nth-child(3) {
+    transition-delay: 0.4s;
+}
+
+/* 表单组交错动画 */
+.form-group.fade-in {
+    transition-delay: 0s;
+}
+
+.form-group.fade-in:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.form-group.fade-in:nth-child(3) {
+    transition-delay: 0.4s;
+}
+
+/* 关于段落交错动画 */
+.about-paragraph.fade-in {
+    transition-delay: 0s;
+}
+
+.about-paragraph.fade-in:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.about-paragraph.fade-in:nth-child(3) {
+    transition-delay: 0.4s;
+}
+
+.about-paragraph.fade-in:nth-child(4) {
+    transition-delay: 0.6s;
+}
+
+/* 标题和副标题交错动画 */
+.section-heading.fade-in {
+    transition-delay: 0s;
+    transform: translateY(30px) scale(0.95);
+}
+
+.section-subheading.fade-in {
+    transition-delay: 0.3s;
+    transform: translateY(20px);
+}
+
+.section-heading.fade-in.visible {
+    transform: translateY(0) scale(1);
+}
+
+.section-subheading.fade-in.visible {
+    transform: translateY(0);
+}
+
 /* 浮动导航点 */
 .floating-nav {
     position: fixed;
-    right: 2rem;
+    right: 4rem;
     top: 50%;
     transform: translateY(-50%);
     z-index: 1000;
@@ -142,11 +361,26 @@ h1, h2, h3, h4, h5, h6 {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    transform-origin: center;
+}
+
+.carousel-control svg {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    fill: transparent;
+    stroke: currentColor;
+    stroke-width: 2;
 }
 
 .carousel-control:hover {
     background-color: rgba(255, 0, 0, 0.8);
-    transform: translateY(-50%) scale(1.1);
+    transform: translateY(-50%) scale(1.15);
+    color: white;
+}
+
+.carousel-control:hover svg {
+    transform: scale(1.2);
+    fill: rgba(255, 255, 255, 0.2);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
 }
 
 .carousel-control.prev {
@@ -283,6 +517,32 @@ h1, h2, h3, h4, h5, h6 {
     overflow: hidden;
     grid-area: bottom-left;
     align-self: flex-end;
+    transform-origin: center;
+}
+
+.hero-cta span {
+    display: inline-block;
+    transition: var(--transition);
+    transform-origin: left center;
+}
+
+.hero-cta:hover span {
+    transform: translateX(5px);
+}
+
+.hero-cta svg {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    fill: transparent;
+    stroke: currentColor;
+    stroke-width: 2;
+    transform-origin: center;
+}
+
+.hero-cta:hover svg {
+    transform: translateX(3px) scale(1.1);
+    fill: rgba(255, 0, 0, 0.2);
+    stroke: var(--accent-color);
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.5));
 }
 
 /* 右侧顶部边缘文案 */
@@ -329,8 +589,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-cta:hover {
     background-color: transparent;
-    transform: translateY(-5px);
+    transform: translateY(-5px) scale(1.05);
     box-shadow: 0 15px 30px rgba(255, 0, 0, 0.3);
+    color: var(--accent-color);
 }
 
 .hero-cta::before {
@@ -401,15 +662,29 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .showcase-header {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    padding: 4rem 2rem;
     margin-bottom: 6rem;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
 }
 
 .section-heading {
     font-size: clamp(2.5rem, 6vw, 4rem);
     color: var(--text-primary);
-    margin-bottom: 1rem;
+    margin: 0 0 1.5rem 0;
     position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    line-height: 1;
+    white-space: nowrap;
     display: inline-block;
 }
 
@@ -426,10 +701,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .section-subheading {
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 1.8vw, 1.2rem);
     color: var(--text-secondary);
     letter-spacing: 2px;
     text-transform: uppercase;
+    margin: 0;
+    font-weight: normal;
+    text-align: center;
+    display: block;
+    line-height: 1;
+    white-space: nowrap;
+    margin-top: 0.5rem;
 }
 
 .works-container {
@@ -585,13 +867,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .about-text .section-heading {
-    text-align: left;
-    margin-bottom: 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    display: block;
+    width: 100%;
 }
 
 .about-text .section-heading::after {
-    left: 0;
-    transform: translateX(0);
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .about-paragraph {
@@ -610,8 +894,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .skills-header {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 6rem;
+    text-align: center;
+    width: 100%;
+}
+
+.skills-header .section-heading::after {
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .skills-grid {
@@ -658,10 +952,21 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 2rem;
     color: var(--accent-color);
     transition: var(--transition);
+    position: relative;
 }
 
-.skill-card:hover .skill-icon {
+.skill-icon svg {
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    fill: transparent;
+    stroke: var(--accent-color);
+    stroke-width: 2;
+}
+
+.skill-card:hover .skill-icon svg {
     transform: scale(1.2) rotate(10deg);
+    fill: rgba(255, 0, 0, 0.1);
+    stroke: var(--accent-color);
+    filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
 }
 
 .skill-title {
@@ -686,8 +991,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .contact-header {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 6rem;
+    text-align: center;
+    width: 100%;
+}
+
+.contact-header .section-heading::after {
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .contact-content {
@@ -752,11 +1067,14 @@ h1, h2, h3, h4, h5, h6 {
     transition: var(--transition);
     position: relative;
     padding: 0.5rem 0;
+    display: inline-block;
+    transform-origin: left center;
 }
 
 .social-link:hover {
     color: var(--accent-color);
     padding-left: 10px;
+    transform: scale(1.05);
 }
 
 .social-link::before {
@@ -841,12 +1159,41 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
     width: fit-content;
     align-self: flex-start;
+    transform-origin: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.form-submit span {
+    display: inline-block;
+    transition: var(--transition);
+    transform-origin: left center;
+}
+
+.form-submit:hover span {
+    transform: translateX(5px);
+}
+
+.form-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: var(--transition);
 }
 
 .form-submit:hover {
     background-color: transparent;
-    transform: translateY(-3px);
+    transform: translateY(-3px) scale(1.05);
     box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
+    color: var(--accent-color);
+}
+
+.form-submit:hover::before {
+    left: 100%;
 }
 
 /* 页脚 */
@@ -915,17 +1262,7 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-/* 滚动动画 */
-.fade-in {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-}
 
-.fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
 
 /* 响应式设计 */
 @media (max-width: 1200px) {
@@ -986,7 +1323,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 768px) {
     .floating-nav {
-        right: 1rem;
+        right: 2rem;
     }
     
     .hero-content {
@@ -1050,11 +1387,12 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .section-subheading {
-        font-size: 1rem;
+        font-size: clamp(0.7rem, 1.2vw, 0.9rem);
     }
     
     .showcase-header {
         margin-bottom: 4rem;
+        padding: 1.5rem 2rem;
     }
     
     .works-container {
@@ -1068,7 +1406,7 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .floating-nav {
-        right: 0.5rem;
+        right: 1.5rem;
     }
     
     .hero-cta {
@@ -1191,6 +1529,240 @@ h1, h2, h3, h4, h5, h6 {
 ::-moz-selection {
     background-color: rgba(255, 0, 0, 0.3);
     color: var(--text-primary);
+}
+
+/* 音乐播放器样式 */
+.music-player {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 0;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+}
+
+.music-toggle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50% 0 0 50%;
+    background: var(--accent-color);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 10000;
+    box-shadow: -4px 0 15px rgba(255, 0, 0, 0.3);
+}
+
+.music-toggle:hover {
+    background: var(--accent-hover);
+    transform: scale(1.1);
+    box-shadow: -6px 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.music-toggle svg {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    fill: white;
+    stroke: none;
+}
+
+.music-toggle:hover svg {
+    transform: rotate(15deg) scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+}
+
+.music-panel {
+    background: var(--surface);
+    padding: 1rem 1.5rem;
+    border-radius: 20px 0 0 20px;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateX(100%);
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 300px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+}
+
+.music-panel.open {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.music-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.music-controls button svg {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    fill: transparent;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.music-controls button:hover svg {
+    transform: scale(1.2);
+    fill: rgba(255, 0, 0, 0.2);
+    stroke: var(--accent-color);
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+}
+
+.music-controls button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--secondary-bg);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.music-controls button:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.music-play {
+    width: 36px !important;
+    height: 36px !important;
+    background: var(--accent-color) !important;
+    color: white !important;
+}
+
+.music-play:hover {
+    background: var(--accent-hover) !important;
+    transform: scale(1.1);
+}
+
+.music-info {
+    min-width: 150px;
+}
+
+.music-name-row {
+    margin-bottom: 0.5rem;
+}
+
+.music-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    display: block;
+}
+
+.music-progress-row {
+    margin-bottom: 0.5rem;
+}
+
+.music-progress {
+    width: 100%;
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.music-progress-bar {
+    height: 100%;
+    background: var(--accent-color);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.music-volume-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.volume-icon {
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.volume-slider {
+    flex: 1;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--border-color);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.volume-value {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    min-width: 35px;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .music-player {
+        top: auto;
+        bottom: 2rem;
+        right: 0;
+        transform: none;
+        flex-direction: row-reverse;
+        align-items: center;
+    }
+    
+    .music-toggle {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .music-panel {
+        max-width: 250px;
+        padding: 0.75rem 1rem;
+    }
 }
 
 /* 作品弹出层样式 */

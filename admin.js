@@ -129,7 +129,14 @@ const admin = (function() {
         'modal-6-gallery-3': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
         'modal-6-concept-1': 'The design concept was centered around creating a product that is both aesthetically pleasing and highly functional.',
         'modal-6-concept-2': 'We used parametric modeling techniques to create smooth, organic shapes that feel natural to hold and use.',
-        'modal-6-concept-3': 'The materials and textures were carefully chosen to create a premium look and feel, with realistic rendering that showcases the product\'s features.'
+        'modal-6-concept-3': 'The materials and textures were carefully chosen to create a premium look and feel, with realistic rendering that showcases the product\'s features.',
+        
+        // 音乐设置
+        'music-name': '背景音乐',
+        'music-url': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+        'music-auto-play': 'true',
+        'music-volume': '70',
+        'music-enabled': 'true'
     };
 
     function loadData() {
@@ -833,6 +840,9 @@ const admin = (function() {
         }
     }
 })();
+
+// 将admin对象暴露到全局作用域
+window.admin = admin;
 
 document.addEventListener('DOMContentLoaded', function() {
     admin.init();
