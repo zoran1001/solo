@@ -207,7 +207,7 @@ const initWorkCategoryNav = () => {
     // 为分类文字添加点击事件监听器
     const workCategories = document.querySelectorAll('.work-category[data-category]');
     workCategories.forEach(category => {
-        category.addEventListener('click', (e) => {
+        category.addEventListener('click', () => {
             const categoryValue = category.dataset.category;
             if (categoryValue) {
                 console.log('切换到分类:', categoryValue);
@@ -215,7 +215,7 @@ const initWorkCategoryNav = () => {
             }
         });
     });
-};
+}
 
 // 平滑滚动函数
 const addSmoothScroll = () => {
@@ -1206,15 +1206,6 @@ if (Object.keys(workData).length === 0) {
         ]
     }
 };
-
-
-
-
-
-
-
-
-
 // 全局变量声明
 let workModal = null;
 let workModalCloseBtn = null;
@@ -1245,7 +1236,6 @@ const updateWorkModalContent = (work) => {
             });
         }
     }
-    
     // 更新详情
     const client = workModal.querySelector('.detail-item:nth-child(1) p');
     const year = workModal.querySelector('.detail-item:nth-child(2) p');
@@ -1270,7 +1260,6 @@ const updateWorkModalContent = (work) => {
             });
         }
     }
-    
     // 更新设计理念
     const conceptContent = workModal.querySelector('.work-concept-content');
     if (conceptContent) {
@@ -1313,9 +1302,8 @@ const openWorkModal = (workId) => {
 const closeWorkModal = () => {
     if (!workModal) return;
     
+    // 隐藏弹窗
     workModal.style.opacity = '0';
-    
-    // 等待动画结束后隐藏弹窗
     setTimeout(() => {
         workModal.style.display = 'none';
         document.body.style.overflow = '';
@@ -1354,20 +1342,14 @@ const initWorkModal = () => {
 
 // 获取音乐设置
 const getMusicSettings = () => {
-        // 默认音乐设置
-        return {
-            enabled: true,
-            volume: 70,
-            autoPlay: true,
-            url: 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/aigei_com.mp3?v=1767831280',
-            name: 'BGM'
-        };
-    ;
-    ;
-    ;
-    ;
-    ;
-    ;
+    // 默认音乐设置
+    return {
+        enabled: true,
+        volume: 70,
+        autoPlay: true,
+        url: 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/aigei_com.mp3?v=1767831280',
+        name: 'BGM'
+    };
 };
 
 // 初始化音乐播放器
@@ -1564,4 +1546,4 @@ const initMusicPlayer = () => {
         pageLoaded = true;
         checkLoadingComplete();
     }
-};
+}
