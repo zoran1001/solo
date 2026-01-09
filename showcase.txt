@@ -1,0 +1,97 @@
+    <!-- 作品展示区域 -->
+    <section id="showcase" class="showcase">
+        <div class="showcase-header">
+            <h2 class="section-heading">My design works</h2>
+            <p class="section-subheading">Breakthrough Conventional Creative Expression</p>
+        </div>
+        
+        <!-- 设计分类导航 -->
+        <div class="design-category-nav">
+            <button class="category-nav-btn active" data-category="all">All</button>
+            <button class="category-nav-btn" data-category="brand">Brand Design</button>
+            <button class="category-nav-btn" data-category="ai">AI Design</button>
+            <button class="category-nav-btn" data-category="web">Web Design</button>
+            <button class="category-nav-btn" data-category="graphic">Graphic Design</button>
+            <button class="category-nav-btn" data-category="3d">3D Design</button>
+        </div>
+        
+        <!-- 作品轮播容器 -->
+        <div class="work-carousel-container">
+            <!-- 所有作品轮播 -->
+            <div class="work-carousel active" data-category="all">
+        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="works-container">
+            <!-- Brand Design -->
+            <div class="work-item large work-1">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/04c1b54e734068ed38cbb1e9b5dc0310.png?v=1767768158" alt="Brand Design">
+                    </div>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">Brand Design</h3>
+                            <p class="work-category">A Design</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- AI-generated -->
+            <div class="work-item small work-3">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/ChatGPT_Image_2026_1_7_15_43_57.png?v=1767776603" alt="AI-generated">
+                    </div>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">AI-generated</h3>
+                            <p class="work-category">AI Design</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Website Design -->
+            <div class="work-item small work-4">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/jimeng-2026-01-07-8512-3D_....png?v=1767777492" alt="Website Design">
+                    </div>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">Website Design</h3>
+                            <p class="work-category">Web Design</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Graphic Design -->
+            <div class="work-item medium work-5">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/167.png?v=1767777647" alt="Graphic Design">
+                    </div>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">Graphic Design</h3>
+                            <p class="work-category">Creative Design</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 3D Design -->
+            <div class="work-item large work-6">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275" alt="3D Design">
+                    </div>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">3D Design</h3>
+                            <p class="work-category">3D Design</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+    </section>
+

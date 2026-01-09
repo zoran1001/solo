@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理 - 我的设计宇宙</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>后台管理</h2>
+            </div>
+            <nav class="admin-nav">
+                <ul>
+                    <li class="active" data-section="hero">
+                        <span>🏠</span> 首页Banner
+                    </li>
+                    <li data-section="showcase">
+                        <span>🎨</span> 作品展示
+                    </li>
+                    <li data-section="about">
+                        <span>👤</span> 关于我
+                    </li>
+                    <li data-section="skills">
+                        <span>⚡</span> 专业技能
+                    </li>
+                    <li data-section="contact">
+                        <span>📧</span> 联系方式
+                    </li>
+                    <li data-section="footer">
+                        <span>📄</span> 页脚信息
+                    </li>
+                    <li data-section="workmodal">
+                        <span>📝</span> 弹窗内容
+                    </li>
+                    <li data-section="music">
+                        <span>🎵</span> 音乐设置
+                    </li>
+                </ul>
+            </nav>
+            <div class="admin-actions">
+                <button class="btn btn-primary" onclick="admin.saveAll()">保存全部</button>
+                <button class="btn btn-secondary" onclick="admin.preview()">预览效果</button>
+                <button class="btn btn-success" onclick="admin.exportToCode()">导出代码</button>
+                <button class="btn btn-warning" onclick="admin.oneClickSync()">一键同步</button>
+                <a href="index.html" target="_blank" class="btn btn-outline">查看前台</a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <section id="hero-section" class="admin-section active">
+                <h2>首页Banner管理</h2>
+                
+                <div class="form-group">
+                    <h3>轮播图片</h3>
+                    <div class="carousel-list">
+                        <div class="image-input-group" data-field="carousel-1">
+                            <label>轮播图 1</label>
+                            <input type="text" class="image-url-input" data-field="carousel-1" placeholder="图片URL">
+                            <div class="image-preview"></div>
+                        </div>
+                        <div class="image-input-group" data-field="carousel-2">
+                            <label>轮播图 2</label>
+                            <input type="text" class="image-url-input" data-field="carousel-2" placeholder="图片URL">
+                            <div class="image-preview"></div>
+                        </div>
+                        <div class="image-input-group" data-field="carousel-3">
+                            <label>轮播图 3</label>
+                            <input type="text" class="image-url-input" data-field="carousel-3" placeholder="图片URL">
+                            <div class="image-preview"></div>
+                        </div>
+                        <div class="image-input-group" data-field="carousel-4">
+                            <label>轮播图 4</label>
+                            <input type="text" class="image-url-input" data-field="carousel-4" placeholder="图片URL">
+                            <div class="image-preview"></div>
+                        </div>
+                        <div class="image-input-group" data-field="carousel-5">
+                            <label>轮播图 5</label>
+                            <input type="text" class="image-url-input" data-field="carousel-5" placeholder="图片URL">
+                            <div class="image-preview"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h3>主标题</h3>
+                    <input type="text" data-field="hero-title-1" placeholder="第一行标题">
+                    <input type="text" data-field="hero-title-2" placeholder="第二行标题">
+                </div>
+
+                <div class="form-group">
+                    <h3>副标题</h3>
+                    <input type="text" data-field="hero-subtitle" placeholder="副标题文字">
+                </div>
+
+                <div class="form-group">
+                    <h3>CTA按钮文字</h3>
+                    <input type="text" data-field="hero-cta" placeholder="按钮文字">
+                </div>
+
+                <div class="form-group">
+                    <h3>右侧顶部文案</h3>
+                    <input type="text" data-field="hero-edge-top-1" placeholder="第一行">
+                    <input type="text" data-field="hero-edge-top-2" placeholder="第二行">
+                    <input type="text" data-field="hero-edge-top-3" placeholder="第三行">
+                </div>
+
+                <div class="form-group">
+                    <h3>右侧底部文案</h3>
+                    <input type="text" data-field="hero-edge-bottom-1" placeholder="第一行">
+                    <input type="text" data-field="hero-edge-bottom-2" placeholder="第二行">
+                    <input type="text" data-field="hero-edge-bottom-3" placeholder="第三行">
+                </div>
+            </section>
+
+            <section id="showcase-section" class="admin-section">
+                <h2>作品展示管理</h2>
+                
+                <div class="work-list">
+                    <div class="work-item" data-work="work-1">
+                        <h3>作品 1 - 品牌设计</h3>
+                        <div class="form-row">
+                            <div class="form-col image-col">
+                                <label>图片URL</label>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-1-image" placeholder="图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <label>作品标题</label>
+                                <input type="text" data-field="work-1-title" placeholder="标题">
+                            </div>
+                            <div class="form-col">
+                                <label>作品分类</label>
+                                <input type="text" data-field="work-1-category" placeholder="分类">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="work-item" data-work="work-3">
+                        <h3>作品 2 - AI设计</h3>
+                        <div class="form-row">
+                            <div class="form-col image-col">
+                                <label>图片URL</label>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-3-image" placeholder="图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <label>作品标题</label>
+                                <input type="text" data-field="work-3-title" placeholder="标题">
+                            </div>
+                            <div class="form-col">
+                                <label>作品分类</label>
+                                <input type="text" data-field="work-3-category" placeholder="分类">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="work-item" data-work="work-4">
+                        <h3>作品 3 - 网页设计</h3>
+                        <div class="form-row">
+                            <div class="form-col image-col">
+                                <label>图片URL</label>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-4-image" placeholder="图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <label>作品标题</label>
+                                <input type="text" data-field="work-4-title" placeholder="标题">
+                            </div>
+                            <div class="form-col">
+                                <label>作品分类</label>
+                                <input type="text" data-field="work-4-category" placeholder="分类">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="work-item" data-work="work-5">
+                        <h3>作品 4 - 插画设计</h3>
+                        <div class="form-row">
+                            <div class="form-col image-col">
+                                <label>图片URL</label>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-5-image" placeholder="图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <label>作品标题</label>
+                                <input type="text" data-field="work-5-title" placeholder="标题">
+                            </div>
+                            <div class="form-col">
+                                <label>作品分类</label>
+                                <input type="text" data-field="work-5-category" placeholder="分类">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="work-item" data-work="work-6">
+                        <h3>作品 5 - 3D设计</h3>
+                        <div class="form-row">
+                            <div class="form-col image-col">
+                                <label>图片URL</label>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-6-image" placeholder="图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <label>作品标题</label>
+                                <input type="text" data-field="work-6-title" placeholder="标题">
+                            </div>
+                            <div class="form-col">
+                                <label>作品分类</label>
+                                <input type="text" data-field="work-6-category" placeholder="分类">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about-section" class="admin-section">
+                <h2>关于我管理</h2>
+                
+                <div class="form-group">
+                    <h3>个人照片</h3>
+                    <div class="image-input-group single">
+                        <input type="text" class="image-url-input" data-field="about-image" placeholder="图片URL">
+                        <div class="image-preview"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h3>关于我文案</h3>
+                    <textarea data-field="about-text-1" rows="3" placeholder="第一段文案"></textarea>
+                    <textarea data-field="about-text-2" rows="3" placeholder="第二段文案"></textarea>
+                    <textarea data-field="about-text-3" rows="3" placeholder="第三段文案"></textarea>
+                </div>
+            </section>
+
+            <section id="skills-section" class="admin-section">
+                <h2>专业技能管理</h2>
+                
+                <div class="form-group">
+                    <h3>技能标题</h3>
+                    <input type="text" data-field="skills-title" placeholder="技能区域标题">
+                </div>
+
+                <div class="form-group">
+                    <h3>技能副标题</h3>
+                    <input type="text" data-field="skills-subtitle" placeholder="技能区域副标题">
+                </div>
+
+                <div class="skill-list">
+                    <div class="skill-item" data-skill="1">
+                        <h3>技能 1</h3>
+                        <input type="text" data-field="skill-1-title" placeholder="技能名称">
+                    </div>
+                    <div class="skill-item" data-skill="2">
+                        <h3>技能 2</h3>
+                        <input type="text" data-field="skill-2-title" placeholder="技能名称">
+                    </div>
+                    <div class="skill-item" data-skill="3">
+                        <h3>技能 3</h3>
+                        <input type="text" data-field="skill-3-title" placeholder="技能名称">
+                    </div>
+                    <div class="skill-item" data-skill="4">
+                        <h3>技能 4</h3>
+                        <input type="text" data-field="skill-4-title" placeholder="技能名称">
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact-section" class="admin-section">
+                <h2>联系方式管理</h2>
+                
+                <div class="form-group">
+                    <h3>联系区域标题</h3>
+                    <input type="text" data-field="contact-title" placeholder="标题">
+                    <input type="text" data-field="contact-subtitle" placeholder="副标题">
+                </div>
+
+                <div class="form-group">
+                    <h3>联系方式</h3>
+                    <input type="text" data-field="contact-email" placeholder="邮箱地址">
+                    <input type="text" data-field="contact-phone" placeholder="电话号码">
+                </div>
+
+                <div class="form-group">
+                    <h3>社交媒体</h3>
+                    <input type="text" data-field="social-1" placeholder="社交媒体1名称">
+                    <input type="text" data-field="social-2" placeholder="社交媒体2名称">
+                    <input type="text" data-field="social-3" placeholder="社交媒体3名称">
+                </div>
+
+                <div class="form-group">
+                    <h3>表单文案</h3>
+                    <input type="text" data-field="form-name" placeholder="姓名标签">
+                    <input type="text" data-field="form-email" placeholder="邮箱标签">
+                    <input type="text" data-field="form-message" placeholder="留言标签">
+                    <input type="text" data-field="form-submit" placeholder="提交按钮文字">
+                </div>
+            </section>
+
+            <section id="footer-section" class="admin-section">
+                <h2>页脚信息管理</h2>
+                
+                <div class="form-group">
+                    <h3>版权信息</h3>
+                    <input type="text" data-field="footer-text" placeholder="版权文字">
+                </div>
+            </section>
+
+            <!-- 作品弹窗内容管理 -->
+            <section id="workmodal-section" class="admin-section">
+                <h2>作品弹窗内容管理</h2>
+                <p class="work-modal-tip">点击作品卡片时可查看弹窗效果，修改后点击保存并刷新前台页面</p>
+                
+                <div class="admin-section-actions">
+                    <button class="btn btn-primary" onclick="admin.addWorkModal()">添加作品弹窗</button>
+                </div>
+                
+                <!-- 分类导航栏 -->
+                <div class="work-category-nav">
+                    <button class="category-nav-btn active" data-category="all">
+                        <span class="category-icon">📋</span>
+                        <span>全部作品</span>
+                        <span class="category-count" data-category="all">0</span>
+                    </button>
+                    <button class="category-nav-btn" data-category="品牌设计">
+                        <span class="category-icon">🏷️</span>
+                        <span>品牌设计</span>
+                        <span class="category-count" data-category="品牌设计">0</span>
+                    </button>
+                    <button class="category-nav-btn" data-category="AI设计">
+                        <span class="category-icon">🤖</span>
+                        <span>AI设计</span>
+                        <span class="category-count" data-category="AI设计">0</span>
+                    </button>
+                    <button class="category-nav-btn" data-category="网页设计">
+                        <span class="category-icon">🌐</span>
+                        <span>网页设计</span>
+                        <span class="category-count" data-category="网页设计">0</span>
+                    </button>
+                    <button class="category-nav-btn" data-category="插画设计">
+                        <span class="category-icon">🎨</span>
+                        <span>插画设计</span>
+                        <span class="category-count" data-category="插画设计">0</span>
+                    </button>
+                    <button class="category-nav-btn" data-category="3D设计">
+                        <span class="category-icon">🗿</span>
+                        <span>3D设计</span>
+                        <span class="category-count" data-category="3D设计">0</span>
+                    </button>
+                    <button class="category-nav-btn" data-category="其他设计">
+                        <span class="category-icon">✨</span>
+                        <span>其他设计</span>
+                        <span class="category-count" data-category="其他设计">0</span>
+                    </button>
+                </div>
+                
+                <!-- 作品列表容器 -->
+                <div class="work-modal-lists-container">
+                    <!-- 所有作品列表 -->
+                    <div class="work-modal-list" data-category="all">
+                    </div>
+                    
+                    <!-- 品牌设计分类 -->
+                    <div class="work-modal-list" data-category="品牌设计">
+                    </div>
+                    
+                    <!-- AI设计分类 -->
+                    <div class="work-modal-list" data-category="AI设计">
+                    </div>
+                    
+                    <!-- 网页设计分类 -->
+                    <div class="work-modal-list" data-category="网页设计">
+                    </div>
+                    
+                    <!-- 插画设计分类 -->
+                    <div class="work-modal-list" data-category="插画设计">
+                    </div>
+                    
+                    <!-- 3D设计分类 -->
+                    <div class="work-modal-list" data-category="3D设计">
+                    </div>
+                    
+                    <!-- 其他设计分类 -->
+                    <div class="work-modal-list" data-category="其他设计">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 音乐设置 -->
+            <section id="music-section" class="admin-section">
+                <h2>音乐设置</h2>
+                
+                <div class="form-group">
+                    <h3>音乐基本信息</h3>
+                    <input type="text" data-field="music-name" placeholder="音乐名称">
+                    <input type="text" data-field="music-url" placeholder="音乐文件URL">
+                </div>
+
+                <div class="form-group">
+                    <h3>音乐设置</h3>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="music-auto-play">自动播放</label>
+                            <select id="music-auto-play" data-field="music-auto-play">
+                                <option value="true">开启</option>
+                                <option value="false">关闭</option>
+                            </select>
+                        </div>
+                        <div class="form-col">
+                            <label for="music-volume">默认音量 (0-100)</label>
+                            <input type="number" id="music-volume" data-field="music-volume" min="0" max="100" value="70">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h3>音乐状态</h3>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="music-enabled">启用音乐</label>
+                            <select id="music-enabled" data-field="music-enabled">
+                                <option value="true">开启</option>
+                                <option value="false">关闭</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    
+    <!-- 进度提示 -->
+    <div id="progress-modal" class="progress-modal">
+        <div class="progress-content">
+            <h3 id="progress-title">同步进度</h3>
+            <p id="progress-message">正在准备同步...</p>
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <div id="progress-percentage" class="progress-percentage">0%</div>
+        </div>
+    </div>
+
+    <!-- 服务器状态提示 -->
+    <div id="server-status-modal" class="progress-modal" style="display: none;">
+        <div class="progress-content">
+            <h3 id="server-status-title">服务器状态检测</h3>
+            <p id="server-status-message">正在检测服务器状态...</p>
+            <div class="progress-bar-container">
+                <div id="server-status-bar" class="progress-bar"></div>
+            </div>
+            <div class="server-status-actions" style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                <button id="server-start-btn" class="btn btn-primary" style="display: none;">自动启动服务器</button>
+                <button id="server-check-again-btn" class="btn btn-secondary">重新检测</button>
+                <button id="server-close-btn" class="btn btn-outline">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+    <script src="sync-to-admin.js"></script>
+    <script>
+        // 检测本地服务器状态
+        const checkServerStatus = async () => {
+            const modal = document.getElementById('server-status-modal');
+            const title = document.getElementById('server-status-title');
+            const message = document.getElementById('server-status-message');
+            const progressBar = document.getElementById('server-status-bar');
+            const startBtn = document.getElementById('server-start-btn');
+            const checkAgainBtn = document.getElementById('server-check-again-btn');
+            const closeBtn = document.getElementById('server-close-btn');
+            
+            // 显示模态框
+            modal.style.display = 'flex';
+            title.textContent = '服务器状态检测';
+            message.textContent = '正在检测本地服务器状态...';
+            progressBar.style.width = '30%';
+            startBtn.style.display = 'none';
+            
+            try {
+                // 尝试连接本地服务器
+                const response = await fetch('http://localhost:3000/sync-files', {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 2000
+                });
+                
+                progressBar.style.width = '100%';
+                if (response.ok) {
+                    message.textContent = '✅ 本地服务器已启动，端口：3000';
+                    // 3秒后自动关闭
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 3000);
+                } else {
+                    throw new Error('服务器响应异常');
+                }
+            } catch (error) {
+                progressBar.style.width = '100%';
+                message.textContent = '⚠️  本地服务器未启动，端口：3000';
+                startBtn.style.display = 'block';
+            }
+            
+            // 事件监听 - 使用once: true确保只执行一次
+            closeBtn.onclick = () => {
+                modal.style.display = 'none';
+            };
+            
+            checkAgainBtn.onclick = () => {
+                checkServerStatus();
+            };
+            
+            startBtn.onclick = async () => {
+                message.textContent = '正在尝试启动服务器...';
+                progressBar.style.width = '50%';
+                startBtn.style.display = 'none';
+                
+                try {
+                    // 尝试启动服务器
+                    const response = await fetch('http://localhost:3000/start-server', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        progressBar.style.width = '100%';
+                        message.textContent = '✅ 服务器启动成功！端口：3000';
+                        setTimeout(() => {
+                            modal.style.display = 'none';
+                        }, 3000);
+                    } else {
+                        throw new Error('服务器启动失败');
+                    }
+                } catch (error) {
+                    progressBar.style.width = '100%';
+                    message.textContent = '⚠️  服务器启动失败，请手动启动';
+                    
+                    // 显示手动启动说明
+                    const instructions = `
+                        请在项目根目录下执行以下命令启动服务器：
+                        node sync-files.js
+                        
+                        服务器将在端口 3000 上运行
+                    `;
+                    
+                    // 创建提示弹窗
+                    const instructionModal = document.createElement('div');
+                    instructionModal.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                        z-index: 10001;
+                        max-width: 500px;
+                        width: 90%;
+                        text-align: left;
+                    `;
+                    
+                    instructionModal.innerHTML = `
+                        <h3 style="margin-top: 0;">启动服务器说明</h3>
+                        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; overflow: auto;">${instructions}</pre>
+                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                            <button onclick="this.closest('div').remove()" class="btn btn-primary">我知道了</button>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(instructionModal);
+                }
+            };
+        };
+        
+        // 页面加载时自动检测服务器状态
+        document.addEventListener('DOMContentLoaded', () => {
+            // 延迟检测，确保其他资源加载完成
+            setTimeout(() => {
+                checkServerStatus();
+            }, 1000);
+        });
+        
+        // 扩展admin对象，添加服务器状态检测方法
+        window.admin = window.admin || {};
+        window.admin.checkServerStatus = checkServerStatus;
+    </script>
+</body>
+</html>
