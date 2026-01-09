@@ -81,15 +81,15 @@ function syncWebContentToAdmin() {
             // 作品弹窗内容
             'modal-1-banner': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
             'modal-1-title': 'Brand Design Project',
-            'modal-1-category': 'Graphic Design',
+            'modal-1-category': '品牌设计',
             'modal-1-desc-1': 'This is a comprehensive brand design project for a modern startup. The project includes logo design, brand identity, packaging design, and marketing materials.',
             'modal-1-desc-2': 'The design concept revolves around minimalism and modern aesthetics, using a clean color palette and geometric shapes to create a strong visual identity.',
             'modal-1-client': 'Tech Startup Inc.',
             'modal-1-year': '2024',
             'modal-1-services': 'Logo Design, Brand Identity, Packaging',
             'modal-1-gallery-1': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
-            'modal-1-gallery-2': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
-            'modal-1-gallery-3': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
+            'modal-1-gallery-2': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1_f48883c8-2168-400b-a521-e01e484b1a83.png?v=1767687196',
+            'modal-1-gallery-3': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/abc7a5ac29b4d8d283e2acc0cbecbe61.jpg?v=1767687194',
             'modal-1-concept-1': 'The design concept for this project was inspired by modern minimalism and geometric aesthetics. We wanted to create a brand identity that is both timeless and contemporary, with a strong visual impact.',
             'modal-1-concept-2': 'The color palette was carefully chosen to reflect the brand\'s values and personality, using clean and bold colors that create a strong visual contrast.',
             'modal-1-concept-3': 'The typography selection was based on readability and visual hierarchy, with a modern sans-serif font that complements the geometric shapes used throughout the design.',
@@ -384,8 +384,13 @@ function getWorkDataFromLocalStorage() {
         if (saved) {
             const data = JSON.parse(saved);
             
-            // 获取所有作品ID
-            const workIds = ['work-1', 'work-3', 'work-4', 'work-5', 'work-6'];
+            // 动态获取所有作品ID
+            // 查找所有以modal-开头且以-title结尾的数据键
+            const modalKeys = Object.keys(data).filter(key => key.startsWith('modal-') && key.endsWith('-title'));
+            const workIds = modalKeys.map(key => {
+                const num = key.split('-')[1];
+                return `work-${num}`;
+            });
             
             // 遍历所有作品ID，获取作品信息
             workIds.forEach(workId => {
@@ -473,7 +478,9 @@ if (typeof admin !== 'undefined') {
             
             if (success) {
                 // 重新加载数据
-                admin.init();
+                if (typeof admin !== 'undefined' && admin.init) {
+                    admin.init();
+                }
                 // 显示提示
                 const toast = document.getElementById('toast');
                 toast.textContent = '已从网页同步数据！';

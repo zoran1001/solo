@@ -338,6 +338,67 @@ body {
     gap: 1.5rem;
 }
 
+/* 分类导航栏样式 */
+.work-category-nav {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+    padding: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+}
+
+/* 分类导航按钮样式 */
+.category-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--background);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.category-nav-btn:hover {
+    background: var(--hover-color);
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-nav-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* 分类图标样式 */
+.category-icon {
+    font-size: 1rem;
+}
+
+/* 分类计数样式 */
+.category-count {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* 作品列表容器样式 */
+.work-modal-lists-container {
+    background: var(--surface);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+}
+
 .work-item,
 .skill-item,
 .work-modal-item {
@@ -467,6 +528,78 @@ body {
     color: var(--text-secondary);
     margin-bottom: 1.5rem;
     font-size: 0.875rem;
+}
+
+/* 可折叠功能样式 */
+.work-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.work-modal-header:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.work-modal-header.collapsible {
+    padding: 1rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    margin-bottom: 0;
+}
+
+.work-modal-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.collapse-icon {
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+    color: var(--text-secondary);
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+    margin: 0;
+    padding: 0;
+}
+
+.collapsible-content.active {
+    max-height: 2000px;
+    margin: 0.25rem 0 1.5rem 0;
+    padding: 0;
+}
+
+.collapsible-content .form-group {
+    border-top: none;
+    border-radius: 0 0 0.75rem 0.75rem;
+    margin-bottom: 0;
+    border-left: 4px solid var(--primary-color);
+}
+
+.collapsible-content .form-group:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.work-modal-item {
+    background: transparent;
+    padding: 0;
+    border: none;
+    margin-bottom: 0;
 }
 
 /* 进度提示样式 */

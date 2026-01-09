@@ -22,14 +22,14 @@ const admin = (function() {
         'work-1-title': 'Brand Design',
         'work-1-category': 'Graphic Design',
         'work-3-image': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
-        'work-3-title': 'AI-generated',
+        'work-3-title': 'AI Generated Design',
         'work-3-category': 'AI Design',
         'work-4-image': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
         'work-4-title': 'Website Design',
         'work-4-category': 'Web Design',
         'work-5-image': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
         'work-5-title': 'Illustration Design',
-        'work-5-category': 'Creative Design',
+        'work-5-category': 'Illustration Design',
         'work-6-image': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
         'work-6-title': '3D Design',
         'work-6-category': '3D Design',
@@ -58,7 +58,7 @@ const admin = (function() {
         
         'modal-1-banner': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
         'modal-1-title': 'Brand Design Project',
-        'modal-1-category': 'Graphic Design',
+        'modal-1-category': '品牌设计',
         'modal-1-desc-1': 'This is a comprehensive brand design project for a modern startup. The project includes logo design, brand identity, packaging design, and marketing materials.',
         'modal-1-desc-2': 'The design concept revolves around minimalism and modern aesthetics, using a clean color palette and geometric shapes to create a strong visual identity.',
         'modal-1-client': 'Tech Startup Inc.',
@@ -73,7 +73,7 @@ const admin = (function() {
         
         'modal-3-banner': 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
         'modal-3-title': 'AI-generated Art Project',
-        'modal-3-category': 'AI Design',
+        'modal-3-category': 'AI设计',
         'modal-3-desc-1': 'This project explores the intersection of artificial intelligence and creative design. Using advanced AI algorithms, we generated unique visual compositions that challenge traditional design boundaries.',
         'modal-3-desc-2': 'The project pushes the limits of what\'s possible with AI-generated art, creating stunning visuals that combine human creativity with machine intelligence.',
         'modal-3-client': 'AI Creative Lab',
@@ -88,7 +88,7 @@ const admin = (function() {
         
         'modal-4-banner': 'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
         'modal-4-title': 'Modern Website Design',
-        'modal-4-category': 'Web Design',
+        'modal-4-category': '网页设计',
         'modal-4-desc-1': 'A modern, responsive website design for a creative agency. This project focuses on clean typography, smooth animations, and an intuitive user experience.',
         'modal-4-desc-2': 'The design incorporates a minimalist aesthetic with bold visual elements to create a memorable impression.',
         'modal-4-client': 'Creative Agency Inc.',
@@ -103,7 +103,7 @@ const admin = (function() {
         
         'modal-5-banner': 'https://images.unsplash.com/photo-1603970484243-63f290002d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
         'modal-5-title': 'Creative Illustration',
-        'modal-5-category': 'Creative Design',
+        'modal-5-category': '插画设计',
         'modal-5-desc-1': 'A series of creative illustrations for a children\'s book. The project focuses on vibrant colors, playful characters, and engaging storytelling.',
         'modal-5-desc-2': 'Each illustration was carefully crafted to capture the imagination of young readers while supporting the book\'s narrative.',
         'modal-5-client': 'Children\'s Book Publisher',
@@ -118,7 +118,7 @@ const admin = (function() {
         
         'modal-6-banner': 'https://images.unsplash.com/photo-1556661718-86b3f05a636d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
         'modal-6-title': '3D Product Design',
-        'modal-6-category': '3D Design',
+        'modal-6-category': '3D设计',
         'modal-6-desc-1': 'A 3D product design project for a consumer electronics company. The project includes product modeling, texturing, and realistic rendering.',
         'modal-6-desc-2': 'The design focuses on sleek, modern aesthetics with a strong emphasis on functionality and user experience.',
         'modal-6-client': 'Electronics Company Ltd.',
@@ -143,7 +143,8 @@ const admin = (function() {
         try {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
-                currentData = JSON.parse(saved);
+                // 从localStorage加载数据，并合并默认数据，确保所有字段都存在
+                currentData = { ...defaultData, ...JSON.parse(saved) };
             } else {
                 currentData = { ...defaultData };
             }
@@ -170,6 +171,10 @@ const admin = (function() {
             if (currentData[field] !== undefined) {
                 input.value = currentData[field];
             }
+            // 移除可能存在的旧事件监听器，避免重复绑定
+            input.removeEventListener('input', handleInput);
+            input.removeEventListener('change', handleInput);
+            // 添加新的事件监听器
             input.addEventListener('input', handleInput);
             input.addEventListener('change', handleInput);
         });
@@ -222,19 +227,22 @@ const admin = (function() {
         const sections = document.querySelectorAll('.admin-section');
 
         navItems.forEach(item => {
-            item.addEventListener('click', () => {
+            // 移除可能存在的旧事件监听器，避免重复绑定
+            const handleNavClick = () => {
                 const target = item.dataset.section;
 
+                // 更新导航状态
                 navItems.forEach(nav => nav.classList.remove('active'));
                 item.classList.add('active');
 
+                // 更新显示的区域
                 sections.forEach(section => {
-                    section.classList.remove('active');
-                    if (section.id === target + '-section') {
-                        section.classList.add('active');
-                    }
+                    section.classList.toggle('active', section.id === `${target}-section`);
                 });
-            });
+            };
+
+            item.removeEventListener('click', handleNavClick);
+            item.addEventListener('click', handleNavClick);
         });
     }
 
@@ -250,28 +258,19 @@ const admin = (function() {
     }
 
     function applyChangesToPage() {
-        document.querySelectorAll('.carousel-slide-1').forEach(el => {
-            el.style.backgroundImage = `url('${currentData['carousel-1'] || ''}')`;
-        });
-        document.querySelectorAll('.carousel-slide-2').forEach(el => {
-            el.style.backgroundImage = `url('${currentData['carousel-2'] || ''}')`;
-        });
-        document.querySelectorAll('.carousel-slide-3').forEach(el => {
-            el.style.backgroundImage = `url('${currentData['carousel-3'] || ''}')`;
-        });
-        document.querySelectorAll('.carousel-slide-4').forEach(el => {
-            el.style.backgroundImage = `url('${currentData['carousel-4'] || ''}')`;
-        });
-        document.querySelectorAll('.carousel-slide-5').forEach(el => {
-            el.style.backgroundImage = `url('${currentData['carousel-5'] || ''}')`;
-        });
+        // 更新轮播图片
+        for (let i = 1; i <= 5; i++) {
+            const selector = `.carousel-slide-${i}`;
+            const imageUrl = currentData[`carousel-${i}`] || '';
+            document.querySelectorAll(selector).forEach(el => {
+                el.style.backgroundImage = `url('${imageUrl}')`;
+            });
+        }
 
-        document.querySelectorAll('.hero-title .title-line:first-child').forEach(el => {
-            el.textContent = currentData['hero-title-1'] || '';
-        });
-        document.querySelectorAll('.hero-title .title-line:last-child').forEach(el => {
-            el.textContent = currentData['hero-title-2'] || '';
-        });
+        // 更新英雄区域文本
+        const heroTitleLines = document.querySelectorAll('.hero-title .title-line');
+        if (heroTitleLines[0]) heroTitleLines[0].textContent = currentData['hero-title-1'] || '';
+        if (heroTitleLines[1]) heroTitleLines[1].textContent = currentData['hero-title-2'] || '';
         document.querySelectorAll('.hero-subtitle').forEach(el => {
             el.textContent = currentData['hero-subtitle'] || '';
         });
@@ -279,75 +278,57 @@ const admin = (function() {
             el.textContent = currentData['hero-cta'] || '';
         });
 
+        // 更新边缘文本
         const edgeTop = document.querySelectorAll('.edge-text-right p');
-        if (edgeTop[0]) edgeTop[0].textContent = currentData['hero-edge-top-1'] || '';
-        if (edgeTop[1]) edgeTop[1].textContent = currentData['hero-edge-top-2'] || '';
-        if (edgeTop[2]) edgeTop[2].textContent = currentData['hero-edge-top-3'] || '';
-
         const edgeBottom = document.querySelectorAll('.edge-text-bottom p');
-        if (edgeBottom[0]) edgeBottom[0].textContent = currentData['hero-edge-bottom-1'] || '';
-        if (edgeBottom[1]) edgeBottom[1].textContent = currentData['hero-edge-bottom-2'] || '';
-        if (edgeBottom[2]) edgeBottom[2].textContent = currentData['hero-edge-bottom-3'] || '';
+        const edgeTopData = ['hero-edge-top-1', 'hero-edge-top-2', 'hero-edge-top-3'];
+        const edgeBottomData = ['hero-edge-bottom-1', 'hero-edge-bottom-2', 'hero-edge-bottom-3'];
 
-        document.querySelectorAll('.work-1 .work-image img').forEach(el => {
-            el.src = currentData['work-1-image'] || '';
-        });
-        document.querySelectorAll('.work-1 .work-title').forEach(el => {
-            el.textContent = currentData['work-1-title'] || '';
-        });
-        document.querySelectorAll('.work-1 .work-category').forEach(el => {
-            el.textContent = currentData['work-1-category'] || '';
+        edgeTop.forEach((el, index) => {
+            if (el) el.textContent = currentData[edgeTopData[index]] || '';
         });
 
-        document.querySelectorAll('.work-3 .work-image img').forEach(el => {
-            el.src = currentData['work-3-image'] || '';
-        });
-        document.querySelectorAll('.work-3 .work-title').forEach(el => {
-            el.textContent = currentData['work-3-title'] || '';
-        });
-        document.querySelectorAll('.work-3 .work-category').forEach(el => {
-            el.textContent = currentData['work-3-category'] || '';
+        edgeBottom.forEach((el, index) => {
+            if (el) el.textContent = currentData[edgeBottomData[index]] || '';
         });
 
-        document.querySelectorAll('.work-4 .work-image img').forEach(el => {
-            el.src = currentData['work-4-image'] || '';
+        // 更新作品展示
+        // 动态获取所有作品ID，与generateWorksHTML函数保持一致
+        const modalKeys = Object.keys(currentData).filter(key => key.startsWith('modal-') && key.endsWith('-title'));
+        const workIds = modalKeys.map(key => {
+            const num = key.split('-')[1];
+            return `work-${num}`;
         });
-        document.querySelectorAll('.work-4 .work-title').forEach(el => {
-            el.textContent = currentData['work-4-title'] || '';
-        });
-        document.querySelectorAll('.work-4 .work-category').forEach(el => {
-            el.textContent = currentData['work-4-category'] || '';
-        });
-
-        document.querySelectorAll('.work-5 .work-image img').forEach(el => {
-            el.src = currentData['work-5-image'] || '';
-        });
-        document.querySelectorAll('.work-5 .work-title').forEach(el => {
-            el.textContent = currentData['work-5-title'] || '';
-        });
-        document.querySelectorAll('.work-5 .work-category').forEach(el => {
-            el.textContent = currentData['work-5-category'] || '';
-        });
-
-        document.querySelectorAll('.work-6 .work-image img').forEach(el => {
-            el.src = currentData['work-6-image'] || '';
-        });
-        document.querySelectorAll('.work-6 .work-title').forEach(el => {
-            el.textContent = currentData['work-6-title'] || '';
-        });
-        document.querySelectorAll('.work-6 .work-category').forEach(el => {
-            el.textContent = currentData['work-6-category'] || '';
+        
+        workIds.forEach(workId => {
+            const imageUrl = currentData[`${workId}-image`] || '';
+            const title = currentData[`${workId}-title`] || '';
+            const category = currentData[`${workId}-category`] || '';
+            
+            document.querySelectorAll(`${workId} .work-image img`).forEach(el => {
+                el.src = imageUrl;
+            });
+            document.querySelectorAll(`${workId} .work-title`).forEach(el => {
+                el.textContent = title;
+            });
+            document.querySelectorAll(`${workId} .work-category`).forEach(el => {
+                el.textContent = category;
+            });
         });
 
+        // 更新关于我
         document.querySelectorAll('.about-image img').forEach(el => {
             el.src = currentData['about-image'] || '';
         });
 
         const aboutParagraphs = document.querySelectorAll('.about-paragraph');
-        if (aboutParagraphs[0]) aboutParagraphs[0].textContent = currentData['about-text-1'] || '';
-        if (aboutParagraphs[1]) aboutParagraphs[1].textContent = currentData['about-text-2'] || '';
-        if (aboutParagraphs[2]) aboutParagraphs[2].textContent = currentData['about-text-3'] || '';
+        for (let i = 1; i <= 3; i++) {
+            if (aboutParagraphs[i - 1]) {
+                aboutParagraphs[i - 1].textContent = currentData[`about-text-${i}`] || '';
+            }
+        }
 
+        // 更新技能区域
         document.querySelectorAll('.skills-header .section-heading').forEach(el => {
             el.textContent = currentData['skills-title'] || '';
         });
@@ -355,19 +336,14 @@ const admin = (function() {
             el.textContent = currentData['skills-subtitle'] || '';
         });
 
-        document.querySelectorAll('.skill-1 .skill-title').forEach(el => {
-            el.textContent = currentData['skill-1-title'] || '';
-        });
-        document.querySelectorAll('.skill-2 .skill-title').forEach(el => {
-            el.textContent = currentData['skill-2-title'] || '';
-        });
-        document.querySelectorAll('.skill-3 .skill-title').forEach(el => {
-            el.textContent = currentData['skill-3-title'] || '';
-        });
-        document.querySelectorAll('.skill-4 .skill-title').forEach(el => {
-            el.textContent = currentData['skill-4-title'] || '';
-        });
+        for (let i = 1; i <= 4; i++) {
+            const skillTitle = currentData[`skill-${i}-title`] || '';
+            document.querySelectorAll(`.skill-${i} .skill-title`).forEach(el => {
+                el.textContent = skillTitle;
+            });
+        }
 
+        // 更新联系区域
         document.querySelectorAll('.contact-header .section-heading').forEach(el => {
             el.textContent = currentData['contact-title'] || '';
         });
@@ -382,40 +358,100 @@ const admin = (function() {
             el.textContent = currentData['contact-phone'] || '';
         });
 
+        // 更新社交媒体
         const socialLinks = document.querySelectorAll('.social-link');
-        if (socialLinks[0]) socialLinks[0].textContent = currentData['social-1'] || '';
-        if (socialLinks[1]) socialLinks[1].textContent = currentData['social-2'] || '';
-        if (socialLinks[2]) socialLinks[2].textContent = currentData['social-3'] || '';
+        for (let i = 1; i <= 3; i++) {
+            if (socialLinks[i - 1]) {
+                socialLinks[i - 1].textContent = currentData[`social-${i}`] || '';
+            }
+        }
 
-        document.querySelectorAll('label[for="name"]').forEach(el => {
-            el.textContent = currentData['form-name'] || '';
+        // 更新表单
+        const formLabels = {
+            'form-name': 'name',
+            'form-email': 'email',
+            'form-message': 'message'
+        };
+        
+        Object.entries(formLabels).forEach(([dataKey, labelFor]) => {
+            document.querySelectorAll(`label[for="${labelFor}"]`).forEach(el => {
+                el.textContent = currentData[dataKey] || '';
+            });
         });
-        document.querySelectorAll('label[for="email"]').forEach(el => {
-            el.textContent = currentData['form-email'] || '';
-        });
-        document.querySelectorAll('label[for="message"]').forEach(el => {
-            el.textContent = currentData['form-message'] || '';
-        });
+        
         document.querySelectorAll('.form-submit').forEach(el => {
             el.textContent = currentData['form-submit'] || '';
         });
 
+        // 更新页脚
         document.querySelectorAll('.footer-text').forEach(el => {
             el.textContent = currentData['footer-text'] || '';
         });
     }
 
+    // 初始化可折叠功能
+    function initCollapsible() {
+        const collapsibles = document.querySelectorAll('.collapsible');
+        
+        collapsibles.forEach(collapsible => {
+            // 移除可能存在的旧事件监听器，避免重复绑定
+            collapsible.removeEventListener('click', handleCollapsibleClick);
+            // 添加新的事件监听器
+            collapsible.addEventListener('click', handleCollapsibleClick);
+            
+            // 默认展开第一个作品
+            const isFirstItem = collapsible.closest('.work-modal-item') === document.querySelector('.work-modal-item');
+            if (isFirstItem) {
+                const content = collapsible.nextElementSibling;
+                if (content && content.classList.contains('collapsible-content')) {
+                    content.classList.add('active');
+                    const icon = collapsible.querySelector('.collapse-icon');
+                    if (icon) {
+                        icon.textContent = '▲';
+                    }
+                }
+            }
+        });
+    }
+    
+    // 处理可折叠元素的点击事件
+    function handleCollapsibleClick(e) {
+        e.stopPropagation(); // 阻止事件冒泡
+        const collapsible = e.currentTarget;
+        // 切换内容显示/隐藏
+        const content = collapsible.nextElementSibling;
+        if (content && content.classList.contains('collapsible-content')) {
+            content.classList.toggle('active');
+            
+            // 切换折叠图标方向
+            const icon = collapsible.querySelector('.collapse-icon');
+            if (icon) {
+                icon.textContent = content.classList.contains('active') ? '▲' : '▼';
+            }
+        }
+    }
+    
     function init() {
         loadData();
         initForm();
         initImagePreviews();
         initNavigation();
+        
+        // 初始化作品分类
+        initWorkCategories();
+        
+        // 初始化可折叠功能
+        initCollapsible();
     }
 
     return {
         init: init,
         saveAll: function() {
             if (saveData()) {
+                // 重新初始化表单以显示保存后的数据
+                loadData();
+                initForm();
+                initImagePreviews();
                 showToast('保存成功！');
             } else {
                 showToast('保存失败！', 'error');
@@ -439,81 +475,260 @@ const admin = (function() {
             // 创建代码导出弹窗
             createExportModal(instructions, carouselHTML, jsCode);
         },
-        oneClickSync: function() {
+        oneClickSync: async function() {
             // 显示进度提示
             showProgressModal();
             
-            // 步骤1：保存当前数据到localStorage
-            updateProgress(0, '正在保存数据...');
-            if (!saveData()) {
-                updateProgress(0, '数据保存失败，无法同步！', true);
-                showToast('数据保存失败，无法同步！', 'error');
-                setTimeout(hideProgressModal, 1500);
-                return;
+            try {
+                // 步骤1：保存当前数据到localStorage
+                updateProgress(0, '正在保存数据...');
+                if (!saveData()) {
+                    updateProgress(0, '数据保存失败，无法同步！', true);
+                    showToast('数据保存失败，无法同步！', 'error');
+                    setTimeout(hideProgressModal, 1500);
+                    return;
+                }
+                
+                updateProgress(25, '数据保存成功，正在生成HTML文件...');
+                
+                // 步骤2：生成完整的HTML、CSS和JS文件
+                await generateAndDownloadFiles(currentData);
+                
+                updateProgress(100, '一键同步完成！已生成最新的HTML、CSS和JS文件');
+                showToast('一键同步完成！已生成最新的HTML、CSS和JS文件');
+            } catch (error) {
+                updateProgress(0, `同步失败：${error.message}`, true);
+                showToast(`同步失败：${error.message}`, 'error');
+                console.error('一键同步失败:', error);
+            } finally {
+                // 3秒后隐藏进度提示
+                setTimeout(hideProgressModal, 3000);
+            }
+        },
+        addWorkModal: function() {
+            // 添加新的作品弹窗
+            // 动态获取所有作品ID，确保ID不重复
+            // 查找所有以modal-开头且以-title结尾的数据键
+            const modalKeys = Object.keys(currentData).filter(key => key.startsWith('modal-') && key.endsWith('-title'));
+            const existingModalIds = modalKeys.map(key => parseInt(key.split('-')[1])).sort((a, b) => a - b);
+            
+            // 计算新的modal ID
+            const newModalId = existingModalIds.length > 0 ? existingModalIds[existingModalIds.length - 1] + 1 : 1;
+            const newWorkId = `work-${newModalId}`;
+            
+            // 获取当前激活的分类
+            const activeCategoryBtn = document.querySelector('.category-nav-btn.active');
+            let activeCategory = activeCategoryBtn ? activeCategoryBtn.dataset.category : '其他设计';
+            
+            // 如果当前是全部作品，默认使用其他设计分类
+            const defaultCategory = activeCategory === 'all' ? '其他设计' : activeCategory;
+            
+            // 创建新的作品弹窗表单
+            const newWorkModalItem = document.createElement('div');
+            newWorkModalItem.className = 'work-modal-item';
+            newWorkModalItem.dataset.work = newWorkId;
+            
+            // 构建分类选项HTML，默认选择当前激活的分类
+            let categoryOptions = `
+                <option value="">请选择分类</option>
+                <option value="品牌设计" ${defaultCategory === '品牌设计' ? 'selected' : ''}>品牌设计</option>
+                <option value="AI设计" ${defaultCategory === 'AI设计' ? 'selected' : ''}>AI设计</option>
+                <option value="网页设计" ${defaultCategory === '网页设计' ? 'selected' : ''}>网页设计</option>
+                <option value="插画设计" ${defaultCategory === '插画设计' ? 'selected' : ''}>插画设计</option>
+                <option value="3D设计" ${defaultCategory === '3D设计' ? 'selected' : ''}>3D设计</option>
+                <option value="其他设计" ${defaultCategory === '其他设计' ? 'selected' : ''}>其他设计</option>
+            `;
+            
+            newWorkModalItem.innerHTML = `
+                <div class="work-modal-header collapsible">
+                    <h3>作品 ${newModalId} - New Work</h3>
+                    <span class="collapse-icon">▼</span>
+                </div>
+                
+                <div class="work-modal-content collapsible-content">
+                    <div class="form-group">
+                        <h4>Banner图片</h4>
+                        <div class="image-input-wrapper">
+                            <input type="text" class="image-url-input" data-field="modal-${newModalId}-banner" placeholder="Banner图片URL">
+                            <div class="image-preview"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h4>标题和分类</h4>
+                        <input type="text" data-field="modal-${newModalId}-title" placeholder="作品标题">
+                        <select data-field="modal-${newModalId}-category">
+                            ${categoryOptions}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h4>项目描述</h4>
+                        <textarea data-field="modal-${newModalId}-desc-1" rows="3" placeholder="描述段落1"></textarea>
+                        <textarea data-field="modal-${newModalId}-desc-2" rows="3" placeholder="描述段落2"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h4>项目详情</h4>
+                        <input type="text" data-field="modal-${newModalId}-client" placeholder="客户名称">
+                        <input type="text" data-field="modal-${newModalId}-year" placeholder="年份">
+                        <input type="text" data-field="modal-${newModalId}-services" placeholder="服务内容">
+                    </div>
+                    
+                    <div class="form-group">
+                        <h4>展示图片（3张）</h4>
+                        <div class="image-input-wrapper">
+                            <input type="text" class="image-url-input" data-field="modal-${newModalId}-gallery-1" placeholder="图片1 URL">
+                            <div class="image-preview"></div>
+                        </div>
+                        <div class="image-input-wrapper">
+                            <input type="text" class="image-url-input" data-field="modal-${newModalId}-gallery-2" placeholder="图片2 URL">
+                            <div class="image-preview"></div>
+                        </div>
+                        <div class="image-input-wrapper">
+                            <input type="text" class="image-url-input" data-field="modal-${newModalId}-gallery-3" placeholder="图片3 URL">
+                            <div class="image-preview"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h4>设计理念（3段）</h4>
+                        <textarea data-field="modal-${newModalId}-concept-1" rows="3" placeholder="理念段落1"></textarea>
+                        <textarea data-field="modal-${newModalId}-concept-2" rows="3" placeholder="理念段落2"></textarea>
+                        <textarea data-field="modal-${newModalId}-concept-3" rows="3" placeholder="理念段落3"></textarea>
+                    </div>
+                </div>
+            `;
+            
+            // 添加到当前激活的分类列表
+            const activeCategoryList = document.querySelector(`.work-modal-list[data-category="${defaultCategory}"]`);
+            if (activeCategoryList) {
+                activeCategoryList.appendChild(newWorkModalItem);
             }
             
-            updateProgress(25, '数据保存成功，正在生成HTML文件...');
+            // 同时添加到全部作品列表
+            const allCategoryList = document.querySelector('.work-modal-list[data-category="all"]');
+            if (allCategoryList) {
+                // 克隆一个新的元素添加到全部作品列表
+                const allCopy = newWorkModalItem.cloneNode(true);
+                allCategoryList.appendChild(allCopy);
+            }
             
-            // 步骤2：生成完整的HTML、CSS和JS文件
-            generateAndDownloadFiles(currentData);
+            // 初始化新添加的表单和图片预览
+            initForm();
+            initImagePreviews();
             
-            updateProgress(100, '一键同步完成！已生成最新的HTML、CSS和JS文件');
-            showToast('一键同步完成！已生成最新的HTML、CSS和JS文件');
+            // 为新作品添加初始数据到currentData对象中
+            currentData[`modal-${newModalId}-title`] = '';
+            currentData[`modal-${newModalId}-category`] = defaultCategory;
+            currentData[`modal-${newModalId}-banner`] = '';
+            currentData[`modal-${newModalId}-desc-1`] = '';
+            currentData[`modal-${newModalId}-desc-2`] = '';
+            currentData[`modal-${newModalId}-client`] = '';
+            currentData[`modal-${newModalId}-year`] = '';
+            currentData[`modal-${newModalId}-services`] = '';
+            currentData[`modal-${newModalId}-gallery-1`] = '';
+            currentData[`modal-${newModalId}-gallery-2`] = '';
+            currentData[`modal-${newModalId}-gallery-3`] = '';
+            currentData[`modal-${newModalId}-concept-1`] = '';
+            currentData[`modal-${newModalId}-concept-2`] = '';
+            currentData[`modal-${newModalId}-concept-3`] = '';
             
-            // 3秒后隐藏进度提示
-            setTimeout(hideProgressModal, 3000);
+            // 更新分类计数
+            updateCategoryCounts();
+            
+            // 显示成功提示
+            showToast('已添加新作品弹窗！');
+            
+            // 初始化可折叠功能
+            initCollapsible();
+        },
+        filterWorkModalByCategory: function(category) {
+            // 按分类筛选作品弹窗
+            const workModalItems = document.querySelectorAll('.work-modal-item');
+            
+            workModalItems.forEach(item => {
+                // 获取作品的分类
+                const categoryField = item.querySelector(`[data-field*="-category"]`);
+                const workCategory = categoryField ? categoryField.value : '';
+                
+                // 根据分类筛选
+                if (category === '' || workCategory === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         }
     };
 
     // 生成HTML轮播图片内容
     function generateCarouselHTML(data) {
-        return `                <div class="carousel-slide active" style="background-image: url(${data['carousel-1'] || ''});"></div>
-                <div class="carousel-slide" style="background-image: url(${data['carousel-2'] || ''});"></div>
-                <div class="carousel-slide" style="background-image: url(${data['carousel-3'] || ''});"></div>
-                <div class="carousel-slide" style="background-image: url(${data['carousel-4'] || ''});"></div>
-                <div class="carousel-slide" style="background-image: url(${data['carousel-5'] || ''});"></div>`;
+        // 默认图片URL，当轮播图图片URL为空时使用
+        const defaultImageUrl = 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275';
+        return `                <div class="carousel-slide active" style="background-image: url(${data['carousel-1'] || defaultImageUrl});"></div>
+                <div class="carousel-slide" style="background-image: url(${data['carousel-2'] || defaultImageUrl});"></div>
+                <div class="carousel-slide" style="background-image: url(${data['carousel-3'] || defaultImageUrl});"></div>
+                <div class="carousel-slide" style="background-image: url(${data['carousel-4'] || defaultImageUrl});"></div>
+                <div class="carousel-slide" style="background-image: url(${data['carousel-5'] || defaultImageUrl});"></div>`;
+    }
+
+    // 辅助函数：转义字符串中的单引号
+    function escapeSingleQuotes(str) {
+        return (str || '').replace(/'/g, "\\'");
     }
 
     // 生成JavaScript代码
     function generateJSCode(data) {
         // 作品数据对象
-        let workDataCode = '// 作品数据结构，存储每个作品的独特内容\nconst workData = {\n';
+        const workData = {};
         
-        // 为每个作品生成数据
-        const workIds = ['work-1', 'work-3', 'work-4', 'work-5', 'work-6'];
-        workIds.forEach((workId, index) => {
-            const num = workId.split('-')[1];
-            const isLast = index === workIds.length - 1;
-            
-            workDataCode += `    '${workId}': {\n`;
-            workDataCode += `        title: '${data[`modal-${num}-title`] || ''}',\n`;
-            workDataCode += `        category: '${data[`modal-${num}-category`] || ''}',\n`;
-            workDataCode += `        bannerImage: '${data[`modal-${num}-banner`] || ''}',\n`;
-            workDataCode += `        description: [\n`;
-            workDataCode += `            '${data[`modal-${num}-desc-1`] || ''}',\n`;
-            workDataCode += `            '${data[`modal-${num}-desc-2`] || ''}'\n`;
-            workDataCode += `        ],\n`;
-            workDataCode += `        details: {\n`;
-            workDataCode += `            client: '${data[`modal-${num}-client`] || ''}',\n`;
-            workDataCode += `            year: '${data[`modal-${num}-year`] || ''}',\n`;
-            workDataCode += `            services: '${data[`modal-${num}-services`] || ''}'\n`;
-            workDataCode += `        },\n`;
-            workDataCode += `        gallery: [\n`;
-            workDataCode += `            '${data[`modal-${num}-gallery-1`] || ''}',\n`;
-            workDataCode += `            '${data[`modal-${num}-gallery-2`] || ''}',\n`;
-            workDataCode += `            '${data[`modal-${num}-gallery-3`] || ''}'\n`;
-            workDataCode += `        ],\n`;
-            workDataCode += `        concept: [\n`;
-            workDataCode += `            '${data[`modal-${num}-concept-1`] || ''}',\n`;
-            workDataCode += `            '${data[`modal-${num}-concept-2`] || ''}',\n`;
-            workDataCode += `            '${data[`modal-${num}-concept-3`] || ''}'\n`;
-            workDataCode += `        ]\n`;
-            workDataCode += `    }${isLast ? '' : ','}\n`;
+        // 动态获取所有作品ID
+        // 查找所有以modal-开头且以-title结尾的数据键
+        const modalKeys = Object.keys(data).filter(key => key.startsWith('modal-') && key.endsWith('-title'));
+        
+        // 提取作品ID
+        const workIds = modalKeys.map(key => {
+            // 从modal-X-title中提取X，然后构建work-X
+            const num = key.split('-')[1];
+            return `work-${num}`;
         });
         
-        workDataCode += '};';
+        // 为每个作品生成数据
+        workIds.forEach(workId => {
+            const num = workId.split('-')[1];
+            
+            // 检查是否有这个作品的数据
+            if (data[`modal-${num}-title`] !== undefined) {
+                workData[workId] = {
+                    title: data[`modal-${num}-title`],
+                    category: data[`modal-${num}-category`],
+                    bannerImage: data[`modal-${num}-banner`],
+                    description: [
+                        data[`modal-${num}-desc-1`],
+                        data[`modal-${num}-desc-2`]
+                    ],
+                    details: {
+                        client: data[`modal-${num}-client`],
+                        year: data[`modal-${num}-year`],
+                        services: data[`modal-${num}-services`]
+                    },
+                    gallery: [
+                        data[`modal-${num}-gallery-1`],
+                        data[`modal-${num}-gallery-2`],
+                        data[`modal-${num}-gallery-3`]
+                    ],
+                    concept: [
+                        data[`modal-${num}-concept-1`],
+                        data[`modal-${num}-concept-2`],
+                        data[`modal-${num}-concept-3`]
+                    ]
+                };
+            }
+        });
         
-        return workDataCode;
+        // 使用JSON.stringify生成JavaScript代码，更安全可靠
+        return '// 作品数据结构，存储每个作品的独特内容\nconst workData = ' + JSON.stringify(workData, null, 4) + ';';
     }
 
     // 生成说明文本
@@ -759,56 +974,343 @@ const admin = (function() {
     }
     
     // 生成完整文件并下载
-    function generateAndDownloadFiles(data) {
+    async function generateAndDownloadFiles(data) {
         // 生成轮播图片HTML代码
         const carouselHTML = generateCarouselHTML(data);
         
         // 生成workData JavaScript代码
         const workDataJS = generateJSCode(data);
         
-        // 同步所有文件到本地
-        syncToLocalFiles(carouselHTML, workDataJS, data);
+        // 同步所有文件到本地 - 等待同步完成
+        await syncToLocalFiles(carouselHTML, workDataJS, data);
+    }
+    
+    // 生成作品展示HTML结构
+    function generateWorksHTML(data) {
+        // 动态获取所有作品ID
+        const modalKeys = Object.keys(data).filter(key => key.startsWith('modal-') && key.endsWith('-title'));
+        const workIds = modalKeys.map(key => {
+            const num = key.split('-')[1];
+            return `work-${num}`;
+        });
+        
+        // 作品尺寸列表，循环使用
+        const sizes = ['large', 'small', 'small', 'medium', 'large'];
+        
+        // 生成作品HTML
+        let worksHTML = '';
+        workIds.forEach((workId, index) => {
+            const num = workId.split('-')[1];
+            const size = sizes[index % sizes.length];
+            const imageUrl = data[`work-${num}-image`] || data[`modal-${num}-banner`] || '';
+            const title = data[`${workId}-title`] || 'New Work';
+            const category = data[`${workId}-category`] || '其他设计';
+            
+            worksHTML += `            <!-- ${title} -->
+            <div class="work-item ${size} ${workId}">
+                <div class="work-inner">
+                    <div class="work-image">
+                        <img src="${imageUrl}" alt="${title}">
+                    </div>
+                    <div class="work-overlay">
+                        <div class="work-info">
+                            <h3 class="work-title">${title}</h3>
+                            <p class="work-category">${category}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+`;
+        });
+        
+        return worksHTML;
     }
     
     // 同步文件到本地
-    function syncToLocalFiles(carouselHTML, workDataJS, data) {
+    async function syncToLocalFiles(carouselHTML, workDataJS, data) {
         updateProgress(50, '正在同步到本地文件...');
         
-        // 发送请求到本地Node.js服务器
-        fetch('http://localhost:3000/sync-files', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                carouselHTML: carouselHTML,
-                workDataJS: workDataJS,
-                textData: {
-                    heroTitle1: data['hero-title-1'],
-                    heroTitle2: data['hero-title-2'],
-                    heroSubtitle: data['hero-subtitle'],
-                    heroCta: data['hero-cta'],
-                    edgeTop1: data['hero-edge-top-1'],
-                    edgeTop2: data['hero-edge-top-2'],
-                    edgeTop3: data['hero-edge-top-3'],
-                    edgeBottom1: data['hero-edge-bottom-1'],
-                    edgeBottom2: data['hero-edge-bottom-2'],
-                    edgeBottom3: data['hero-edge-bottom-3']
-                }
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
+        try {
+            // 动态生成workImages对象，包含所有作品
+            const workImages = {};
+            
+            // 动态获取所有作品ID
+            const modalKeys = Object.keys(data).filter(key => key.startsWith('modal-') && key.endsWith('-title'));
+            const workIds = modalKeys.map(key => {
+                const num = key.split('-')[1];
+                return `work-${num}`;
+            });
+            
+            // 为每个作品添加图片数据
+            workIds.forEach(workId => {
+                const num = workId.split('-')[1];
+                // 使用作品的workImage作为展示图片，优先于bannerImage
+                workImages[workId] = data[`work-${num}-image`] || data[`modal-${num}-banner`];
+            });
+            
+            // 生成作品展示HTML
+            const worksHTML = generateWorksHTML(data);
+            
+            // 发送请求到本地Node.js服务器
+            const response = await fetch('http://localhost:3000/sync-files', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    carouselHTML: carouselHTML,
+                    workDataJS: workDataJS,
+                    textData: {
+                        heroTitle1: data['hero-title-1'],
+                        heroTitle2: data['hero-title-2'],
+                        heroSubtitle: data['hero-subtitle'],
+                        heroCta: data['hero-cta'],
+                        edgeTop1: data['hero-edge-top-1'],
+                        edgeTop2: data['hero-edge-top-2'],
+                        edgeTop3: data['hero-edge-top-3'],
+                        edgeBottom1: data['hero-edge-bottom-1'],
+                        edgeBottom2: data['hero-edge-bottom-2'],
+                        edgeBottom3: data['hero-edge-bottom-3']
+                    },
+                    // 添加作品展示图片数据
+                    workImages: workImages,
+                    // 添加作品展示HTML
+                    worksHTML: worksHTML,
+                    // 添加音乐设置数据
+                    musicSettings: {
+                        name: data['music-name'],
+                        url: data['music-url'],
+                        autoPlay: data['music-auto-play'],
+                        volume: data['music-volume'],
+                        enabled: data['music-enabled']
+                    }
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
                 updateProgress(90, '本地文件同步成功！');
             } else {
-                updateProgress(90, `本地文件同步失败：${data.message}`, true);
-                console.error('本地文件同步失败:', data.message);
+                const errorMsg = result.error ? `${result.message} (详情: ${result.error})` : result.message;
+                updateProgress(90, `本地文件同步失败：${errorMsg}`, true);
+                console.error('本地文件同步失败:', result);
             }
-        })
-        .catch(error => {
-            updateProgress(90, `本地文件同步失败：${error.message}`, true);
+        } catch (error) {
+            updateProgress(90, `网络请求失败：请确保同步服务器正在运行 (${error.message})`, true);
             console.error('本地文件同步失败:', error);
+        }
+    }
+    
+    // 初始化作品分类
+    function initWorkCategories() {
+        // 清空所有分类容器
+        const categoryContainers = document.querySelectorAll('.work-modal-list');
+        categoryContainers.forEach(container => {
+            container.innerHTML = '';
+        });
+        
+        // 统计每个分类的作品数量
+        const categoryCounts = {
+            'all': 0,
+            '品牌设计': 0,
+            'AI设计': 0,
+            '网页设计': 0,
+            '插画设计': 0,
+            '3D设计': 0,
+            '其他设计': 0
+        };
+        
+        // 动态获取所有作品ID
+        const modalKeys = Object.keys(currentData).filter(key => key.startsWith('modal-') && key.endsWith('-title'));
+        const workIds = modalKeys.map(key => {
+            const num = key.split('-')[1];
+            return `work-${num}`;
+        });
+        
+        // 为每个作品生成HTML并添加到对应分类和全部作品
+        workIds.forEach(workId => {
+            const num = workId.split('-')[1];
+            const category = currentData[`modal-${num}-category`] || '其他设计';
+            
+            // 增加分类计数
+            categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+            categoryCounts['all'] = (categoryCounts['all'] || 0) + 1;
+            
+            // 创建作品HTML
+            const workHTML = `
+                <div class="work-modal-item" data-work="${workId}">
+                    <div class="work-modal-header collapsible">
+                        <h3>作品 ${num} - ${currentData[`modal-${num}-title`] || 'New Work'}</h3>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    
+                    <div class="work-modal-content collapsible-content">
+                        <div class="form-group">
+                            <h4>Banner图片</h4>
+                            <div class="image-input-wrapper">
+                                <input type="text" class="image-url-input" data-field="modal-${num}-banner" placeholder="Banner图片URL" value="${escapeSingleQuotes(currentData[`modal-${num}-banner`] || '')}">
+                                <div class="image-preview"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <h4>标题和分类</h4>
+                            <input type="text" data-field="modal-${num}-title" placeholder="作品标题" value="${escapeSingleQuotes(currentData[`modal-${num}-title`] || '')}">
+                            <select data-field="modal-${num}-category">
+                                <option value="">请选择分类</option>
+                                <option value="品牌设计" ${category === '品牌设计' ? 'selected' : ''}>品牌设计</option>
+                                <option value="AI设计" ${category === 'AI设计' ? 'selected' : ''}>AI设计</option>
+                                <option value="网页设计" ${category === '网页设计' ? 'selected' : ''}>网页设计</option>
+                                <option value="插画设计" ${category === '插画设计' ? 'selected' : ''}>插画设计</option>
+                                <option value="3D设计" ${category === '3D设计' ? 'selected' : ''}>3D设计</option>
+                                <option value="其他设计" ${category === '其他设计' ? 'selected' : ''}>其他设计</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <h4>项目描述</h4>
+                            <textarea data-field="modal-${num}-desc-1" rows="3" placeholder="描述段落1">${escapeSingleQuotes(currentData[`modal-${num}-desc-1`] || '')}</textarea>
+                            <textarea data-field="modal-${num}-desc-2" rows="3" placeholder="描述段落2">${escapeSingleQuotes(currentData[`modal-${num}-desc-2`] || '')}</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <h4>项目详情</h4>
+                            <input type="text" data-field="modal-${num}-client" placeholder="客户名称" value="${escapeSingleQuotes(currentData[`modal-${num}-client`] || '')}">
+                            <input type="text" data-field="modal-${num}-year" placeholder="年份" value="${escapeSingleQuotes(currentData[`modal-${num}-year`] || '')}">
+                            <input type="text" data-field="modal-${num}-services" placeholder="服务内容" value="${escapeSingleQuotes(currentData[`modal-${num}-services`] || '')}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <h4>展示图片（3张）</h4>
+                            <div class="image-input-wrapper">
+                                <input type="text" class="image-url-input" data-field="modal-${num}-gallery-1" placeholder="图片1 URL" value="${escapeSingleQuotes(currentData[`modal-${num}-gallery-1`] || '')}">
+                                <div class="image-preview"></div>
+                            </div>
+                            <div class="image-input-wrapper">
+                                <input type="text" class="image-url-input" data-field="modal-${num}-gallery-2" placeholder="图片2 URL" value="${escapeSingleQuotes(currentData[`modal-${num}-gallery-2`] || '')}">
+                                <div class="image-preview"></div>
+                            </div>
+                            <div class="image-input-wrapper">
+                                <input type="text" class="image-url-input" data-field="modal-${num}-gallery-3" placeholder="图片3 URL" value="${escapeSingleQuotes(currentData[`modal-${num}-gallery-3`] || '')}">
+                                <div class="image-preview"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <h4>设计理念（3段）</h4>
+                            <textarea data-field="modal-${num}-concept-1" rows="3" placeholder="理念段落1">${escapeSingleQuotes(currentData[`modal-${num}-concept-1`] || '')}</textarea>
+                            <textarea data-field="modal-${num}-concept-2" rows="3" placeholder="理念段落2">${escapeSingleQuotes(currentData[`modal-${num}-concept-2`] || '')}</textarea>
+                            <textarea data-field="modal-${num}-concept-3" rows="3" placeholder="理念段落3">${escapeSingleQuotes(currentData[`modal-${num}-concept-3`] || '')}</textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 添加到对应分类容器
+            const categoryContainer = document.querySelector(`.work-modal-list[data-category="${category}"]`);
+            if (categoryContainer) {
+                categoryContainer.innerHTML += workHTML;
+            }
+            
+            // 添加到全部作品容器
+            const allContainer = document.querySelector(`.work-modal-list[data-category="all"]`);
+            if (allContainer) {
+                allContainer.innerHTML += workHTML;
+            }
+        });
+        
+        // 更新分类计数
+        Object.entries(categoryCounts).forEach(([category, count]) => {
+            const countElement = document.querySelector(`.category-count[data-category="${category}"]`);
+            if (countElement) {
+                countElement.textContent = `(${count})`;
+            }
+        });
+        
+        // 初始化分类导航功能
+        initCategoryNavigation();
+        
+        // 重新初始化表单和图片预览
+        initForm();
+        initImagePreviews();
+        
+        // 初始化可折叠功能
+        initCollapsible();
+    }
+    
+    // 初始化分类导航
+    function initCategoryNavigation() {
+        // 隐藏所有作品列表，只显示全部作品
+        const workLists = document.querySelectorAll('.work-modal-list');
+        workLists.forEach(list => {
+            if (list.dataset.category === 'all') {
+                list.style.display = 'block';
+            } else {
+                list.style.display = 'none';
+            }
+        });
+        
+        // 添加分类按钮点击事件
+        const categoryButtons = document.querySelectorAll('.category-nav-btn');
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有按钮的active类
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                // 添加当前按钮的active类
+                this.classList.add('active');
+                
+                // 获取当前分类
+                const category = this.dataset.category;
+                
+                // 显示对应分类的作品列表，隐藏其他列表
+                workLists.forEach(list => {
+                    if (list.dataset.category === category) {
+                        list.style.display = 'block';
+                    } else {
+                        list.style.display = 'none';
+                    }
+                });
+            });
+        });
+    }
+    
+    // 更新分类计数
+    function updateCategoryCounts() {
+        // 统计每个分类的作品数量
+        const categoryCounts = {
+            'all': 0,
+            '品牌设计': 0,
+            'AI设计': 0,
+            '网页设计': 0,
+            '插画设计': 0,
+            '3D设计': 0,
+            '其他设计': 0
+        };
+        
+        // 获取所有作品项
+        const allWorkItems = document.querySelectorAll('.work-modal-item');
+        
+        // 遍历所有作品，统计每个分类的数量
+        allWorkItems.forEach(item => {
+            // 只统计全部作品列表中的作品，避免重复计数
+            if (item.closest('.work-modal-list[data-category="all"]')) {
+                // 获取作品的分类
+                const categoryField = item.querySelector('[data-field*="-category"]');
+                const workCategory = categoryField ? categoryField.value : '其他设计';
+                
+                // 增加对应分类的计数
+                categoryCounts[workCategory] = (categoryCounts[workCategory] || 0) + 1;
+                categoryCounts['all'] = (categoryCounts['all'] || 0) + 1;
+            }
+        });
+        
+        // 更新分类计数显示
+        Object.entries(categoryCounts).forEach(([category, count]) => {
+            const countElement = document.querySelector(`.category-count[data-category="${category}"]`);
+            if (countElement) {
+                countElement.textContent = `(${count})`;
+            }
         });
     }
     

@@ -1,67 +1,72 @@
 // 轮播功能
-function initHeroCarousel() {
-    // 检查元素是否存在
-    const slides = document.querySelectorAll('.carousel-slide');
+const initHeroCarousel = () => {
+    // 检查元素是否存在，只获取英雄区域的轮播图幻灯片
+    const slides = document.querySelectorAll('.hero-carousel .carousel-slide');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     let currentSlide = 0;
     let slideInterval;
     
     // 切换到指定幻灯片
-    function goToSlide(index) {
+    const goToSlide = (index) => {
+        // 确保只有英雄区域的幻灯片被处理
+        const heroSlides = document.querySelectorAll('.hero-carousel .carousel-slide');
+        if (heroSlides.length === 0) return;
+        
         // 移除当前激活状态
-        slides[currentSlide].classList.remove('active');
+        heroSlides[currentSlide].classList.remove('active');
         
         // 设置新的当前幻灯片
-        currentSlide = (index + slides.length) % slides.length;
+        currentSlide = (index + heroSlides.length) % heroSlides.length;
         
         // 添加新的激活状态
-        slides[currentSlide].classList.add('active');
+        heroSlides[currentSlide].classList.add('active');
         
         // 重置自动播放
         resetInterval();
-    }
+    };
     
     // 下一张幻灯片
-    function nextSlide() {
-        goToSlide(currentSlide + 1);
-    }
+    const nextSlide = () => goToSlide(currentSlide + 1);
     
     // 上一张幻灯片
-    function prevSlide() {
-        goToSlide(currentSlide - 1);
-    }
+    const prevSlide = () => goToSlide(currentSlide - 1);
     
     // 自动播放
-    function startAutoPlay() {
+    const startAutoPlay = () => {
         slideInterval = setInterval(nextSlide, 5000); // 每5秒切换一次
-    }
+    };
     
     // 重置自动播放
-    function resetInterval() {
+    const resetInterval = () => {
         clearInterval(slideInterval);
         startAutoPlay();
+    };
+    
+    // 直接绑定事件监听器，不使用可选链，确保事件能被正确绑定
+    if (prevBtn) {
+        prevBtn.addEventListener('click', prevSlide);
+        console.log('轮播图上一张按钮事件监听器已绑定');
     }
-    
-    // 绑定事件监听器 - 添加直接的事件处理，避免作用域问题
-    document.getElementById('prevBtn').addEventListener('click', function() {
-        prevSlide();
-    });
-    
-    document.getElementById('nextBtn').addEventListener('click', function() {
-        nextSlide();
-    });
+    if (nextBtn) {
+        nextBtn.addEventListener('click', nextSlide);
+        console.log('轮播图下一张按钮事件监听器已绑定');
+    }
     
     // 开始自动播放
     startAutoPlay();
-}
+    console.log('轮播图自动播放已启动');
+};
 
 // 确保加载动画至少显示一段时间，并且在页面完全加载后才消失
 let pageLoaded = false;
 let minLoadTimePassed = false;
+let domLoaded = false;
 
 // 页面DOM加载完成
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', () => {
+    domLoaded = true;
+    
     // 页面DOM加载完成后执行的逻辑
     addSmoothScroll();
     addScrollAnimations();
@@ -80,29 +85,39 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 // 页面所有资源加载完成
-window.addEventListener('load', function() {
+window.addEventListener('load', () => {
     pageLoaded = true;
     checkLoadingComplete();
 });
 
 // 确保至少显示2秒的加载动画
-setTimeout(function() {
+setTimeout(() => {
     minLoadTimePassed = true;
     checkLoadingComplete();
 }, 2000);
 
+// 备用机制：如果load事件没有触发，3秒后强制显示页面
+setTimeout(() => {
+    if (!pageLoaded) {
+        console.log('资源加载超时，强制显示页面');
+        pageLoaded = true;
+        minLoadTimePassed = true;
+        checkLoadingComplete();
+    }
+}, 3000);
+
 // 检查加载是否完成，只有在页面完全加载且最小加载时间已过时才隐藏遮罩
-function checkLoadingComplete() {
+const checkLoadingComplete = () => {
     if (pageLoaded && minLoadTimePassed) {
         // 添加loaded类，触发遮罩淡出动画
         document.body.classList.add('loaded');
     }
-}
+};
 
 // 初始化滚动动画
-function initScrollAnimations() {
+const initScrollAnimations = () => {
     // 监听滚动事件，为元素添加动画
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', () => {
         const scrollY = window.pageYOffset;
         
         // 为英雄区域形状添加视差效果
@@ -115,11 +130,7 @@ function initScrollAnimations() {
         // 为浮动导航点添加淡入效果
         const floatingNav = document.querySelector('.floating-nav');
         if (floatingNav) {
-            if (scrollY > 200) {
-                floatingNav.style.opacity = '1';
-            } else {
-                floatingNav.style.opacity = '0';
-            }
+            floatingNav.style.opacity = scrollY > 200 ? '1' : '0';
         }
     });
     
@@ -129,34 +140,28 @@ function initScrollAnimations() {
         floatingNav.style.opacity = '0';
         floatingNav.style.transition = 'opacity 0.5s ease';
     }
-}
-
-
-
-
+};
 
 // 平滑滚动函数
-function addSmoothScroll() {
+const addSmoothScroll = () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', (e) => {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            const target = document.querySelector(anchor.getAttribute('href'));
+            target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
-}
+};
 
 // 滚动动画效果
-function addScrollAnimations() {
+const addScrollAnimations = () => {
     // 设置更精确的观察选项
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
     
-    const observer = new IntersectionObserver(function(entries) {
+    const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 // 添加visible类触发动画
@@ -176,13 +181,9 @@ function addScrollAnimations() {
         el.classList.add('fade-in');
         
         // 为作品项添加交替左右进入效果
-        if (el.classList.contains('work-item')) {
+        if (el.classList.contains('work-item') || el.classList.contains('contact-item') || el.classList.contains('form-group')) {
             // 根据索引奇偶性添加左右进入效果
-            if (index % 2 === 0) {
-                el.classList.add('left');
-            } else {
-                el.classList.add('right');
-            }
+            el.classList.add(index % 2 === 0 ? 'left' : 'right');
         }
         
         // 为技能卡片添加旋转进入效果
@@ -190,27 +191,18 @@ function addScrollAnimations() {
             el.classList.add('rotate');
         }
         
-        // 为联系项和表单组添加交替左右进入效果
-        if (el.classList.contains('contact-item') || el.classList.contains('form-group')) {
-            if (index % 2 === 0) {
-                el.classList.add('left');
-            } else {
-                el.classList.add('right');
-            }
-        }
-        
         // 添加观察
         observer.observe(el);
     });
-}
+};
 
 // 浮动导航点高亮功能
-function addFloatingNavHighlight() {
+const addFloatingNavHighlight = () => {
     const sections = document.querySelectorAll('section[id]');
     const navDots = document.querySelectorAll('.nav-dot');
     
     // 滚动事件监听
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', () => {
         let current = '';
         const scrollPosition = window.scrollY + 100;
         
@@ -229,38 +221,38 @@ function addFloatingNavHighlight() {
             }
         });
     });
-}
+};
 
 // 作品项悬停效果
-function addWorkItemEffects() {
+const addWorkItemEffects = () => {
     const workItems = document.querySelectorAll('.work-item');
     
     workItems.forEach(item => {
         // 鼠标进入效果已在CSS中实现
         // 鼠标离开效果已在CSS中实现
     });
-}
+};
 
 // 技能项悬停效果
-function addSkillItemEffects() {
+const addSkillItemEffects = () => {
     const skillCards = document.querySelectorAll('.skill-card');
     
     skillCards.forEach(card => {
         // 鼠标进入效果已在CSS中实现
         // 鼠标离开效果已在CSS中实现
     });
-}
+};
 
 // 表单提交效果
-function addFormSubmissionEffect() {
+const addFormSubmissionEffect = () => {
     const form = document.querySelector('.contact-form');
     
     if (form) {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
             
             // 添加提交动画
-            const submitButton = this.querySelector('.form-submit');
+            const submitButton = form.querySelector('.form-submit');
             const originalText = submitButton.textContent;
             
             // 添加加载状态
@@ -284,34 +276,7 @@ function addFormSubmissionEffect() {
             }, 1500);
         });
     }
-}
-
-// 初始化滚动动画
-function initScrollAnimations() {
-    // 监听滚动事件，为元素添加动画
-    window.addEventListener('scroll', function() {
-        const scrollY = window.pageYOffset;
-        
-        // 为英雄区域形状添加视差效果
-        const shapes = document.querySelectorAll('.hero-shape');
-        shapes.forEach((shape, index) => {
-            const speed = (index + 1) * 0.5;
-            shape.style.transform = `translateY(${scrollY * speed}px) rotate(${scrollY * speed * 0.1}deg)`;
-        });
-        
-        // 为浮动导航点添加淡入效果
-        const floatingNav = document.querySelector('.floating-nav');
-        if (scrollY > 200) {
-            floatingNav.style.opacity = '1';
-        } else {
-            floatingNav.style.opacity = '0';
-        }
-    });
-    
-    // 初始设置浮动导航点的不透明度
-    document.querySelector('.floating-nav').style.opacity = '0';
-    document.querySelector('.floating-nav').style.transition = 'opacity 0.5s ease';
-}
+};
 
 // 雪花粒子系统
 class ParticleSystem {
@@ -534,412 +499,643 @@ class ParticleSystem {
 }
 
 // 初始化粒子系统
-function initParticleSystem() {
+const initParticleSystem = () => {
     new ParticleSystem('particles-canvas');
-}
+};
 
 // 作品数据结构，存储每个作品的独特内容
+// 作品数据结构，存储每个作品的独特内容
+// 作品数据结构，存储每个作品的独特内容
 const workData = {
-    'work-1': {
-        title: 'Brand Design Project',
-        category: 'Graphic Design',
-        bannerImage: 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
-        description: [
-            'This is a comprehensive brand design project for a modern startup. The project includes logo design, brand identity, packaging design, and marketing materials.',
-            'The design concept revolves around minimalism and modern aesthetics, using a clean color palette and geometric shapes to create a strong visual identity.'
+    "work-1": {
+        "title": "Brand Design Project",
+        "category": "品牌设计",
+        "bannerImage": "https://cdn.shopify.com/s/files/1/0522/3320/7988/files/ChatGPT_Image_May_16_2025_sedfsw04_11_34_AM_copy.webp?v=1747338860",
+        "description": [
+            "This is a comprehensive brand design project for a modern startup. The project includes logo design, brand identity, packaging design, and marketing materials.",
+            "The design concept revolves around minimalism and modern aesthetics, using a clean color palette and geometric shapes to create a strong visual identity."
         ],
-        details: {
-            client: 'Tech Startup Inc.',
-            year: '2024',
-            services: 'Logo Design, Brand Identity, Packaging'
+        "details": {
+            "client": "Tech Startup Inc.",
+            "year": "2024",
+            "services": "Logo Design, Brand Identity, Packaging"
         },
-        gallery: [
-            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
-            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
-            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275'
+        "gallery": [
+            "https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275",
+            "https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275",
+            "https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275"
         ],
-        concept: [
-            'The design concept for this project was inspired by modern minimalism and geometric aesthetics. We wanted to create a brand identity that is both timeless and contemporary, with a strong visual impact.',
-            'The color palette was carefully chosen to reflect the brand\'s values and personality, using clean and bold colors that create a strong visual contrast.',
-            'The typography selection was based on readability and visual hierarchy, with a modern sans-serif font that complements the geometric shapes used throughout the design.'
+        "concept": [
+            "The design concept for this project was inspired by modern minimalism and geometric aesthetics. We wanted to create a brand identity that is both timeless and contemporary, with a strong visual impact.",
+            "The color palette was carefully chosen to reflect the brand's values and personality, using clean and bold colors that create a strong visual contrast.",
+            "The typography selection was based on readability and visual hierarchy, with a modern sans-serif font that complements the geometric shapes used throughout the design."
         ]
     },
-    'work-3': {
-        title: 'AI-generated Art Project',
-        category: 'AI Design',
-        bannerImage: 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
-        description: [
-            'This project explores the intersection of artificial intelligence and creative design. Using advanced AI algorithms, we generated unique visual compositions that challenge traditional design boundaries.',
-            'The project pushes the limits of what\'s possible with AI-generated art, creating stunning visuals that combine human creativity with machine intelligence.'
+    "work-3": {
+        "title": "AI-generated Art Project",
+        "category": "AI设计",
+        "bannerImage": "https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275",
+        "description": [
+            "This project explores the intersection of artificial intelligence and creative design. Using advanced AI algorithms, we generated unique visual compositions that challenge traditional design boundaries.",
+            "The project pushes the limits of what's possible with AI-generated art, creating stunning visuals that combine human creativity with machine intelligence."
         ],
-        details: {
-            client: 'AI Creative Lab',
-            year: '2024',
-            services: 'AI Art Generation, Creative Direction'
+        "details": {
+            "client": "AI Creative Lab",
+            "year": "2024",
+            "services": "AI Art Generation, Creative Direction"
         },
-        gallery: [
-            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
-            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275',
-            'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275'
+        "gallery": [
+            "https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275",
+            "https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275",
+            "https://cdn.shopify.com/s/files/1/0522/3320/7988/files/dc75125a74b3f6f509719465ef712ca1.png?v=1767682275"
         ],
-        concept: [
-            'The core concept behind this project is to explore the creative potential of artificial intelligence as a collaborative tool for designers.',
-            'We used a combination of generative adversarial networks (GANs) and diffusion models to create unique visual compositions that blend human intent with machine creativity.',
-            'The result is a series of artworks that challenge our perception of what constitutes "creative" work in the age of AI.'
+        "concept": [
+            "The core concept behind this project is to explore the creative potential of artificial intelligence as a collaborative tool for designers.",
+            "We used a combination of generative adversarial networks (GANs) and diffusion models to create unique visual compositions that blend human intent with machine creativity.",
+            "The result is a series of artworks that challenge our perception of what constitutes \"creative\" work in the age of AI."
         ]
     },
-    'work-4': {
-        title: 'Modern Website Design',
-        category: 'Web Design',
-        bannerImage: 'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        description: [
-            'A modern, responsive website design for a creative agency. This project focuses on clean typography, smooth animations, and an intuitive user experience.',
-            'The design incorporates a minimalist aesthetic with bold visual elements to create a memorable impression.'
+    "work-4": {
+        "title": "Modern Website Design",
+        "category": "网页设计",
+        "bannerImage": "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+        "description": [
+            "A modern, responsive website design for a creative agency. This project focuses on clean typography, smooth animations, and an intuitive user experience.",
+            "The design incorporates a minimalist aesthetic with bold visual elements to create a memorable impression."
         ],
-        details: {
-            client: 'Creative Agency Inc.',
-            year: '2024',
-            services: 'Website Design, UI/UX, Frontend Development'
+        "details": {
+            "client": "Creative Agency Inc.",
+            "year": "2024",
+            "services": "Website Design, UI/UX, Frontend Development"
         },
-        gallery: [
-            'https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-            'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-            'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+        "gallery": [
+            "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+            "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+            "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
         ],
-        concept: [
-            'The design concept was centered around creating a digital experience that reflects the agency\'s creative approach.',
-            'We used a grid-based layout to create visual hierarchy, with ample white space to let the content breathe.',
-            'The color scheme was kept minimal, with accent colors used strategically to draw attention to important elements.'
+        "concept": [
+            "The design concept was centered around creating a digital experience that reflects the agency's creative approach.",
+            "We used a grid-based layout to create visual hierarchy, with ample white space to let the content breathe.",
+            "The color scheme was kept minimal, with accent colors used strategically to draw attention to important elements."
         ]
     },
-    'work-5': {
-        title: 'Creative Illustration',
-        category: 'Creative Design',
-        bannerImage: 'https://images.unsplash.com/photo-1603970484243-63f290002d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
-        description: [
-            'A series of creative illustrations for a children\'s book. The project focuses on vibrant colors, playful characters, and engaging storytelling.',
-            'Each illustration was carefully crafted to capture the imagination of young readers while supporting the book\'s narrative.'
+    "work-5": {
+        "title": "Creative Illustration",
+        "category": "插画设计",
+        "bannerImage": "https://images.unsplash.com/photo-1603970484243-63f290002d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+        "description": [
+            "A series of creative illustrations for a children's book. The project focuses on vibrant colors, playful characters, and engaging storytelling.",
+            "Each illustration was carefully crafted to capture the imagination of young readers while supporting the book's narrative."
         ],
-        details: {
-            client: 'Children\'s Book Publisher',
-            year: '2024',
-            services: 'Illustration, Character Design, Storyboarding'
+        "details": {
+            "client": "Children's Book Publisher",
+            "year": "2024",
+            "services": "Illustration, Character Design, Storyboarding"
         },
-        gallery: [
-            'https://images.unsplash.com/photo-1603970484243-63f290002d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
-            'https://images.unsplash.com/photo-1599677885500-223a6d98d88c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
-            'https://images.unsplash.com/photo-1513639721868-2c83d12c9288?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'
+        "gallery": [
+            "https://images.unsplash.com/photo-1603970484243-63f290002d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+            "https://images.unsplash.com/photo-1599677885500-223a6d98d88c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+            "https://images.unsplash.com/photo-1513639721868-2c83d12c9288?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
         ],
-        concept: [
-            'The illustration style was inspired by classic children\'s book art with a modern twist.',
-            'We used bold, saturated colors to create a sense of wonder and excitement, while keeping the characters relatable and expressive.',
-            'Each scene was composed to guide the reader\'s eye through the story, creating a cohesive narrative experience.'
+        "concept": [
+            "The illustration style was inspired by classic children's book art with a modern twist.",
+            "We used bold, saturated colors to create a sense of wonder and excitement, while keeping the characters relatable and expressive.",
+            "Each scene was composed to guide the reader's eye through the story, creating a cohesive narrative experience."
         ]
     },
-    'work-6': {
-        title: '3D Product Design',
-        category: '3D Design',
-        bannerImage: 'https://images.unsplash.com/photo-1556661718-86b3f05a636d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        description: [
-            'A 3D product design project for a consumer electronics company. The project includes product modeling, texturing, and realistic rendering.',
-            'The design focuses on sleek, modern aesthetics with a strong emphasis on functionality and user experience.'
+    "work-6": {
+        "title": "3D Product Design",
+        "category": "3D设计",
+        "bannerImage": "https://images.unsplash.com/photo-1556661718-86b3f05a636d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+        "description": [
+            "A 3D product design project for a consumer electronics company. The project includes product modeling, texturing, and realistic rendering.",
+            "The design focuses on sleek, modern aesthetics with a strong emphasis on functionality and user experience."
         ],
-        details: {
-            client: 'Electronics Company Ltd.',
-            year: '2024',
-            services: '3D Modeling, Product Design, Rendering'
+        "details": {
+            "client": "Electronics Company Ltd.",
+            "year": "2024",
+            "services": "3D Modeling, Product Design, Rendering"
         },
-        gallery: [
-            'https://images.unsplash.com/photo-1556661718-86b3f05a636d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-            'https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-            'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+        "gallery": [
+            "https://images.unsplash.com/photo-1556661718-86b3f05a636d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+            "https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
         ],
-        concept: [
-            'The design concept was centered around creating a product that is both aesthetically pleasing and highly functional.',
-            'We used parametric modeling techniques to create smooth, organic shapes that feel natural to hold and use.',
-            'The materials and textures were carefully chosen to create a premium look and feel, with realistic rendering that showcases the product\'s features.'
+        "concept": [
+            "The design concept was centered around creating a product that is both aesthetically pleasing and highly functional.",
+            "We used parametric modeling techniques to create smooth, organic shapes that feel natural to hold and use.",
+            "The materials and textures were carefully chosen to create a premium look and feel, with realistic rendering that showcases the product's features."
         ]
     }
 };
 
-// 动态更新模态框内容
-function updateModalContent(workKey) {
-    const data = workData[workKey];
-    if (!data) return;
-    
-    // 更新Banner部分
-    const bannerImage = document.querySelector('.work-banner-image img');
-    const bannerTitle = document.querySelector('.work-banner-title');
-    const bannerCategory = document.querySelector('.work-banner-category');
-    
-    bannerImage.src = data.bannerImage;
-    bannerImage.alt = data.title;
-    bannerTitle.textContent = data.title;
-    bannerCategory.textContent = data.category;
-    
-    // 更新项目概述
-    const descriptionContainer = document.querySelector('.work-modal-description');
-    descriptionContainer.innerHTML = '';
-    data.description.forEach(para => {
-        const p = document.createElement('p');
-        p.textContent = para;
-        descriptionContainer.appendChild(p);
-    });
-    
-    // 更新项目详情
-    const detailItems = document.querySelectorAll('.detail-item');
-    detailItems[0].querySelector('p').textContent = data.details.client;
-    detailItems[1].querySelector('p').textContent = data.details.year;
-    detailItems[2].querySelector('p').textContent = data.details.services;
-    
-    // 更新项目展示图片
-    const galleryItems = document.querySelectorAll('.gallery-item img');
-    galleryItems.forEach((item, index) => {
-        if (data.gallery[index]) {
-            item.src = data.gallery[index];
-            item.alt = `${data.title} Image ${index + 1}`;
-        }
-    });
-    
-    // 更新设计理念
-    const conceptContainer = document.querySelector('.work-concept-content');
-    conceptContainer.innerHTML = '';
-    data.concept.forEach(para => {
-        const p = document.createElement('p');
-        p.textContent = para;
-        conceptContainer.appendChild(p);
-    });
-}
 
-// 作品弹窗功能
-function initWorkModal() {
+
+
+
+
+
+
+
+// 初始化作品弹窗功能
+const initWorkModal = () => {
+    // 获取弹窗元素
     const modal = document.getElementById('workModal');
     const closeBtn = document.querySelector('.work-modal-close');
     const workItems = document.querySelectorAll('.work-item');
     
-    // 打开模态框
-    workItems.forEach(item => {
-        item.addEventListener('click', () => {
-            // 获取作品的唯一标识（从class中提取，如work-1, work-3等）
-            const workClasses = Array.from(item.classList);
-            const workKey = workClasses.find(cls => cls.startsWith('work-') && cls !== 'work-item'); // 排除'work-item'，只匹配'work-1', 'work-3'等
-            
-            // 更新模态框内容
-            if (workKey) {
-                updateModalContent(workKey);
-            }
-            
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden'; // 防止背景滚动
-        });
-    });
-    
-    // 关闭模态框
-    function closeModal() {
-        modal.classList.remove('show');
-        document.body.style.overflow = 'auto'; // 恢复背景滚动
-    }
-    
-    // 点击关闭按钮
-    closeBtn.addEventListener('click', closeModal);
-    
-    // 点击模态框外部区域
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-    
-    // 按下ESC键
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('show')) {
-            closeModal();
-        }
-    });
-}
-
-// 音乐播放器功能
-function initMusicPlayer() {
-    const musicPlayer = document.getElementById('musicPlayer');
-    const musicToggle = document.getElementById('musicToggle');
-    const musicPlay = document.getElementById('musicPlay');
-    const musicPrev = document.getElementById('musicPrev');
-    const musicNext = document.getElementById('musicNext');
-    const musicName = document.getElementById('musicName');
-    const audioPlayer = document.getElementById('audioPlayer');
-    const playIcon = musicPlay.querySelector('.play-icon');
-    const pauseIcon = musicPlay.querySelector('.pause-icon');
-    const volumeSlider = document.getElementById('volumeSlider');
-    const volumeValue = document.getElementById('volumeValue');
-    const musicProgress = document.getElementById('musicProgress');
-    const musicProgressBar = document.getElementById('musicProgressBar');
-    
-    // 从localStorage获取音乐设置
-    const getMusicSettings = () => {
-        const storageKey = 'site_content_data';
-        try {
-            const saved = localStorage.getItem(storageKey);
-            if (saved) {
-                const data = JSON.parse(saved);
-                return {
-                    name: data['music-name'] || '背景音乐',
-                    url: data['music-url'] || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-                    autoPlay: data['music-auto-play'] === 'true' || false,
-                    volume: parseInt(data['music-volume']) || 70,
-                    enabled: data['music-enabled'] === 'true' || true
-                };
-            }
-        } catch (error) {
-            console.error('Failed to load music settings:', error);
-        }
-        // 默认值
-        return {
-            name: '背景音乐',
-            url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-            autoPlay: true,
-            volume: 70,
-            enabled: true
-        };
-    };
-    
-    let musicSettings = getMusicSettings();
-    let isPlaying = false;
-    
-    // 设置初始音量
-    const initialVolume = musicSettings.volume / 100;
-    audioPlayer.volume = initialVolume;
-    volumeSlider.value = musicSettings.volume;
-    volumeValue.textContent = musicSettings.volume + '%';
-    
-    // 默认显示控制按钮
-    musicPlayer.classList.add('expanded');
-    
-    // 播放/暂停控制（音乐按钮直接控制）
-    function togglePlayPause() {
-        if (isPlaying) {
-            pauseMusic();
-        } else {
-            playMusic();
-        }
-    }
-    
-    // 音乐按钮控制面板显示/隐藏
-    musicToggle.addEventListener('click', function() {
-        const musicPanel = document.getElementById('musicPanel');
-        musicPanel.classList.toggle('open');
-    });
-    
-    // 播放/暂停按钮控制播放状态
-    musicPlay.addEventListener('click', togglePlayPause);
-    
-    // 由于只有一首歌，上一首和下一首按钮可以隐藏或禁用
-    musicPrev.style.display = 'none';
-    musicNext.style.display = 'none';
-    
-    // 如果音乐未启用，隐藏播放器
-    if (!musicSettings.enabled) {
-        musicPlayer.style.display = 'none';
+    // 检查弹窗元素是否存在
+    if (!modal || !closeBtn) {
+        console.warn('作品弹窗元素缺失，跳过初始化');
         return;
     }
     
-    // 加载音乐
-    function loadMusic() {
-        audioPlayer.src = musicSettings.url;
-        musicName.textContent = musicSettings.name;
-        musicProgressBar.style.width = '0%';
-    }
+    // 轮播图相关变量
+    let currentWork = null;
+    let currentSlideIndex = 0;
+    let carouselSlides = [];
     
-    // 尝试自动播放音乐
-    function tryAutoPlay() {
-        if (musicSettings.autoPlay) {
-            // 直接尝试自动播放
-            audioPlayer.play().then(() => {
-                isPlaying = true;
-                playIcon.style.display = 'none';
-                pauseIcon.style.display = 'block';
-            }).catch(() => {
-                // 如果失败，设置用户交互监听
-                console.log('自动播放失败，等待用户交互...');
-                // 添加所有可能的用户交互事件
-                const userEvents = ['click', 'touchstart', 'keydown', 'mousemove'];
-                
-                function playOnUserInteraction() {
-                    audioPlayer.play().then(() => {
-                        isPlaying = true;
-                        playIcon.style.display = 'none';
-                        pauseIcon.style.display = 'block';
-                        // 移除所有事件监听器
-                        userEvents.forEach(event => {
-                            document.removeEventListener(event, playOnUserInteraction);
-                        });
-                    }).catch(error => {
-                        console.log('播放失败:', error);
-                    });
-                }
-                
-                // 添加事件监听器
-                userEvents.forEach(event => {
-                    document.addEventListener(event, playOnUserInteraction, { once: true });
+    // 初始化轮播图
+    const initCarousel = (work) => {
+        const carouselTrack = modal.querySelector('.carousel-track');
+        if (!carouselTrack) {
+            console.warn('未找到carousel-track元素');
+            return;
+        }
+        
+        // 清空轮播图轨道
+        carouselTrack.innerHTML = '';
+        
+        // 检查gallery数组
+        if (!work.gallery || work.gallery.length === 0) {
+            console.warn('gallery数组为空或不存在');
+            return;
+        }
+        
+        // 添加轮播图幻灯片
+        work.gallery.forEach((imageUrl, index) => {
+            const slide = document.createElement('div');
+            slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
+            slide.innerHTML = `<img src="${imageUrl}" alt="${work.title} Image ${index + 1}">`;
+            carouselTrack.appendChild(slide);
+        });
+        
+        // 获取轮播图幻灯片
+        carouselSlides = modal.querySelectorAll('.carousel-slide');
+        currentSlideIndex = 0;
+        
+        // 添加轮播图导航事件
+        const prevBtn = modal.querySelector('.carousel-prev');
+        const nextBtn = modal.querySelector('.carousel-next');
+        
+        if (prevBtn) {
+            prevBtn.removeEventListener('click', handlePrevSlide);
+            prevBtn.addEventListener('click', handlePrevSlide);
+        }
+        
+        if (nextBtn) {
+            nextBtn.removeEventListener('click', handleNextSlide);
+            nextBtn.addEventListener('click', handleNextSlide);
+        }
+        
+        // 添加幻灯片点击事件
+        carouselSlides.forEach((slide, index) => {
+            slide.addEventListener('click', () => handleSlideClick(index));
+        });
+        
+        // 更新轮播图显示
+        updateCarouselDisplay();
+    };
+    
+    // 更新轮播图显示
+    const updateCarouselDisplay = () => {
+        // 确保所有幻灯片都能显示 - 使用CSS类而不是内联样式
+        carouselSlides.forEach((slide, index) => {
+            // 移除所有自定义内联样式，让CSS类生效
+            slide.style.transform = '';
+            slide.style.opacity = '';
+            slide.style.zIndex = '';
+        });
+    };
+    
+    // 更新轮播图
+    const updateCarousel = () => {
+        carouselSlides.forEach((slide, index) => {
+            slide.classList.remove('active');
+            if (index === currentSlideIndex) {
+                slide.classList.add('active');
+            }
+        });
+        
+        // 更新轮播图显示
+        updateCarouselDisplay();
+    };
+    
+    // 处理上一张幻灯片
+    const handlePrevSlide = () => {
+        currentSlideIndex = (currentSlideIndex - 1 + carouselSlides.length) % carouselSlides.length;
+        updateCarousel();
+    };
+    
+    // 处理下一张幻灯片
+    const handleNextSlide = () => {
+        currentSlideIndex = (currentSlideIndex + 1) % carouselSlides.length;
+        updateCarousel();
+    };
+    
+    // 处理幻灯片点击
+    const handleSlideClick = (index) => {
+        currentSlideIndex = index;
+        
+        // 显示详情页，隐藏轮播图
+        showDetailPage();
+    };
+    
+    // 显示详情页
+    const showDetailPage = () => {
+        const carousel = modal.querySelector('.work-gallery-carousel');
+        const detailPage = modal.querySelector('.work-detail-page');
+        
+        if (!carousel || !detailPage) return;
+        
+        // 隐藏轮播图
+        carousel.classList.add('hidden');
+        
+        // 图片上移动画效果
+        const activeSlide = modal.querySelector('.carousel-slide.active img');
+        const bannerImg = modal.querySelector('.work-banner-image img');
+        
+        if (activeSlide && bannerImg) {
+            // 将当前活动幻灯片的图片设置为Banner图片
+            bannerImg.src = activeSlide.src;
+        }
+        
+        // 直接显示详情页，不使用动画
+        detailPage.style.display = 'block';
+    };
+    
+    // 更新弹窗内容
+    const updateWorkModalContent = (work) => {
+        // 检查work对象是否存在
+        if (!work) return;
+        
+        // 更新Banner
+        const bannerImg = modal.querySelector('.work-banner-image img');
+        const bannerTitle = modal.querySelector('.work-banner-title');
+        const bannerCategory = modal.querySelector('.work-banner-category');
+        
+        if (bannerImg) bannerImg.src = work.bannerImage || '';
+        if (bannerTitle) bannerTitle.textContent = work.title || '';
+        if (bannerCategory) bannerCategory.textContent = work.category || '';
+        
+        // 更新描述
+        const descriptionContainer = modal.querySelector('.work-modal-description');
+        if (descriptionContainer) {
+            descriptionContainer.innerHTML = '';
+            if (work.description && Array.isArray(work.description)) {
+                work.description.forEach(paragraph => {
+                    const p = document.createElement('p');
+                    p.textContent = paragraph || '';
+                    descriptionContainer.appendChild(p);
                 });
+            }
+        }
+        
+        // 更新详情
+        const client = modal.querySelector('.detail-item:nth-child(1) p');
+        const year = modal.querySelector('.detail-item:nth-child(2) p');
+        const services = modal.querySelector('.detail-item:nth-child(3) p');
+        
+        if (work.details) {
+            if (client) client.textContent = work.details.client || '';
+            if (year) year.textContent = work.details.year || '';
+            if (services) services.textContent = work.details.services || '';
+        }
+        
+        // 更新展示图片
+        const gallery = modal.querySelector('.work-showcase-gallery');
+        if (gallery) {
+            gallery.innerHTML = '';
+            if (work.gallery && Array.isArray(work.gallery)) {
+                work.gallery.forEach(imageUrl => {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.className = 'gallery-item';
+                    galleryItem.innerHTML = `<img src="${imageUrl || ''}" alt="${work.title || ''}">`;
+                    gallery.appendChild(galleryItem);
+                });
+            }
+        }
+        
+        // 更新设计理念
+        const conceptContent = modal.querySelector('.work-concept-content');
+        if (conceptContent) {
+            conceptContent.innerHTML = '';
+            if (work.concept && Array.isArray(work.concept)) {
+                work.concept.forEach(paragraph => {
+                    const p = document.createElement('p');
+                    p.textContent = paragraph || '';
+                    conceptContent.appendChild(p);
+                });
+            }
+        }
+    };
+    
+    // 打开作品弹窗
+    const openWorkModal = (workId) => {
+        const work = workData[workId];
+        if (!work) return;
+        
+        currentWork = work;
+        
+        // 更新弹窗内容
+        updateWorkModalContent(work);
+        
+        // 初始化轮播图
+        initCarousel(work);
+        
+        // 显示弹窗
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // 添加淡入效果
+        setTimeout(() => {
+            modal.style.opacity = '1';
+        }, 10);
+    };
+    
+    // 关闭作品弹窗
+    const closeWorkModal = () => {
+        modal.style.opacity = '0';
+        
+        // 重置弹窗状态
+        const carousel = modal.querySelector('.work-gallery-carousel');
+        const detailPage = modal.querySelector('.work-detail-page');
+        const banner = modal.querySelector('.work-banner');
+        
+        if (carousel) carousel.classList.remove('hidden');
+        if (detailPage) detailPage.style.display = 'none';
+        if (banner) banner.classList.remove('animate');
+        
+        // 等待动画结束后隐藏弹窗
+        setTimeout(() => {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }, 300);
+    };
+    
+    // 点击作品项打开弹窗
+    workItems.forEach(item => {
+        // 为作品项添加点击事件监听器
+        item.addEventListener('click', (e) => {
+            // 查找以work-开头但不是work-item的类，即作品ID
+            const workId = Array.from(item.classList).find(cls => cls.startsWith('work-') && cls !== 'work-item');
+            if (workId && workData[workId]) {
+                openWorkModal(workId);
+            }
+        });
+        
+        // 也为work-overlay元素添加点击事件监听器，确保点击事件能被正确处理
+        const overlay = item.querySelector('.work-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', (e) => {
+                e.stopPropagation(); // 阻止事件冒泡，避免触发两次
+                // 查找以work-开头但不是work-item的类，即作品ID
+                const workId = Array.from(item.classList).find(cls => cls.startsWith('work-') && cls !== 'work-item');
+                if (workId && workData[workId]) {
+                    openWorkModal(workId);
+                }
             });
         }
-    }
-    
-    // 音量控制
-    volumeSlider.addEventListener('input', function() {
-        const volume = this.value / 100;
-        audioPlayer.volume = volume;
-        volumeValue.textContent = this.value + '%';
     });
     
-    // 进度条点击跳转
-    musicProgress.addEventListener('click', function(e) {
-        const rect = this.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-        if (audioPlayer.duration) {
-            audioPlayer.currentTime = percent * audioPlayer.duration;
+    // 点击关闭按钮关闭弹窗
+    closeBtn.addEventListener('click', closeWorkModal);
+    
+    // 点击弹窗外部关闭弹窗
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeWorkModal();
         }
     });
     
-    // 更新进度条
-    audioPlayer.addEventListener('timeupdate', function() {
-        if (audioPlayer.duration) {
-            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-            musicProgressBar.style.width = percent + '%';
+    // 按下ESC键关闭弹窗
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            closeWorkModal();
         }
     });
-    
-    // 播放音乐
-    function playMusic() {
-        audioPlayer.play().catch(function(error) {
-            console.log('播放失败:', error);
+};
+
+// 获取音乐设置
+const getMusicSettings = () => {
+        // 默认音乐设置
+        return {
+            enabled: true,
+            volume: 70,
+            autoPlay: true,
+            url: 'https://cdn.shopify.com/s/files/1/0522/3320/7988/files/aigei_com.mp3?v=1767831280',
+            name: 'BGM'
+        };
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+};
+
+// 初始化音乐播放器
+const initMusicPlayer = () => {
+    try {
+        // 获取所有需要的DOM元素
+        const audioPlayer = document.getElementById('audioPlayer');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
+        const musicPlayer = document.getElementById('musicPlayer');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicPlay = document.getElementById('musicPlay');
+        const musicPrev = document.getElementById('musicPrev');
+        const musicNext = document.getElementById('musicNext');
+        const musicName = document.getElementById('musicName');
+        const musicProgressBar = document.getElementById('musicProgressBar');
+        const musicProgress = document.getElementById('musicProgress');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const currentTimeEl = document.getElementById('currentTime');
+        const totalTimeEl = document.getElementById('totalTime');
+        
+        // 检查必要元素是否存在
+        if (!audioPlayer || !volumeSlider || !volumeValue || !musicPlayer || !musicToggle || !musicPlay) {
+            console.warn('音乐播放器元素缺失，跳过初始化');
+            return;
+        }
+        
+        let musicSettings = getMusicSettings();
+        let isPlaying = false;
+        
+        // 设置初始音量
+        const initialVolume = musicSettings.volume / 100;
+        audioPlayer.volume = initialVolume;
+        volumeSlider.value = musicSettings.volume;
+        volumeValue.textContent = musicSettings.volume + '%';
+        
+        // 默认显示控制按钮
+        musicPlayer.classList.add('expanded');
+        
+        // 播放/暂停控制（音乐按钮直接控制）
+        const togglePlayPause = () => {
+            isPlaying ? pauseMusic() : playMusic();
+        };
+        
+        // 音乐按钮控制面板显示/隐藏
+        musicToggle.addEventListener('click', () => {
+            const musicPanel = document.getElementById('musicPanel');
+            musicPanel?.classList.toggle('open');
         });
-        isPlaying = true;
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'block';
+        
+        // 播放/暂停按钮控制播放状态
+        musicPlay.addEventListener('click', togglePlayPause);
+        
+        // 由于只有一首歌，上一首和下一首按钮可以隐藏或禁用
+        musicPrev?.style.setProperty('display', 'none');
+        musicNext?.style.setProperty('display', 'none');
+        
+        // 如果音乐未启用，隐藏播放器
+        if (!musicSettings.enabled) {
+            musicPlayer.style.display = 'none';
+            return;
+        }
+        
+        // 加载音乐
+        const loadMusic = () => {
+            audioPlayer.src = musicSettings.url;
+            musicName && (musicName.textContent = musicSettings.name);
+            musicProgressBar?.style.setProperty('width', '0%');
+            // 初始化图标状态
+            playIcon?.style.setProperty('display', 'block');
+            pauseIcon?.style.setProperty('display', 'none');
+            isPlaying = false;
+        };
+        
+        // 尝试自动播放音乐
+        const tryAutoPlay = () => {
+            if (musicSettings.autoPlay) {
+                // 直接尝试自动播放
+                audioPlayer.play().then(() => {
+                    isPlaying = true;
+                    playIcon?.style.setProperty('display', 'none');
+                    pauseIcon?.style.setProperty('display', 'block');
+                }).catch(() => {
+                    // 如果失败，设置用户交互监听
+                    console.log('自动播放失败，等待用户交互...');
+                    // 添加所有可能的用户交互事件
+                    const userEvents = ['click', 'touchstart', 'keydown', 'mousemove'];
+                    
+                    const playOnUserInteraction = () => {
+                        audioPlayer.play().then(() => {
+                            isPlaying = true;
+                            playIcon?.style.setProperty('display', 'none');
+                            pauseIcon?.style.setProperty('display', 'block');
+                            // 移除所有事件监听器
+                            userEvents.forEach(event => {
+                                document.removeEventListener(event, playOnUserInteraction);
+                            });
+                        }).catch(error => {
+                            console.log('播放失败:', error);
+                        });
+                    };
+                    
+                    // 添加事件监听器
+                    userEvents.forEach(event => {
+                        document.addEventListener(event, playOnUserInteraction, { once: true });
+                    });
+                });
+            }
+        };
+        
+        // 音量控制
+        volumeSlider.addEventListener('input', (e) => {
+            const volume = e.target.value / 100;
+            audioPlayer.volume = volume;
+            volumeValue.textContent = e.target.value + '%';
+        });
+        
+        // 进度条点击跳转
+        musicProgress?.addEventListener('click', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            if (audioPlayer.duration) {
+                audioPlayer.currentTime = percent * audioPlayer.duration;
+            }
+        });
+        
+        // 时间格式化函数，将秒数转换为 MM:SS 格式
+        const formatTime = (seconds) => {
+            if (isNaN(seconds) || seconds < 0) {
+                return '0:00';
+            }
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        };
+        
+        // 更新进度条和当前时间
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (audioPlayer.duration && musicProgressBar) {
+                const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                musicProgressBar.style.width = percent + '%';
+            }
+            
+            // 更新当前时间
+            currentTimeEl && (currentTimeEl.textContent = formatTime(audioPlayer.currentTime));
+        });
+        
+        // 音乐加载完成后更新总时间
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            totalTimeEl && (totalTimeEl.textContent = formatTime(audioPlayer.duration));
+        });
+        
+        // 音乐加载完成后更新总时间（兼容不同浏览器）
+        audioPlayer.addEventListener('loadeddata', () => {
+            if (totalTimeEl && !isNaN(audioPlayer.duration)) {
+                totalTimeEl.textContent = formatTime(audioPlayer.duration);
+            }
+        });
+        
+        // 播放音乐
+        const playMusic = () => {
+            audioPlayer.play().catch(error => {
+                console.log('播放失败:', error);
+            });
+            isPlaying = true;
+            playIcon?.style.setProperty('display', 'none');
+            pauseIcon?.style.setProperty('display', 'block');
+        };
+        
+        // 暂停音乐
+        const pauseMusic = () => {
+            audioPlayer.pause();
+            isPlaying = false;
+            playIcon?.style.setProperty('display', 'block');
+            pauseIcon?.style.setProperty('display', 'none');
+        };
+        
+        // 音乐播放结束
+        audioPlayer.addEventListener('ended', () => {
+            // 循环播放当前音乐
+            audioPlayer.currentTime = 0;
+            playMusic();
+        });
+        
+        // 加载音乐
+        loadMusic();
+        
+        // 尝试自动播放音乐
+        tryAutoPlay();
+    } catch (error) {
+        console.error('音乐播放器初始化失败:', error);
+        // 确保页面能继续加载
+        pageLoaded = true;
+        checkLoadingComplete();
     }
-    
-    // 暂停音乐
-    function pauseMusic() {
-        audioPlayer.pause();
-        isPlaying = false;
-        playIcon.style.display = 'block';
-        pauseIcon.style.display = 'none';
-    }
-    
-    // 音乐播放结束
-    audioPlayer.addEventListener('ended', function() {
-        // 循环播放当前音乐
-        audioPlayer.currentTime = 0;
-        playMusic();
-    });
-    
-    // 加载音乐
-    loadMusic();
-    
-    // 尝试自动播放音乐
-    tryAutoPlay();
-}
-
-
-
+};
