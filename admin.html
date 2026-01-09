@@ -17,8 +17,14 @@
                     <li class="active" data-section="hero">
                         <span>🏠</span> 首页Banner
                     </li>
-                    <li data-section="showcase">
-                        <span>🎨</span> 作品展示
+                    <li data-section="design-categories">
+                        <span>📁</span> 设计分类
+                    </li>
+                    <li data-section="work-carousel">
+                        <span>🎠</span> 作品轮播
+                    </li>
+                    <li data-section="work-details">
+                        <span>📝</span> 作品详情
                     </li>
                     <li data-section="about">
                         <span>👤</span> 关于我
@@ -31,9 +37,6 @@
                     </li>
                     <li data-section="footer">
                         <span>📄</span> 页脚信息
-                    </li>
-                    <li data-section="workmodal">
-                        <span>📝</span> 弹窗内容
                     </li>
                     <li data-section="music">
                         <span>🎵</span> 音乐设置
@@ -50,37 +53,15 @@
         </aside>
 
         <main class="admin-main">
+            <!-- 首页Banner管理 -->
             <section id="hero-section" class="admin-section active">
                 <h2>首页Banner管理</h2>
                 
                 <div class="form-group">
-                    <h3>轮播图片</h3>
-                    <div class="carousel-list">
-                        <div class="image-input-group" data-field="carousel-1">
-                            <label>轮播图 1</label>
-                            <input type="text" class="image-url-input" data-field="carousel-1" placeholder="图片URL">
-                            <div class="image-preview"></div>
-                        </div>
-                        <div class="image-input-group" data-field="carousel-2">
-                            <label>轮播图 2</label>
-                            <input type="text" class="image-url-input" data-field="carousel-2" placeholder="图片URL">
-                            <div class="image-preview"></div>
-                        </div>
-                        <div class="image-input-group" data-field="carousel-3">
-                            <label>轮播图 3</label>
-                            <input type="text" class="image-url-input" data-field="carousel-3" placeholder="图片URL">
-                            <div class="image-preview"></div>
-                        </div>
-                        <div class="image-input-group" data-field="carousel-4">
-                            <label>轮播图 4</label>
-                            <input type="text" class="image-url-input" data-field="carousel-4" placeholder="图片URL">
-                            <div class="image-preview"></div>
-                        </div>
-                        <div class="image-input-group" data-field="carousel-5">
-                            <label>轮播图 5</label>
-                            <input type="text" class="image-url-input" data-field="carousel-5" placeholder="图片URL">
-                            <div class="image-preview"></div>
-                        </div>
+                    <h3>静态背景图</h3>
+                    <div class="image-input-group single">
+                        <input type="text" class="image-url-input" data-field="hero-background" placeholder="背景图片URL">
+                        <div class="image-preview"></div>
                     </div>
                 </div>
 
@@ -115,117 +96,337 @@
                 </div>
             </section>
 
-            <section id="showcase-section" class="admin-section">
-                <h2>作品展示管理</h2>
+            <!-- 作品展示管理 -->
+            <!-- 设计分类管理 -->
+            <section id="design-categories-section" class="admin-section">
+                <h2>设计分类管理</h2>
                 
-                <div class="work-list">
-                    <div class="work-item" data-work="work-1">
-                        <h3>作品 1 - 品牌设计</h3>
-                        <div class="form-row">
-                            <div class="form-col image-col">
-                                <label>图片URL</label>
-                                <div class="image-input-wrapper">
-                                    <input type="text" class="image-url-input" data-field="work-1-image" placeholder="图片URL">
-                                    <div class="image-preview"></div>
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <label>作品标题</label>
-                                <input type="text" data-field="work-1-title" placeholder="标题">
-                            </div>
-                            <div class="form-col">
-                                <label>作品分类</label>
-                                <input type="text" data-field="work-1-category" placeholder="分类">
+                <div class="form-group">
+                    <h3>作品展示标题</h3>
+                    <input type="text" data-field="showcase-title" placeholder="作品展示主标题">
+                    <input type="text" data-field="showcase-subtitle" placeholder="作品展示副标题">
+                </div>
+
+                <div class="work-categories">
+                    <h3>分类代表图片管理</h3>
+                    <div class="category-grid">
+                        <div class="category-item" data-category="brand">
+                            <h4>品牌设计</h4>
+                            <div class="image-input-wrapper">
+                                <input type="text" class="image-url-input" data-field="category-brand-image" placeholder="分类代表图片URL">
+                                <div class="image-preview"></div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="work-item" data-work="work-3">
-                        <h3>作品 2 - AI设计</h3>
-                        <div class="form-row">
-                            <div class="form-col image-col">
-                                <label>图片URL</label>
-                                <div class="image-input-wrapper">
-                                    <input type="text" class="image-url-input" data-field="work-3-image" placeholder="图片URL">
-                                    <div class="image-preview"></div>
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <label>作品标题</label>
-                                <input type="text" data-field="work-3-title" placeholder="标题">
-                            </div>
-                            <div class="form-col">
-                                <label>作品分类</label>
-                                <input type="text" data-field="work-3-category" placeholder="分类">
+                        <div class="category-item" data-category="ai">
+                            <h4>AI设计</h4>
+                            <div class="image-input-wrapper">
+                                <input type="text" class="image-url-input" data-field="category-ai-image" placeholder="分类代表图片URL">
+                                <div class="image-preview"></div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="work-item" data-work="work-4">
-                        <h3>作品 3 - 网页设计</h3>
-                        <div class="form-row">
-                            <div class="form-col image-col">
-                                <label>图片URL</label>
-                                <div class="image-input-wrapper">
-                                    <input type="text" class="image-url-input" data-field="work-4-image" placeholder="图片URL">
-                                    <div class="image-preview"></div>
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <label>作品标题</label>
-                                <input type="text" data-field="work-4-title" placeholder="标题">
-                            </div>
-                            <div class="form-col">
-                                <label>作品分类</label>
-                                <input type="text" data-field="work-4-category" placeholder="分类">
+                        <div class="category-item" data-category="web">
+                            <h4>网页设计</h4>
+                            <div class="image-input-wrapper">
+                                <input type="text" class="image-url-input" data-field="category-web-image" placeholder="分类代表图片URL">
+                                <div class="image-preview"></div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="work-item" data-work="work-5">
-                        <h3>作品 4 - 插画设计</h3>
-                        <div class="form-row">
-                            <div class="form-col image-col">
-                                <label>图片URL</label>
-                                <div class="image-input-wrapper">
-                                    <input type="text" class="image-url-input" data-field="work-5-image" placeholder="图片URL">
-                                    <div class="image-preview"></div>
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <label>作品标题</label>
-                                <input type="text" data-field="work-5-title" placeholder="标题">
-                            </div>
-                            <div class="form-col">
-                                <label>作品分类</label>
-                                <input type="text" data-field="work-5-category" placeholder="分类">
+                        <div class="category-item" data-category="graphic">
+                            <h4>平面设计</h4>
+                            <div class="image-input-wrapper">
+                                <input type="text" class="image-url-input" data-field="category-graphic-image" placeholder="分类代表图片URL">
+                                <div class="image-preview"></div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="work-item" data-work="work-6">
-                        <h3>作品 5 - 3D设计</h3>
-                        <div class="form-row">
-                            <div class="form-col image-col">
-                                <label>图片URL</label>
-                                <div class="image-input-wrapper">
-                                    <input type="text" class="image-url-input" data-field="work-6-image" placeholder="图片URL">
-                                    <div class="image-preview"></div>
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <label>作品标题</label>
-                                <input type="text" data-field="work-6-title" placeholder="标题">
-                            </div>
-                            <div class="form-col">
-                                <label>作品分类</label>
-                                <input type="text" data-field="work-6-category" placeholder="分类">
+                        <div class="category-item" data-category="3d">
+                            <h4>3D设计</h4>
+                            <div class="image-input-wrapper">
+                                <input type="text" class="image-url-input" data-field="category-3d-image" placeholder="分类代表图片URL">
+                                <div class="image-preview"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- 作品轮播管理 -->
+            <section id="work-carousel-section" class="admin-section">
+                <h2>作品轮播管理</h2>
+                
+                <p class="section-description">管理每个分类下的具体作品，ALL分类将自动显示各分类的代表图</p>
+                
+                <div class="work-carousel-tabs">
+                    <button class="tab-btn active" data-category="brand">品牌设计</button>
+                    <button class="tab-btn" data-category="ai">AI设计</button>
+                    <button class="tab-btn" data-category="web">网页设计</button>
+                    <button class="tab-btn" data-category="graphic">平面设计</button>
+                    <button class="tab-btn" data-category="3d">3D设计</button>
+                </div>
+
+                <div class="work-carousel-content">
+                    <!-- 品牌设计作品 -->
+                    <div class="carousel-tab-content active" data-category="brand">
+                        <h3>品牌设计作品</h3>
+                        <div class="works-grid">
+                            <div class="work-item-admin" data-work="work-1">
+                                <h5>作品 1</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-1-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-1-title" placeholder="作品标题">
+                                <input type="text" data-field="work-1-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-7">
+                                <h5>作品 2</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-7-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-7-title" placeholder="作品标题">
+                                <input type="text" data-field="work-7-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-8">
+                                <h5>作品 3</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-8-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-8-title" placeholder="作品标题">
+                                <input type="text" data-field="work-8-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-17">
+                                <h5>作品 4</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-17-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-17-title" placeholder="作品标题">
+                                <input type="text" data-field="work-17-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-18">
+                                <h5>作品 5</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-18-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-18-title" placeholder="作品标题">
+                                <input type="text" data-field="work-18-category" placeholder="作品子分类">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI设计作品 -->
+                    <div class="carousel-tab-content" data-category="ai">
+                        <h3>AI设计作品</h3>
+                        <div class="works-grid">
+                            <div class="work-item-admin" data-work="work-3">
+                                <h5>作品 1</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-3-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-3-title" placeholder="作品标题">
+                                <input type="text" data-field="work-3-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-9">
+                                <h5>作品 2</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-9-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-9-title" placeholder="作品标题">
+                                <input type="text" data-field="work-9-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-10">
+                                <h5>作品 3</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-10-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-10-title" placeholder="作品标题">
+                                <input type="text" data-field="work-10-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-19">
+                                <h5>作品 4</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-19-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-19-title" placeholder="作品标题">
+                                <input type="text" data-field="work-19-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-20">
+                                <h5>作品 5</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-20-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-20-title" placeholder="作品标题">
+                                <input type="text" data-field="work-20-category" placeholder="作品子分类">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 网页设计作品 -->
+                    <div class="carousel-tab-content" data-category="web">
+                        <h3>网页设计作品</h3>
+                        <div class="works-grid">
+                            <div class="work-item-admin" data-work="work-4">
+                                <h5>作品 1</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-4-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-4-title" placeholder="作品标题">
+                                <input type="text" data-field="work-4-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-11">
+                                <h5>作品 2</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-11-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-11-title" placeholder="作品标题">
+                                <input type="text" data-field="work-11-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-12">
+                                <h5>作品 3</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-12-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-12-title" placeholder="作品标题">
+                                <input type="text" data-field="work-12-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-21">
+                                <h5>作品 4</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-21-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-21-title" placeholder="作品标题">
+                                <input type="text" data-field="work-21-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-22">
+                                <h5>作品 5</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-22-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-22-title" placeholder="作品标题">
+                                <input type="text" data-field="work-22-category" placeholder="作品子分类">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 平面设计作品 -->
+                    <div class="carousel-tab-content" data-category="graphic">
+                        <h3>平面设计作品</h3>
+                        <div class="works-grid">
+                            <div class="work-item-admin" data-work="work-5">
+                                <h5>作品 1</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-5-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-5-title" placeholder="作品标题">
+                                <input type="text" data-field="work-5-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-13">
+                                <h5>作品 2</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-13-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-13-title" placeholder="作品标题">
+                                <input type="text" data-field="work-13-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-14">
+                                <h5>作品 3</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-14-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-14-title" placeholder="作品标题">
+                                <input type="text" data-field="work-14-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-23">
+                                <h5>作品 4</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-23-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-23-title" placeholder="作品标题">
+                                <input type="text" data-field="work-23-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-24">
+                                <h5>作品 5</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-24-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-24-title" placeholder="作品标题">
+                                <input type="text" data-field="work-24-category" placeholder="作品子分类">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3D设计作品 -->
+                    <div class="carousel-tab-content" data-category="3d">
+                        <h3>3D设计作品</h3>
+                        <div class="works-grid">
+                            <div class="work-item-admin" data-work="work-6">
+                                <h5>作品 1</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-6-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-6-title" placeholder="作品标题">
+                                <input type="text" data-field="work-6-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-15">
+                                <h5>作品 2</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-15-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-15-title" placeholder="作品标题">
+                                <input type="text" data-field="work-15-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-16">
+                                <h5>作品 3</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-16-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-16-title" placeholder="作品标题">
+                                <input type="text" data-field="work-16-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-25">
+                                <h5>作品 4</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-25-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-25-title" placeholder="作品标题">
+                                <input type="text" data-field="work-25-category" placeholder="作品子分类">
+                            </div>
+                            <div class="work-item-admin" data-work="work-26">
+                                <h5>作品 5</h5>
+                                <div class="image-input-wrapper">
+                                    <input type="text" class="image-url-input" data-field="work-26-image" placeholder="作品图片URL">
+                                    <div class="image-preview"></div>
+                                </div>
+                                <input type="text" data-field="work-26-title" placeholder="作品标题">
+                                <input type="text" data-field="work-26-category" placeholder="作品子分类">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 关于我管理 -->
             <section id="about-section" class="admin-section">
                 <h2>关于我管理</h2>
                 
@@ -245,6 +446,7 @@
                 </div>
             </section>
 
+            <!-- 专业技能管理 -->
             <section id="skills-section" class="admin-section">
                 <h2>专业技能管理</h2>
                 
@@ -258,26 +460,27 @@
                     <input type="text" data-field="skills-subtitle" placeholder="技能区域副标题">
                 </div>
 
-                <div class="skill-list">
+                <div class="skill-grid">
                     <div class="skill-item" data-skill="1">
-                        <h3>技能 1</h3>
+                        <h5>技能 1</h5>
                         <input type="text" data-field="skill-1-title" placeholder="技能名称">
                     </div>
                     <div class="skill-item" data-skill="2">
-                        <h3>技能 2</h3>
+                        <h5>技能 2</h5>
                         <input type="text" data-field="skill-2-title" placeholder="技能名称">
                     </div>
                     <div class="skill-item" data-skill="3">
-                        <h3>技能 3</h3>
+                        <h5>技能 3</h5>
                         <input type="text" data-field="skill-3-title" placeholder="技能名称">
                     </div>
                     <div class="skill-item" data-skill="4">
-                        <h3>技能 4</h3>
+                        <h5>技能 4</h5>
                         <input type="text" data-field="skill-4-title" placeholder="技能名称">
                     </div>
                 </div>
             </section>
 
+            <!-- 联系方式管理 -->
             <section id="contact-section" class="admin-section">
                 <h2>联系方式管理</h2>
                 
@@ -309,6 +512,7 @@
                 </div>
             </section>
 
+            <!-- 页脚信息管理 -->
             <section id="footer-section" class="admin-section">
                 <h2>页脚信息管理</h2>
                 
@@ -318,13 +522,13 @@
                 </div>
             </section>
 
-            <!-- 作品弹窗内容管理 -->
-            <section id="workmodal-section" class="admin-section">
-                <h2>作品弹窗内容管理</h2>
-                <p class="work-modal-tip">点击作品卡片时可查看弹窗效果，修改后点击保存并刷新前台页面</p>
+            <!-- 作品详情管理 -->
+            <section id="work-details-section" class="admin-section">
+                <h2>作品详情管理</h2>
+                <p class="work-detail-tip">点击作品卡片时可查看详情效果，修改后点击保存并刷新前台页面</p>
                 
                 <div class="admin-section-actions">
-                    <button class="btn btn-primary" onclick="admin.addWorkModal()">添加作品弹窗</button>
+                    <button class="btn btn-primary" onclick="admin.addWorkDetail()">添加作品详情</button>
                 </div>
                 
                 <!-- 分类导航栏 -->
@@ -332,69 +536,32 @@
                     <button class="category-nav-btn active" data-category="all">
                         <span class="category-icon">📋</span>
                         <span>全部作品</span>
-                        <span class="category-count" data-category="all">0</span>
                     </button>
                     <button class="category-nav-btn" data-category="品牌设计">
                         <span class="category-icon">🏷️</span>
                         <span>品牌设计</span>
-                        <span class="category-count" data-category="品牌设计">0</span>
                     </button>
                     <button class="category-nav-btn" data-category="AI设计">
                         <span class="category-icon">🤖</span>
                         <span>AI设计</span>
-                        <span class="category-count" data-category="AI设计">0</span>
                     </button>
                     <button class="category-nav-btn" data-category="网页设计">
                         <span class="category-icon">🌐</span>
                         <span>网页设计</span>
-                        <span class="category-count" data-category="网页设计">0</span>
                     </button>
-                    <button class="category-nav-btn" data-category="插画设计">
+                    <button class="category-nav-btn" data-category="平面设计">
                         <span class="category-icon">🎨</span>
-                        <span>插画设计</span>
-                        <span class="category-count" data-category="插画设计">0</span>
+                        <span>平面设计</span>
                     </button>
                     <button class="category-nav-btn" data-category="3D设计">
                         <span class="category-icon">🗿</span>
                         <span>3D设计</span>
-                        <span class="category-count" data-category="3D设计">0</span>
-                    </button>
-                    <button class="category-nav-btn" data-category="其他设计">
-                        <span class="category-icon">✨</span>
-                        <span>其他设计</span>
-                        <span class="category-count" data-category="其他设计">0</span>
                     </button>
                 </div>
                 
-                <!-- 作品列表容器 -->
-                <div class="work-modal-lists-container">
-                    <!-- 所有作品列表 -->
-                    <div class="work-modal-list" data-category="all">
-                    </div>
-                    
-                    <!-- 品牌设计分类 -->
-                    <div class="work-modal-list" data-category="品牌设计">
-                    </div>
-                    
-                    <!-- AI设计分类 -->
-                    <div class="work-modal-list" data-category="AI设计">
-                    </div>
-                    
-                    <!-- 网页设计分类 -->
-                    <div class="work-modal-list" data-category="网页设计">
-                    </div>
-                    
-                    <!-- 插画设计分类 -->
-                    <div class="work-modal-list" data-category="插画设计">
-                    </div>
-                    
-                    <!-- 3D设计分类 -->
-                    <div class="work-modal-list" data-category="3D设计">
-                    </div>
-                    
-                    <!-- 其他设计分类 -->
-                    <div class="work-modal-list" data-category="其他设计">
-                    </div>
+                <!-- 作品详情列表 -->
+                <div class="work-details-container">
+                    <!-- 作品详情会动态生成 -->
                 </div>
             </section>
 

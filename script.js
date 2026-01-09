@@ -177,40 +177,41 @@ const initWorkCategoryNav = () => {
         });
     });
     
-    // 使用事件委托处理所有作品项的点击事件
-    workCarousels.forEach(carousel => {
-        carousel.addEventListener('click', (e) => {
-            // 查找被点击元素的最近的work-item祖先
-            const workItem = e.target.closest('.work-item');
-            if (workItem) {
-                console.log('作品项被点击:', e.target);
-                
-                // 检查是否是分类代表图片（即包含data-category属性的work-category元素）
-                const workCategory = workItem.querySelector('.work-category[data-category]');
-                if (workCategory) {
-                    // 是分类代表图片，切换到对应分类
-                    const categoryValue = workCategory.dataset.category;
-                    console.log('切换到分类:', categoryValue);
-                    switchCategory(categoryValue);
-                } else {
-                    // 是具体作品图片，打开详情页
-                    // 从类名中提取作品ID，确保只匹配类似work-1、work-2这样的具体作品ID，而不是work-item
-                    const workClass = Array.from(workItem.classList).find(cls => cls.startsWith('work-') && cls !== 'work-item');
-                    if (workClass) {
-                        const workId = workClass;
-                        console.log('打开作品详情:', workId);
-                        // 打开作品详情页
-                        openWorkModal(workId);
-                    }
+    // 直接在每个作品项上添加点击事件监听器
+    const workItems = document.querySelectorAll('.work-item');
+    workItems.forEach(workItem => {
+        workItem.addEventListener('click', (e) => {
+            console.log('作品项被点击:', e.target);
+            
+            // 检查是否是分类代表图片（即包含data-category属性的work-category元素）
+            const workCategory = workItem.querySelector('.work-category[data-category]');
+            if (workCategory) {
+                // 是分类代表图片，切换到对应分类
+                const categoryValue = workCategory.dataset.category;
+                console.log('切换到分类:', categoryValue);
+                switchCategory(categoryValue);
+            } else {
+                // 是具体作品图片，打开详情页
+                // 从类名中提取作品ID，确保只匹配类似work-1、work-2这样的具体作品ID，而不是work-item
+                const workClass = Array.from(workItem.classList).find(cls => cls.startsWith('work-') && cls !== 'work-item');
+                if (workClass) {
+                    const workId = workClass;
+                    console.log('打开作品详情:', workId);
+                    // 打开作品详情页
+                    openWorkModal(workId);
                 }
             }
-            // 检查是否点击了作品分类
-            else if (e.target.classList.contains('work-category')) {
-                const categoryValue = e.target.dataset.category;
-                if (categoryValue) {
-                    console.log('切换到分类:', categoryValue);
-                    switchCategory(categoryValue);
-                }
+        });
+    });
+    
+    // 为分类文字添加点击事件监听器
+    const workCategories = document.querySelectorAll('.work-category[data-category]');
+    workCategories.forEach(category => {
+        category.addEventListener('click', (e) => {
+            const categoryValue = category.dataset.category;
+            if (categoryValue) {
+                console.log('切换到分类:', categoryValue);
+                switchCategory(categoryValue);
             }
         });
     });
@@ -577,10 +578,33 @@ const initParticleSystem = () => {
     new ParticleSystem('particles-canvas');
 };
 
-// 作品数据结构，存储每个作品的独特内容
-// 作品数据结构，存储每个作品的独特内容
-// 作品数据结构，存储每个作品的独特内容
-const workData = {
+// 从localStorage读取作品数据，没有则使用默认数据
+let workData = {};
+let categoryData = {};
+
+// 尝试从localStorage获取数据
+const storedWorkData = localStorage.getItem('workData');
+const storedCategoryData = localStorage.getItem('categoryData');
+
+if (storedWorkData) {
+    try {
+        workData = JSON.parse(storedWorkData);
+    } catch (e) {
+        console.error('Failed to parse workData from localStorage:', e);
+    }
+}
+
+if (storedCategoryData) {
+    try {
+        categoryData = JSON.parse(storedCategoryData);
+    } catch (e) {
+        console.error('Failed to parse categoryData from localStorage:', e);
+    }
+}
+
+// 如果localStorage没有数据，使用默认数据
+if (Object.keys(workData).length === 0) {
+    workData = {
     "work-1": {
         "title": "Brand Design Project",
         "category": "品牌设计",

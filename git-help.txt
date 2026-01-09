@@ -1,0 +1,72 @@
+# Git Push 失败问题说明
+
+## 问题原因
+在Terminal#515-525中，`git push`命令失败，错误信息为：
+```
+fatal: No configured push destination.
+```
+
+这是因为Git仓库没有配置远程仓库的URL，所以无法将本地代码推送到远程服务器。
+
+## 解决方案
+要解决这个问题，您需要先配置远程仓库，然后再执行push操作。
+
+### 步骤1：查看当前远程仓库配置
+```bash
+git remote -v
+```
+
+### 步骤2：添加远程仓库
+如果没有远程仓库配置，使用以下命令添加：
+```bash
+git remote add origin <远程仓库URL>
+```
+例如：
+```bash
+git remote add origin https://github.com/your-username/your-repository.git
+```
+
+### 步骤3：推送代码到远程仓库
+添加远程仓库后，即可执行push命令：
+```bash
+git push -u origin main
+```
+或
+```bash
+git push -u origin master
+```
+
+### 步骤4：后续推送
+第一次推送时使用`-u`参数设置上游分支后，后续可以直接使用：
+```bash
+git push
+```
+
+## 完整示例
+```bash
+# 1. 初始化Git仓库（如果尚未初始化）
+git init
+
+# 2. 添加所有文件到暂存区
+git add .
+
+# 3. 提交更改
+git commit -m "Initial commit"
+
+# 4. 添加远程仓库
+git remote add origin https://github.com/your-username/your-repository.git
+
+# 5. 推送代码
+git push -u origin main
+```
+
+## 注意事项
+- 确保您有远程仓库的访问权限
+- 替换示例中的远程仓库URL为您自己的仓库地址
+- 如果使用SSH协议，URL格式为：`git@github.com:your-username/your-repository.git`
+
+## 查看更多帮助
+```bash
+git help remote
+git help push
+```
